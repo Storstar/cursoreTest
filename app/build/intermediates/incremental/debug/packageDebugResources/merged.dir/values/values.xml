@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#FFFFFF</color>
+    <string name="app_name">ShopApp</string>
+    <string name="gcm_defaultSenderId" translatable="false">440224489531</string>
+    <string name="google_api_key" translatable="false">AIzaSyD7IMcuc1TsmZ6WcK4EqIo2_HQqFwhOb5c</string>
+    <string name="google_app_id" translatable="false">1:440224489531:android:8dc28698c534a14cd2bc1e</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD7IMcuc1TsmZ6WcK4EqIo2_HQqFwhOb5c</string>
+    <string name="google_storage_bucket" translatable="false">curssa.firebasestorage.app</string>
+    <string name="project_id" translatable="false">curssa</string>
+    <style name="Theme.ShopApp" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

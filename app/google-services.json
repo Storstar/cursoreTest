@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "440224489531",
+    "project_id": "curssa",
+    "storage_bucket": "curssa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:440224489531:android:8dc28698c534a14cd2bc1e",
+        "android_client_info": {
+          "package_name": "com.example.shopapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7IMcuc1TsmZ6WcK4EqIo2_HQqFwhOb5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

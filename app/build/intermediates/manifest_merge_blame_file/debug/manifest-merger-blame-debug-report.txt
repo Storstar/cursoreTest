@@ -1,0 +1,433 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.shopapp"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- Интернет -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:6:5-67
+12-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:7:5-79
+13-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:7:22-76
+14
+15    <!-- SIM-карта -->
+16    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+16-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:10:5-75
+16-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:10:22-72
+17
+18    <!-- Геолокация -->
+19    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+19-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:13:5-79
+19-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:13:22-76
+20    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+20-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:14:5-81
+20-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:14:22-78
+21    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+21-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:23:5-77
+21-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:23:22-74
+22    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+22-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:24:5-68
+22-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:24:22-65
+23    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+23-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:26:5-82
+23-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:26:22-79
+24    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+24-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:25:5-79
+24-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:25:22-76
+25    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
+25-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:26:5-88
+25-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:26:22-85
+26    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" />
+26-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:27:5-82
+26-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:27:22-79
+27    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+27-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:26:5-110
+27-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:26:22-107
+28
+29    <permission
+29-->[androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+30        android:name="com.example.shopapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+30-->[androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+31        android:protectionLevel="signature" />
+31-->[androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+32
+33    <uses-permission android:name="com.example.shopapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+33-->[androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+33-->[androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+34
+35    <application
+35-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:16:5-35:19
+36        android:allowBackup="true"
+36-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:17:9-35
+37        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+37-->[androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+38        android:debuggable="true"
+39        android:extractNativeLibs="false"
+40        android:icon="@mipmap/ic_launcher"
+40-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:18:9-43
+41        android:label="@string/app_name"
+41-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:19:9-41
+42        android:roundIcon="@mipmap/ic_launcher_round"
+42-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:20:9-54
+43        android:supportsRtl="true"
+43-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:21:9-35
+44        android:testOnly="true"
+45        android:theme="@style/Theme.ShopApp"
+45-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:22:9-45
+46        android:usesCleartextTraffic="true" >
+46-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:23:9-44
+47        <activity
+47-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:25:9-34:20
+48            android:name="com.example.shopapp.MainActivity"
+48-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:26:13-41
+49            android:configChanges="orientation|screenSize|keyboardHidden"
+49-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:28:13-74
+50            android:exported="true"
+50-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:27:13-36
+51            android:theme="@style/Theme.ShopApp" >
+51-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:29:13-49
+52            <intent-filter>
+52-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:30:13-33:29
+53                <action android:name="android.intent.action.MAIN" />
+53-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:31:17-69
+53-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:31:25-66
+54
+55                <category android:name="android.intent.category.LAUNCHER" />
+55-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:32:17-77
+55-->/Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:32:27-74
+56            </intent-filter>
+57        </activity>
+58
+59        <service
+59-->[com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:9:9-15:19
+60            android:name="com.google.firebase.components.ComponentDiscoveryService"
+60-->[com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:10:13-84
+61            android:directBootAware="true"
+61-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:32:13-43
+62            android:exported="false" >
+62-->[com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:11:13-37
+63            <meta-data
+63-->[com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:12:13-14:85
+64                android:name="com.google.firebase.components:com.google.firebase.firestore.ktx.FirebaseFirestoreLegacyRegistrar"
+64-->[com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:13:17-129
+65                android:value="com.google.firebase.components.ComponentRegistrar" />
+65-->[com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:14:17-82
+66            <meta-data
+66-->[com.google.firebase:firebase-messaging-ktx:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/0ffa4df7abf2c595642a36eb28d2c71f/transformed/firebase-messaging-ktx-23.4.1/AndroidManifest.xml:26:13-28:85
+67                android:name="com.google.firebase.components:com.google.firebase.messaging.ktx.FirebaseMessagingLegacyRegistrar"
+67-->[com.google.firebase:firebase-messaging-ktx:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/0ffa4df7abf2c595642a36eb28d2c71f/transformed/firebase-messaging-ktx-23.4.1/AndroidManifest.xml:27:17-129
+68                android:value="com.google.firebase.components.ComponentRegistrar" />
+68-->[com.google.firebase:firebase-messaging-ktx:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/0ffa4df7abf2c595642a36eb28d2c71f/transformed/firebase-messaging-ktx-23.4.1/AndroidManifest.xml:28:17-82
+69            <meta-data
+69-->[com.google.firebase:firebase-database:20.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c1cc8f241b9b7241d522cf5e08ed3c62/transformed/firebase-database-20.3.1/AndroidManifest.xml:29:13-31:85
+70                android:name="com.google.firebase.components:com.google.firebase.database.FirebaseDatabaseKtxRegistrar"
+70-->[com.google.firebase:firebase-database:20.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c1cc8f241b9b7241d522cf5e08ed3c62/transformed/firebase-database-20.3.1/AndroidManifest.xml:30:17-120
+71                android:value="com.google.firebase.components.ComponentRegistrar" />
+71-->[com.google.firebase:firebase-database:20.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c1cc8f241b9b7241d522cf5e08ed3c62/transformed/firebase-database-20.3.1/AndroidManifest.xml:31:17-82
+72            <meta-data
+72-->[com.google.firebase:firebase-database:20.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c1cc8f241b9b7241d522cf5e08ed3c62/transformed/firebase-database-20.3.1/AndroidManifest.xml:32:13-34:85
+73                android:name="com.google.firebase.components:com.google.firebase.database.DatabaseRegistrar"
+73-->[com.google.firebase:firebase-database:20.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c1cc8f241b9b7241d522cf5e08ed3c62/transformed/firebase-database-20.3.1/AndroidManifest.xml:33:17-109
+74                android:value="com.google.firebase.components.ComponentRegistrar" />
+74-->[com.google.firebase:firebase-database:20.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c1cc8f241b9b7241d522cf5e08ed3c62/transformed/firebase-database-20.3.1/AndroidManifest.xml:34:17-82
+75            <meta-data
+75-->[com.google.firebase:firebase-firestore:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/7b2db9c050fc87646ad0bc66a8ff2c49/transformed/firebase-firestore-24.10.3/AndroidManifest.xml:17:13-19:85
+76                android:name="com.google.firebase.components:com.google.firebase.firestore.FirebaseFirestoreKtxRegistrar"
+76-->[com.google.firebase:firebase-firestore:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/7b2db9c050fc87646ad0bc66a8ff2c49/transformed/firebase-firestore-24.10.3/AndroidManifest.xml:18:17-122
+77                android:value="com.google.firebase.components.ComponentRegistrar" />
+77-->[com.google.firebase:firebase-firestore:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/7b2db9c050fc87646ad0bc66a8ff2c49/transformed/firebase-firestore-24.10.3/AndroidManifest.xml:19:17-82
+78            <meta-data
+78-->[com.google.firebase:firebase-firestore:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/7b2db9c050fc87646ad0bc66a8ff2c49/transformed/firebase-firestore-24.10.3/AndroidManifest.xml:20:13-22:85
+79                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+79-->[com.google.firebase:firebase-firestore:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/7b2db9c050fc87646ad0bc66a8ff2c49/transformed/firebase-firestore-24.10.3/AndroidManifest.xml:21:17-111
+80                android:value="com.google.firebase.components.ComponentRegistrar" />
+80-->[com.google.firebase:firebase-firestore:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/7b2db9c050fc87646ad0bc66a8ff2c49/transformed/firebase-firestore-24.10.3/AndroidManifest.xml:22:17-82
+81            <meta-data
+81-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:57:13-59:85
+82                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingKtxRegistrar"
+82-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:58:17-122
+83                android:value="com.google.firebase.components.ComponentRegistrar" />
+83-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:59:17-82
+84            <meta-data
+84-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:60:13-62:85
+85                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+85-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:61:17-119
+86                android:value="com.google.firebase.components.ComponentRegistrar" />
+86-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:62:17-82
+87            <meta-data
+87-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:37:13-39:85
+88                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+88-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:38:17-139
+89                android:value="com.google.firebase.components.ComponentRegistrar" />
+89-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:39:17-82
+90            <meta-data
+90-->[com.google.firebase:firebase-installations:17.2.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4e76ba5e3b55b7876ffb346e9b5877ef/transformed/firebase-installations-17.2.0/AndroidManifest.xml:15:13-17:85
+91                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+91-->[com.google.firebase:firebase-installations:17.2.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4e76ba5e3b55b7876ffb346e9b5877ef/transformed/firebase-installations-17.2.0/AndroidManifest.xml:16:17-130
+92                android:value="com.google.firebase.components.ComponentRegistrar" />
+92-->[com.google.firebase:firebase-installations:17.2.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4e76ba5e3b55b7876ffb346e9b5877ef/transformed/firebase-installations-17.2.0/AndroidManifest.xml:17:17-82
+93            <meta-data
+93-->[com.google.firebase:firebase-installations:17.2.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4e76ba5e3b55b7876ffb346e9b5877ef/transformed/firebase-installations-17.2.0/AndroidManifest.xml:18:13-20:85
+94                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+94-->[com.google.firebase:firebase-installations:17.2.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4e76ba5e3b55b7876ffb346e9b5877ef/transformed/firebase-installations-17.2.0/AndroidManifest.xml:19:17-127
+95                android:value="com.google.firebase.components.ComponentRegistrar" />
+95-->[com.google.firebase:firebase-installations:17.2.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4e76ba5e3b55b7876ffb346e9b5877ef/transformed/firebase-installations-17.2.0/AndroidManifest.xml:20:17-82
+96            <meta-data
+96-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/dc7bf9fdfeaed479cf8044179baf0fde/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:12:13-14:85
+97                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+97-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/dc7bf9fdfeaed479cf8044179baf0fde/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:13:17-116
+98                android:value="com.google.firebase.components.ComponentRegistrar" />
+98-->[com.google.firebase:firebase-common-ktx:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/dc7bf9fdfeaed479cf8044179baf0fde/transformed/firebase-common-ktx-20.4.2/AndroidManifest.xml:14:17-82
+99            <meta-data
+99-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:35:13-37:85
+100                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+100-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:36:17-109
+101                android:value="com.google.firebase.components.ComponentRegistrar" />
+101-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:37:17-82
+102            <meta-data
+102-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/53d0c6922027284a77d4e78eb8433d37/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:27:13-29:85
+103                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+103-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/53d0c6922027284a77d4e78eb8433d37/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:28:17-115
+104                android:value="com.google.firebase.components.ComponentRegistrar" />
+104-->[com.google.firebase:firebase-datatransport:18.1.7] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/53d0c6922027284a77d4e78eb8433d37/transformed/firebase-datatransport-18.1.7/AndroidManifest.xml:29:17-82
+105        </service>
+106        <service
+106-->[androidx.room:room-runtime:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/25d428f97de788e60d5a18276193d584/transformed/room-runtime-2.6.1/AndroidManifest.xml:24:9-28:63
+107            android:name="androidx.room.MultiInstanceInvalidationService"
+107-->[androidx.room:room-runtime:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/25d428f97de788e60d5a18276193d584/transformed/room-runtime-2.6.1/AndroidManifest.xml:25:13-74
+108            android:directBootAware="true"
+108-->[androidx.room:room-runtime:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/25d428f97de788e60d5a18276193d584/transformed/room-runtime-2.6.1/AndroidManifest.xml:26:13-43
+109            android:exported="false" />
+109-->[androidx.room:room-runtime:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/25d428f97de788e60d5a18276193d584/transformed/room-runtime-2.6.1/AndroidManifest.xml:27:13-37
+110
+111        <receiver
+111-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:29:9-40:20
+112            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+112-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:30:13-78
+113            android:exported="true"
+113-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:31:13-36
+114            android:permission="com.google.android.c2dm.permission.SEND" >
+114-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:32:13-73
+115            <intent-filter>
+115-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:33:13-35:29
+116                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+116-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:34:17-81
+116-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:34:25-78
+117            </intent-filter>
+118
+119            <meta-data
+119-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:37:13-39:40
+120                android:name="com.google.android.gms.cloudmessaging.FINISHED_AFTER_HANDLED"
+120-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:38:17-92
+121                android:value="true" />
+121-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:39:17-37
+122        </receiver>
+123        <!--
+124             FirebaseMessagingService performs security checks at runtime,
+125             but set to not exported to explicitly avoid allowing another app to call it.
+126        -->
+127        <service
+127-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:46:9-53:19
+128            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+128-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:47:13-82
+129            android:directBootAware="true"
+129-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:48:13-43
+130            android:exported="false" >
+130-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:49:13-37
+131            <intent-filter android:priority="-500" >
+131-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:50:13-52:29
+131-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:50:28-51
+132                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+132-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:51:17-78
+132-->[com.google.firebase:firebase-messaging:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f828d89fa8d26cf1474b98436a707c42/transformed/firebase-messaging-23.4.1/AndroidManifest.xml:51:25-75
+133            </intent-filter>
+134        </service>
+135
+136        <activity
+136-->[com.google.android.gms:play-services-base:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/30f19837c731457c4d6bbcfc650cdb06/transformed/play-services-base-18.3.0/AndroidManifest.xml:20:9-22:45
+137            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+137-->[com.google.android.gms:play-services-base:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/30f19837c731457c4d6bbcfc650cdb06/transformed/play-services-base-18.3.0/AndroidManifest.xml:20:19-85
+138            android:exported="false"
+138-->[com.google.android.gms:play-services-base:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/30f19837c731457c4d6bbcfc650cdb06/transformed/play-services-base-18.3.0/AndroidManifest.xml:22:19-43
+139            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+139-->[com.google.android.gms:play-services-base:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/30f19837c731457c4d6bbcfc650cdb06/transformed/play-services-base-18.3.0/AndroidManifest.xml:21:19-78
+140
+141        <property
+141-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:30:9-32:61
+142            android:name="android.adservices.AD_SERVICES_CONFIG"
+142-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:31:13-65
+143            android:resource="@xml/ga_ad_services_config" />
+143-->[com.google.android.gms:play-services-measurement-api:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d2d7bfab77714e70e7b75873bed5e38/transformed/play-services-measurement-api-21.5.1/AndroidManifest.xml:32:13-58
+144
+145        <provider
+145-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:23:9-28:39
+146            android:name="com.google.firebase.provider.FirebaseInitProvider"
+146-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:24:13-77
+147            android:authorities="com.example.shopapp.firebaseinitprovider"
+147-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:25:13-72
+148            android:directBootAware="true"
+148-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:26:13-43
+149            android:exported="false"
+149-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:27:13-37
+150            android:initOrder="100" />
+150-->[com.google.firebase:firebase-common:20.4.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5fecef67a69e7ea74defb9c65ef315c4/transformed/firebase-common-20.4.2/AndroidManifest.xml:28:13-36
+151
+152        <receiver
+152-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:29:9-33:20
+153            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+153-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:30:13-85
+154            android:enabled="true"
+154-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:31:13-35
+155            android:exported="false" >
+155-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:32:13-37
+156        </receiver>
+157
+158        <service
+158-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:35:9-38:40
+159            android:name="com.google.android.gms.measurement.AppMeasurementService"
+159-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:36:13-84
+160            android:enabled="true"
+160-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:37:13-35
+161            android:exported="false" />
+161-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:38:13-37
+162        <service
+162-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:39:9-43:72
+163            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+163-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:40:13-87
+164            android:enabled="true"
+164-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:41:13-35
+165            android:exported="false"
+165-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:42:13-37
+166            android:permission="android.permission.BIND_JOB_SERVICE" />
+166-->[com.google.android.gms:play-services-measurement:21.5.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ad6e160b830c296052d67072614a52b9/transformed/play-services-measurement-21.5.1/AndroidManifest.xml:43:13-69
+167
+168        <uses-library
+168-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/06625b0af6576700f58c40bd8496318c/transformed/ads-adservices-1.0.0-beta05/AndroidManifest.xml:23:9-25:40
+169            android:name="android.ext.adservices"
+169-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/06625b0af6576700f58c40bd8496318c/transformed/ads-adservices-1.0.0-beta05/AndroidManifest.xml:24:13-50
+170            android:required="false" />
+170-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/06625b0af6576700f58c40bd8496318c/transformed/ads-adservices-1.0.0-beta05/AndroidManifest.xml:25:13-37
+171
+172        <meta-data
+172-->[com.google.android.gms:play-services-basement:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f03bc66f9b6f1a64ca51bfd4577c3a3c/transformed/play-services-basement-18.3.0/AndroidManifest.xml:21:9-23:69
+173            android:name="com.google.android.gms.version"
+173-->[com.google.android.gms:play-services-basement:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f03bc66f9b6f1a64ca51bfd4577c3a3c/transformed/play-services-basement-18.3.0/AndroidManifest.xml:22:13-58
+174            android:value="@integer/google_play_services_version" />
+174-->[com.google.android.gms:play-services-basement:18.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f03bc66f9b6f1a64ca51bfd4577c3a3c/transformed/play-services-basement-18.3.0/AndroidManifest.xml:23:13-66
+175
+176        <provider
+176-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:24:9-32:20
+177            android:name="androidx.startup.InitializationProvider"
+177-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:25:13-67
+178            android:authorities="com.example.shopapp.androidx-startup"
+178-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:26:13-68
+179            android:exported="false" >
+179-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:27:13-37
+180            <meta-data
+180-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:29:13-31:52
+181                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+181-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:30:17-75
+182                android:value="androidx.startup" />
+182-->[androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:31:17-49
+183            <meta-data
+183-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d44d4bfe6415dd54229720a3d651c1d9/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+184                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+184-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d44d4bfe6415dd54229720a3d651c1d9/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+185                android:value="androidx.startup" />
+185-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d44d4bfe6415dd54229720a3d651c1d9/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+186            <meta-data
+186-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+187                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+187-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+188                android:value="androidx.startup" />
+188-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+189        </provider>
+190
+191        <activity
+191-->[androidx.compose.ui:ui-test-manifest:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/13546582bf1b39ebf85c28eee88fa356/transformed/ui-test-manifest-1.5.4/AndroidManifest.xml:23:9-25:39
+192            android:name="androidx.activity.ComponentActivity"
+192-->[androidx.compose.ui:ui-test-manifest:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/13546582bf1b39ebf85c28eee88fa356/transformed/ui-test-manifest-1.5.4/AndroidManifest.xml:24:13-63
+193            android:exported="true" />
+193-->[androidx.compose.ui:ui-test-manifest:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/13546582bf1b39ebf85c28eee88fa356/transformed/ui-test-manifest-1.5.4/AndroidManifest.xml:25:13-36
+194        <activity
+194-->[androidx.compose.ui:ui-tooling-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5eba57c60db662b766a0c4c57579169a/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+195            android:name="androidx.compose.ui.tooling.PreviewActivity"
+195-->[androidx.compose.ui:ui-tooling-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5eba57c60db662b766a0c4c57579169a/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+196            android:exported="true" />
+196-->[androidx.compose.ui:ui-tooling-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5eba57c60db662b766a0c4c57579169a/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+197
+198        <service
+198-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/33ac787d50e25fd70e4275c5b8797e95/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:28:9-34:19
+199            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+199-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/33ac787d50e25fd70e4275c5b8797e95/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:29:13-103
+200            android:exported="false" >
+200-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/33ac787d50e25fd70e4275c5b8797e95/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:30:13-37
+201            <meta-data
+201-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/33ac787d50e25fd70e4275c5b8797e95/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:31:13-33:39
+202                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+202-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/33ac787d50e25fd70e4275c5b8797e95/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:32:17-94
+203                android:value="cct" />
+203-->[com.google.android.datatransport:transport-backend-cct:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/33ac787d50e25fd70e4275c5b8797e95/transformed/transport-backend-cct-3.1.8/AndroidManifest.xml:33:17-36
+204        </service>
+205        <service
+205-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:26:9-30:19
+206            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+206-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:27:13-117
+207            android:exported="false"
+207-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:28:13-37
+208            android:permission="android.permission.BIND_JOB_SERVICE" >
+208-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:29:13-69
+209        </service>
+210
+211        <receiver
+211-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:32:9-34:40
+212            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+212-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
+213            android:exported="false" />
+213-->[com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:34:13-37
+214        <receiver
+214-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+215            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+215-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+216            android:directBootAware="false"
+216-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+217            android:enabled="true"
+217-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+218            android:exported="true"
+218-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+219            android:permission="android.permission.DUMP" >
+219-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+220            <intent-filter>
+220-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+221                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+221-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+221-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+222            </intent-filter>
+223            <intent-filter>
+223-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+224                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+224-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+224-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+225            </intent-filter>
+226            <intent-filter>
+226-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+227                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+227-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+227-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+228            </intent-filter>
+229            <intent-filter>
+229-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+230                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+230-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+230-->[androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+231            </intent-filter>
+232        </receiver>
+233    </application>
+234
+235</manifest>

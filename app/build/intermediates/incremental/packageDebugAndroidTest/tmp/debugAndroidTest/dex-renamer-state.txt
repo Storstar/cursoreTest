@@ -1,0 +1,7 @@
+#Mon Apr 07 19:07:13 MSK 2025
+base.1=/Users/nikitastarozilov/cursoreTest/app/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/0/classes.dex
+path.1=0/classes.dex
+base.0=/Users/nikitastarozilov/cursoreTest/app/build/intermediates/dex/debugAndroidTest/mergeExtDexDebugAndroidTest/classes.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+path.0=classes.dex
