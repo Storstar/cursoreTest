@@ -1,4 +1,4 @@
-#Mon Apr 07 19:07:13 MSK 2025
+#Mon Apr 07 22:11:29 MSK 2025
 base.1=/Users/nikitastarozilov/cursoreTest/app/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/0/classes.dex
 path.1=0/classes.dex
 base.0=/Users/nikitastarozilov/cursoreTest/app/build/intermediates/dex/debugAndroidTest/mergeExtDexDebugAndroidTest/classes.dex

@@ -90,6 +90,10 @@ fun WebViewScreen(
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                     webView = this
+                    
+                    // Запрещаем создание скриншотов
+                    setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
+                    
                     onWebViewCreated(this)
                 }
             },

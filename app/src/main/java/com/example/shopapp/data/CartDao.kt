@@ -10,10 +10,13 @@ interface CartDao {
     fun getAllCartItems(): Flow<List<CartItem>>
 
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
-    suspend fun getCartItemByProductId(productId: Long): CartItem?
+    suspend fun getCartItemByProductId(productId: Int): CartItem?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCartItem(cartItem: CartItem)
+
+    @Update
+    suspend fun updateCartItem(cartItem: CartItem)
 
     @Delete
     suspend fun deleteCartItem(cartItem: CartItem)

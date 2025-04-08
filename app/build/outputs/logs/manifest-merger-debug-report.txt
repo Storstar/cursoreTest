@@ -4,8 +4,11 @@ ADDED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:
 INJECTED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:2:1-37:12
 INJECTED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:2:1-37:12
 INJECTED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml:2:1-37:12
+MERGED from [io.coil-kt:coil-compose:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/e991b6e3f4d40d3d626b134f977bbca0/transformed/coil-compose-2.5.0/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:2:1-18:12
 MERGED from [com.google.firebase:firebase-messaging-ktx:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/0ffa4df7abf2c595642a36eb28d2c71f/transformed/firebase-messaging-ktx-23.4.1/AndroidManifest.xml:17:1-32:12
+MERGED from [io.coil-kt:coil-compose-base:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/b8146d18938446350430dd5ba1b84c1e/transformed/coil-compose-base-2.5.0/AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4da29d52c604417690b57c3044c7af06/transformed/coil-2.5.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.room:room-ktx:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d5d21e15eacd489c32e54abec8e4eaad/transformed/room-ktx-2.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.room:room-runtime:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/25d428f97de788e60d5a18276193d584/transformed/room-runtime-2.6.1/AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.compose.material3:material3:1.1.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/83e4d04f815e9a626bc9236af0f3b7e5/transformed/material3-1.1.2/AndroidManifest.xml:17:1-22:12
@@ -73,16 +76,21 @@ MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /Users/nikitastarozilov/.
 MERGED from [androidx.savedstate:savedstate:1.2.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1a5cfaa69bbae152044d293225a78903/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/bb13c2f1248c857ff31cde47e2af0662/transformed/lifecycle-viewmodel-2.6.2/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a726fb9ecbb7b375a7c8b192dc64c6be/transformed/lifecycle-viewmodel-compose-2.6.2/AndroidManifest.xml:17:1-22:12
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/2e1af54cfce4d54b769b50ab0ece5576/transformed/accompanist-drawablepainter-0.32.0/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.compose.ui:ui-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f991fb94963f4c59dfe994e7b3bf775b/transformed/ui-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.ui:ui-test-manifest:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/13546582bf1b39ebf85c28eee88fa356/transformed/ui-test-manifest-1.5.4/AndroidManifest.xml:17:1-28:12
 MERGED from [androidx.compose.ui:ui-tooling-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5eba57c60db662b766a0c4c57579169a/transformed/ui-tooling-release/AndroidManifest.xml:17:1-28:12
 MERGED from [androidx.activity:activity-compose:1.8.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/edd7d27e33c3104c3948c98088f02e4f/transformed/activity-compose-1.8.1/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.activity:activity-ktx:1.8.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/487e5b22a197907e03e04ade330ff71a/transformed/activity-ktx-1.8.1/AndroidManifest.xml:2:1-7:12
+MERGED from [io.coil-kt:coil-base:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/bc74b6f7652df740336caef5f1f8bdc3/transformed/coil-base-2.5.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/67baa15e2f1cffd175219f58952c7401/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:17:1-23:12
 MERGED from [androidx.core:core-ktx:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/2b904f46c18183bb5dff353da958bfea/transformed/core-ktx-1.12.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.webkit:webkit:1.8.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/493288f9f49f21c546519809182a66fb/transformed/webkit-1.8.0/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.autofill:autofill:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/842052fc1cc7be5625e4cc46a687302a/transformed/autofill-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1e934e0647f1463fae97a101b6e86540/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d4d0aa9b8d4948ca6127ebf0d016ca9/transformed/viewpager-1.0.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/35cf64b81b179949e8cf644ad19874fc/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a053fb6512b675d44f5462f1bf897cd7/transformed/vectordrawable-1.1.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.customview:customview:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/be51d5fe07bcea98d02f5c3d28673702/transformed/customview-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:17:1-30:12
 MERGED from [androidx.lifecycle:lifecycle-runtime:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/e7743fd7a8168c47e638244650ae6383/transformed/lifecycle-runtime-2.6.2/AndroidManifest.xml:2:1-7:12
@@ -98,10 +106,11 @@ MERGED from [androidx.arch.core:core-runtime:2.2.0] /Users/nikitastarozilov/.gra
 MERGED from [com.google.firebase:firebase-components:17.1.5] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/dbc54c849dce93d1c341b90b52da4992/transformed/firebase-components-17.1.5/AndroidManifest.xml:15:1-20:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a2e33da7f921a172994d889895556a94/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/754c47a92fede198cc14011269240ade/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:17:1-55:12
 MERGED from [com.google.android.datatransport:transport-api:3.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/48f06bf3f64303f840d2caacc46adb4b/transformed/transport-api-3.1.0/AndroidManifest.xml:15:1-20:12
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.tracing:tracing:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ed61381416a491d469a510d381a38fa1/transformed/tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5bc2cea2b6daba098f35e99b2250f43c/transformed/exifinterface-1.3.6/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c2acda5acad5aa334b3066a168eff6f3/transformed/documentfile-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5407d9c5c2d64ab51093e67f29ce0ece/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c44a44f303fd92e8aa6b02ac147c8b63/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
@@ -251,8 +260,8 @@ MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/ni
 MERGED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:25:5-39:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/754c47a92fede198cc14011269240ade/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/754c47a92fede198cc14011269240ade/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:23:5-53:19
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
 	android:extractNativeLibs
@@ -297,10 +306,16 @@ uses-sdk
 INJECTED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml
 INJECTED from /Users/nikitastarozilov/cursoreTest/app/src/main/AndroidManifest.xml
+MERGED from [io.coil-kt:coil-compose:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/e991b6e3f4d40d3d626b134f977bbca0/transformed/coil-compose-2.5.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/e991b6e3f4d40d3d626b134f977bbca0/transformed/coil-compose-2.5.0/AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-firestore-ktx:24.10.3] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8fb813264d9813186c1b5a8daeec1cd2/transformed/firebase-firestore-ktx-24.10.3/AndroidManifest.xml:5:5-44
 MERGED from [com.google.firebase:firebase-messaging-ktx:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/0ffa4df7abf2c595642a36eb28d2c71f/transformed/firebase-messaging-ktx-23.4.1/AndroidManifest.xml:20:5-44
 MERGED from [com.google.firebase:firebase-messaging-ktx:23.4.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/0ffa4df7abf2c595642a36eb28d2c71f/transformed/firebase-messaging-ktx-23.4.1/AndroidManifest.xml:20:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/b8146d18938446350430dd5ba1b84c1e/transformed/coil-compose-base-2.5.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-compose-base:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/b8146d18938446350430dd5ba1b84c1e/transformed/coil-compose-base-2.5.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4da29d52c604417690b57c3044c7af06/transformed/coil-2.5.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/4da29d52c604417690b57c3044c7af06/transformed/coil-2.5.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.room:room-ktx:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d5d21e15eacd489c32e54abec8e4eaad/transformed/room-ktx-2.6.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.room:room-ktx:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d5d21e15eacd489c32e54abec8e4eaad/transformed/room-ktx-2.6.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.room:room-runtime:2.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/25d428f97de788e60d5a18276193d584/transformed/room-runtime-2.6.1/AndroidManifest.xml:21:5-44
@@ -435,6 +450,8 @@ MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] /Users/nikitastarozil
 MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/bb13c2f1248c857ff31cde47e2af0662/transformed/lifecycle-viewmodel-2.6.2/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a726fb9ecbb7b375a7c8b192dc64c6be/transformed/lifecycle-viewmodel-compose-2.6.2/AndroidManifest.xml:20:5-44
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a726fb9ecbb7b375a7c8b192dc64c6be/transformed/lifecycle-viewmodel-compose-2.6.2/AndroidManifest.xml:20:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/2e1af54cfce4d54b769b50ab0ece5576/transformed/accompanist-drawablepainter-0.32.0/AndroidManifest.xml:21:5-44
+MERGED from [com.google.accompanist:accompanist-drawablepainter:0.32.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/2e1af54cfce4d54b769b50ab0ece5576/transformed/accompanist-drawablepainter-0.32.0/AndroidManifest.xml:21:5-44
 MERGED from [androidx.compose.ui:ui-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f991fb94963f4c59dfe994e7b3bf775b/transformed/ui-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-android:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/f991fb94963f4c59dfe994e7b3bf775b/transformed/ui-release/AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.ui:ui-test-manifest:1.5.4] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/13546582bf1b39ebf85c28eee88fa356/transformed/ui-test-manifest-1.5.4/AndroidManifest.xml:20:5-44
@@ -445,6 +462,8 @@ MERGED from [androidx.activity:activity-compose:1.8.1] /Users/nikitastarozilov/.
 MERGED from [androidx.activity:activity-compose:1.8.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/edd7d27e33c3104c3948c98088f02e4f/transformed/activity-compose-1.8.1/AndroidManifest.xml:5:5-44
 MERGED from [androidx.activity:activity-ktx:1.8.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/487e5b22a197907e03e04ade330ff71a/transformed/activity-ktx-1.8.1/AndroidManifest.xml:5:5-44
 MERGED from [androidx.activity:activity-ktx:1.8.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/487e5b22a197907e03e04ade330ff71a/transformed/activity-ktx-1.8.1/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/bc74b6f7652df740336caef5f1f8bdc3/transformed/coil-base-2.5.0/AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-base:2.5.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/bc74b6f7652df740336caef5f1f8bdc3/transformed/coil-base-2.5.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/67baa15e2f1cffd175219f58952c7401/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/67baa15e2f1cffd175219f58952c7401/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
 MERGED from [androidx.core:core-ktx:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/2b904f46c18183bb5dff353da958bfea/transformed/core-ktx-1.12.0/AndroidManifest.xml:5:5-44
@@ -453,8 +472,14 @@ MERGED from [androidx.webkit:webkit:1.8.0] /Users/nikitastarozilov/.gradle/cache
 MERGED from [androidx.webkit:webkit:1.8.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/493288f9f49f21c546519809182a66fb/transformed/webkit-1.8.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.autofill:autofill:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/842052fc1cc7be5625e4cc46a687302a/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.autofill:autofill:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/842052fc1cc7be5625e4cc46a687302a/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1e934e0647f1463fae97a101b6e86540/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat-resources:1.6.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1e934e0647f1463fae97a101b6e86540/transformed/appcompat-resources-1.6.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d4d0aa9b8d4948ca6127ebf0d016ca9/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.viewpager:viewpager:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5d4d0aa9b8d4948ca6127ebf0d016ca9/transformed/viewpager-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/35cf64b81b179949e8cf644ad19874fc/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/35cf64b81b179949e8cf644ad19874fc/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a053fb6512b675d44f5462f1bf897cd7/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a053fb6512b675d44f5462f1bf897cd7/transformed/vectordrawable-1.1.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.customview:customview:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/be51d5fe07bcea98d02f5c3d28673702/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.customview:customview:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/be51d5fe07bcea98d02f5c3d28673702/transformed/customview-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.core:core:1.12.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/AndroidManifest.xml:20:5-44
@@ -485,14 +510,16 @@ MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/nikitastarozilov/.
 MERGED from [androidx.interpolator:interpolator:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a2e33da7f921a172994d889895556a94/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/754c47a92fede198cc14011269240ade/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/754c47a92fede198cc14011269240ade/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:21:5-44
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
 MERGED from [com.google.android.datatransport:transport-api:3.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/48f06bf3f64303f840d2caacc46adb4b/transformed/transport-api-3.1.0/AndroidManifest.xml:18:5-44
 MERGED from [com.google.android.datatransport:transport-api:3.1.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/48f06bf3f64303f840d2caacc46adb4b/transformed/transport-api-3.1.0/AndroidManifest.xml:18:5-44
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
 MERGED from [androidx.tracing:tracing:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ed61381416a491d469a510d381a38fa1/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.tracing:tracing:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ed61381416a491d469a510d381a38fa1/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5bc2cea2b6daba098f35e99b2250f43c/transformed/exifinterface-1.3.6/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.6] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5bc2cea2b6daba098f35e99b2250f43c/transformed/exifinterface-1.3.6/AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c2acda5acad5aa334b3066a168eff6f3/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.documentfile:documentfile:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/c2acda5acad5aa334b3066a168eff6f3/transformed/documentfile-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5407d9c5c2d64ab51093e67f29ce0ece/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:20:5-44
@@ -779,8 +806,8 @@ provider#androidx.startup.InitializationProvider
 ADDED from [androidx.emoji2:emoji2:1.4.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/1cc7178d8ba8603789812fa17f54cc68/transformed/emoji2-1.4.0/AndroidManifest.xml:24:9-32:20
 MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d44d4bfe6415dd54229720a3d651c1d9/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:24:9-32:20
 MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/d44d4bfe6415dd54229720a3d651c1d9/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:24:9-32:20
-MERGED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
 MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/eb5a0f9e96f703e607da5895bdb382c1/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
 	tools:node
@@ -870,44 +897,44 @@ ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/nik
 	android:name
 		ADDED from [com.google.android.datatransport:transport-runtime:3.1.8] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/8319163509b73810e7d84c9d17f8781c/transformed/transport-runtime-3.1.8/AndroidManifest.xml:33:13-132
 meta-data#androidx.profileinstaller.ProfileInstallerInitializer
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
 	android:value
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
 	android:name
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
 receiver#androidx.profileinstaller.ProfileInstallReceiver
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
 	android:enabled
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
 	android:exported
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
 	android:permission
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
 	android:directBootAware
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
 	android:name
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
 intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
 action#androidx.profileinstaller.action.INSTALL_PROFILE
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
 	android:name
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
 intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
 action#androidx.profileinstaller.action.SKIP_FILE
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
 	android:name
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
 intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
 action#androidx.profileinstaller.action.SAVE_PROFILE
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
 	android:name
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
 intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
 action#androidx.profileinstaller.action.BENCHMARK_OPERATION
-ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
 	android:name
-		ADDED from [androidx.profileinstaller:profileinstaller:1.3.0] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92

@@ -4,6 +4,12 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
+/**
+ * Represents an item in the shopping cart.
+ * @param id The unique identifier for this cart item
+ * @param productId The ID of the product in the cart
+ * @param quantity The quantity of the product in the cart
+ */
 @Entity(
     tableName = "cart_items",
     foreignKeys = [
@@ -17,7 +23,7 @@ import androidx.room.PrimaryKey
 )
 data class CartItem(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val productId: Long,
+    val id: Int = 0,
+    val productId: Int,
     val quantity: Int
 ) 

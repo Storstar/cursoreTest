@@ -11,9 +11,9 @@ com.example.shopapp.test.app-savedstate-ktx-1.2.1-9 /Users/nikitastarozilov/.gra
 com.example.shopapp.test.app-activity-ktx-1.8.1-10 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/487e5b22a197907e03e04ade330ff71a/transformed/activity-ktx-1.8.1/res
 com.example.shopapp.test.app-core-1.5.0-11 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/5926f6e6266396484b152b0524577bca/transformed/core-1.5.0/res
 com.example.shopapp.test.app-customview-poolingcontainer-1.0.0-12 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/67baa15e2f1cffd175219f58952c7401/transformed/customview-poolingcontainer-1.0.0/res
-com.example.shopapp.test.app-ui-test-release-13 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/87e2bd7228a71f97f8eda4cde8ea876e/transformed/ui-test-release/res
-com.example.shopapp.test.app-lifecycle-runtime-ktx-2.6.2-14 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/9c956a8ee0d856f0b2ab37e3ae91a017/transformed/lifecycle-runtime-ktx-2.6.2/res
-com.example.shopapp.test.app-profileinstaller-1.3.0-15 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/a05d1a9d8740ea41982719f6ed6cc6c7/transformed/profileinstaller-1.3.0/res
+com.example.shopapp.test.app-profileinstaller-1.3.1-13 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/6bc6ce4f890314ac5053dce749bc9437/transformed/profileinstaller-1.3.1/res
+com.example.shopapp.test.app-ui-test-release-14 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/87e2bd7228a71f97f8eda4cde8ea876e/transformed/ui-test-release/res
+com.example.shopapp.test.app-lifecycle-runtime-ktx-2.6.2-15 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/9c956a8ee0d856f0b2ab37e3ae91a017/transformed/lifecycle-runtime-ktx-2.6.2/res
 com.example.shopapp.test.app-ui-test-junit4-release-16 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/b24ede4d409c5ed6e7c40b1a2c4bdd13/transformed/ui-test-junit4-release/res
 com.example.shopapp.test.app-lifecycle-viewmodel-2.6.2-17 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/bb13c2f1248c857ff31cde47e2af0662/transformed/lifecycle-viewmodel-2.6.2/res
 com.example.shopapp.test.app-lifecycle-viewmodel-ktx-2.6.2-18 /Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/be7f9b2742840e15d08db51e631fe099/transformed/lifecycle-viewmodel-ktx-2.6.2/res

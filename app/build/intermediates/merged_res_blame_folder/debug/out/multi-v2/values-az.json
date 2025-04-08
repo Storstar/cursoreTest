@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.shopapp-mergeDebugResources-63:/values-az/values-az.xml",
+            "outputFile": "com.example.shopapp-mergeDebugResources-65:/values-az/values-az.xml",
             "map": [
                 {
                     "source": "/Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/30f19837c731457c4d6bbcfc650cdb06/transformed/play-services-base-18.3.0/res/values-az/values.xml",

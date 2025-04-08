@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.shopapp-mergeDebugResources-63:/values-mk/values-mk.xml",
+            "outputFile": "com.example.shopapp-mergeDebugResources-65:/values-mk/values-mk.xml",
             "map": [
                 {
                     "source": "/Users/nikitastarozilov/.gradle/caches/8.11.1/transforms/ff44c27d4fbffdc992a2c9f4adc53648/transformed/core-1.12.0/res/values-mk/values-mk.xml",

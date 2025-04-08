@@ -1,54 +1,142 @@
 [
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-mdpi_ic_launcher_round.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-mdpi/ic_launcher_round.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-hdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-hdpi/ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-xhdpi_ic_launcher.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-xhdpi/ic_launcher.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xxxhdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/drawable_onboarding3.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/drawable/onboarding3.xml"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-xhdpi_ic_launcher_round.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-xhdpi/ic_launcher_round.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-mdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-mdpi/ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-xxhdpi_ic_launcher.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-xxhdpi/ic_launcher.xml"
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-hdpi_ic_launcher.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-hdpi/ic_launcher.xml"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-mdpi_ic_launcher.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-mdpi/ic_launcher.xml"
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/drawable_onboarding1.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/drawable/onboarding1.xml"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.shopapp-main-67:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-hdpi_ic_launcher_round.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-hdpi/ic_launcher_round.xml"
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-xxhdpi_ic_launcher_round.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-xxhdpi/ic_launcher_round.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-mdpi_ic_launcher_round.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-mdpi/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-hdpi_ic_launcher.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-hdpi/ic_launcher.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-hdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-xxxhdpi_ic_launcher.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-xxxhdpi/ic_launcher.xml"
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xhdpi/ic_launcher_foreground.webp"
     },
     {
-        "merged": "com.example.shopapp-merged_res-65:/mipmap-xxxhdpi_ic_launcher_round.xml.flat",
-        "source": "com.example.shopapp-main-67:/mipmap-xxxhdpi/ic_launcher_round.xml"
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-xxhdpi_ic_launcher_round.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-xxhdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.shopapp-main-69:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-hdpi_ic_launcher_round.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-hdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-xxhdpi_ic_launcher.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-xxhdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-xxxhdpi_ic_launcher_foreground.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-xxxhdpi/ic_launcher_foreground.webp"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-xhdpi_ic_launcher.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-xhdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-xxxhdpi_ic_launcher.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-xxxhdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/drawable_onboarding2.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/drawable/onboarding2.xml"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/font_comic_sans.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/font/comic_sans.xml"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-xxxhdpi_ic_launcher_round.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-xxxhdpi/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.shopapp-merged_res-67:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.shopapp-main-69:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-mdpi_ic_launcher.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-mdpi/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-merged_res-67:/mipmap-xhdpi_ic_launcher_round.xml.flat",
+        "source": "/Users/nikitastarozilov/.gradle/daemon/8.11.1/com.example.shopapp-main-69:/mipmap-xhdpi/ic_launcher_round.xml"
     }
 ]

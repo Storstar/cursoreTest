@@ -38,6 +38,8 @@ public final class CartDao_Impl implements CartDao {
 
   private final EntityDeletionOrUpdateAdapter<CartItem> __deletionAdapterOfCartItem;
 
+  private final EntityDeletionOrUpdateAdapter<CartItem> __updateAdapterOfCartItem;
+
   private final SharedSQLiteStatement __preparedStmtOfClearCart;
 
   public CartDao_Impl(@NonNull final RoomDatabase __db) {
@@ -68,6 +70,22 @@ public final class CartDao_Impl implements CartDao {
       protected void bind(@NonNull final SupportSQLiteStatement statement,
           @NonNull final CartItem entity) {
         statement.bindLong(1, entity.getId());
+      }
+    };
+    this.__updateAdapterOfCartItem = new EntityDeletionOrUpdateAdapter<CartItem>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `cart_items` SET `id` = ?,`productId` = ?,`quantity` = ? WHERE `id` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final CartItem entity) {
+        statement.bindLong(1, entity.getId());
+        statement.bindLong(2, entity.getProductId());
+        statement.bindLong(3, entity.getQuantity());
+        statement.bindLong(4, entity.getId());
       }
     };
     this.__preparedStmtOfClearCart = new SharedSQLiteStatement(__db) {
@@ -119,6 +137,25 @@ public final class CartDao_Impl implements CartDao {
   }
 
   @Override
+  public Object updateCartItem(final CartItem cartItem,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfCartItem.handle(cartItem);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object clearCart(final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
@@ -157,10 +194,10 @@ public final class CartDao_Impl implements CartDao {
           final List<CartItem> _result = new ArrayList<CartItem>(_cursor.getCount());
           while (_cursor.moveToNext()) {
             final CartItem _item;
-            final long _tmpId;
-            _tmpId = _cursor.getLong(_cursorIndexOfId);
-            final long _tmpProductId;
-            _tmpProductId = _cursor.getLong(_cursorIndexOfProductId);
+            final int _tmpId;
+            _tmpId = _cursor.getInt(_cursorIndexOfId);
+            final int _tmpProductId;
+            _tmpProductId = _cursor.getInt(_cursorIndexOfProductId);
             final int _tmpQuantity;
             _tmpQuantity = _cursor.getInt(_cursorIndexOfQuantity);
             _item = new CartItem(_tmpId,_tmpProductId,_tmpQuantity);
@@ -180,7 +217,7 @@ public final class CartDao_Impl implements CartDao {
   }
 
   @Override
-  public Object getCartItemByProductId(final long productId,
+  public Object getCartItemByProductId(final int productId,
       final Continuation<? super CartItem> $completion) {
     final String _sql = "SELECT * FROM cart_items WHERE productId = ?";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
@@ -198,10 +235,10 @@ public final class CartDao_Impl implements CartDao {
           final int _cursorIndexOfQuantity = CursorUtil.getColumnIndexOrThrow(_cursor, "quantity");
           final CartItem _result;
           if (_cursor.moveToFirst()) {
-            final long _tmpId;
-            _tmpId = _cursor.getLong(_cursorIndexOfId);
-            final long _tmpProductId;
-            _tmpProductId = _cursor.getLong(_cursorIndexOfProductId);
+            final int _tmpId;
+            _tmpId = _cursor.getInt(_cursorIndexOfId);
+            final int _tmpProductId;
+            _tmpProductId = _cursor.getInt(_cursorIndexOfProductId);
             final int _tmpQuantity;
             _tmpQuantity = _cursor.getInt(_cursorIndexOfQuantity);
             _result = new CartItem(_tmpId,_tmpProductId,_tmpQuantity);

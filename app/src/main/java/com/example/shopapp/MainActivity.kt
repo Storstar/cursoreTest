@@ -5,35 +5,31 @@ import android.util.Log
 import android.webkit.WebView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.shopapp.ui.screens.CartScreen
-import com.example.shopapp.ui.screens.ProductListScreen
-import com.example.shopapp.ui.screens.WebViewScreen
+import androidx.navigation.navArgument
+import com.example.shopapp.model.Product
+import com.example.shopapp.ui.screens.*
 import com.example.shopapp.ui.theme.ShopAppTheme
+import com.example.shopapp.ui.viewmodels.CartViewModel
+import com.example.shopapp.ui.viewmodels.ProductViewModel
 import com.example.shopapp.utils.FirebaseManager
+import com.example.shopapp.utils.CountryChecker
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.viewinterop.AndroidView
 
 class MainActivity : ComponentActivity() {
     private var webView: WebView? = null
@@ -43,76 +39,198 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         setContent {
-            ShopAppTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
-                    val context = LocalContext.current
-                    val firebaseManager = remember { FirebaseManager(context) }
-                    
-                    var errorMessage by remember { mutableStateOf<String?>(null) }
-                    var showWebView by remember { mutableStateOf(false) }
-                    
-                    // Проверяем наличие URL в Firebase
-                    LaunchedEffect(Unit) {
-                        try {
-                            Log.d(TAG, "Получаем URL из Firebase...")
+            val darkColorScheme = darkColorScheme(
+                primary = Color(0xFFFF5722),
+                secondary = Color(0xFFFF5722),
+                tertiary = Color(0xFFFF5722),
+                background = Color(0xFF1A1A1A),
+                surface = Color(0xFF2A2A2A),
+                onPrimary = Color.White,
+                onSecondary = Color.White,
+                onTertiary = Color.White,
+                onBackground = Color.White,
+                onSurface = Color.White
+            )
+
+            MaterialTheme(
+                colorScheme = darkColorScheme,
+                typography = MaterialTheme.typography
+            ) {
+                val navController = rememberNavController()
+                val context = LocalContext.current
+                val firebaseManager = remember { FirebaseManager(context) }
+                val countryChecker = remember { CountryChecker(context) }
+                
+                var errorMessage by remember { mutableStateOf<String?>(null) }
+                var showWebView by remember { mutableStateOf(false) }
+                var showOnboarding by remember { mutableStateOf(true) }
+                
+                // Initialize ViewModel
+                val productViewModel: ProductViewModel = viewModel()
+                val cartViewModel: CartViewModel = viewModel()
+                
+                // Check country and URL in Firebase
+                LaunchedEffect(Unit) {
+                    try {
+                        val isInCNG = countryChecker.isCountryInCNG()
+                        Log.d(TAG, "Country check result: isInCNG = $isInCNG")
+                        
+                        if (isInCNG) {
+                            Log.d(TAG, "Country is in CNG, checking Firebase URL...")
                             val url = firebaseManager.getWebViewUrl()
-                            Log.d(TAG, "Получен URL из Firebase: $url")
+                            Log.d(TAG, "Received URL from Firebase: $url")
                             showWebView = !url.isNullOrEmpty()
-                            Log.d(TAG, "showWebView установлен в: $showWebView")
+                            Log.d(TAG, "showWebView set to: $showWebView")
                             
-                            if (url.isNullOrEmpty()) {
-                                Log.d(TAG, "URL пустой или null, используем нативный режим")
+                            if (showWebView) {
+                                Log.d(TAG, "Navigating to WebView immediately")
+                                navController.navigate("webview") {
+                                    popUpTo("onboarding") { inclusive = true }
+                                }
                             }
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Ошибка при получении URL из Firebase", e)
-                            // В случае ошибки используем нативный режим
+                        } else {
+                            Log.d(TAG, "Country is not in CNG, using native mode")
                             showWebView = false
                         }
+                        
+                        if (!showWebView) {
+                            Log.d(TAG, "Using native mode, loading sample data")
+                            productViewModel.insertSampleProducts()
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error during initialization", e)
+                        showWebView = false
+                        productViewModel.insertSampleProducts()
+                    }
+                }
+                
+                NavHost(navController = navController, startDestination = "onboarding") {
+                    composable("onboarding") {
+                        OnboardingScreen(
+                            onFinishOnboarding = {
+                                showOnboarding = false
+                                if (showWebView) {
+                                    navController.navigate("webview") {
+                                        popUpTo("onboarding") { inclusive = true }
+                                    }
+                                } else {
+                                    navController.navigate("productList") {
+                                        popUpTo("onboarding") { inclusive = true }
+                                    }
+                                }
+                            }
+                        )
                     }
                     
-                    NavHost(navController = navController, startDestination = "main") {
-                        composable("main") {
-                            if (errorMessage != null) {
-                                ErrorScreen(
-                                    message = errorMessage!!,
-                                    onBackPressed = {
-                                        errorMessage = null
-                                    }
-                                )
-                            } else if (showWebView) {
-                                Log.d(TAG, "Отображаем WebView")
-                                WebViewScreen(
-                                    onError = { error ->
-                                        Log.e(TAG, "Ошибка WebView: $error")
-                                        errorMessage = error
-                                    },
-                                    onWebViewCreated = { webViewInstance ->
-                                        Log.d(TAG, "WebView создан")
-                                        webView = webViewInstance
-                                    }
-                                )
-                            } else {
-                                Log.d(TAG, "Отображаем нативный интерфейс магазина")
-                                // Показываем нативный интерфейс магазина
-                                ProductListScreen(
-                                    onNavigateToCart = {
-                                        navController.navigate("cart")
-                                    }
-                                )
+                    composable("webview") {
+                        var webViewUrl by remember { mutableStateOf<String?>(null) }
+                        
+                        LaunchedEffect(Unit) {
+                            try {
+                                Log.d(TAG, "Loading WebView URL...")
+                                webViewUrl = firebaseManager.getWebViewUrl()
+                                Log.d(TAG, "WebView URL loaded: $webViewUrl")
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error loading WebView URL", e)
                             }
                         }
                         
-                        composable("cart") {
-                            CartScreen(
-                                onNavigateBack = {
-                                    navController.popBackStack()
-                                }
+                        if (webViewUrl != null) {
+                            Log.d(TAG, "Displaying WebView with URL: $webViewUrl")
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                AndroidView(
+                                    factory = { context ->
+                                        WebView(context).apply {
+                                            webView = this
+                                            settings.javaScriptEnabled = true
+                                            settings.domStorageEnabled = true
+                                            settings.setSupportZoom(true)
+                                            
+                                            // Запрещаем создание скриншотов
+                                            setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
+                                            
+                                            loadUrl(webViewUrl!!)
+                                            Log.d(TAG, "WebView created and URL loaded")
+                                        }
+                                    },
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+                        } else {
+                            Log.e(TAG, "WebView URL is null, showing error screen")
+                            ErrorScreen(
+                                message = "Failed to load web content",
+                                onBackPressed = { navController.popBackStack() }
                             )
                         }
+                    }
+                    
+                    composable("productList") {
+                        val products by productViewModel.products.collectAsState(initial = emptyList())
+                        val cartItems by cartViewModel.cartItems.collectAsState(initial = emptyList())
+                        
+                        ProductListScreen(
+                            products = products,
+                            cartItems = cartItems,
+                            onAddToCart = { product -> 
+                                cartViewModel.addToCart(product)
+                            },
+                            onCartClick = { navController.navigate("cart") },
+                            onProductClick = { product ->
+                                navController.navigate("product/${product.id}")
+                            },
+                            onBackClick = { navController.popBackStack() },
+                            onAboutStoreClick = { navController.navigate("aboutStore") }
+                        )
+                    }
+                    
+                    composable("cart") {
+                        val products by productViewModel.products.collectAsState(initial = emptyList())
+                        CartScreen(
+                            cartViewModel = cartViewModel,
+                            products = products,
+                            onNavigateBack = { navController.popBackStack() }
+                        )
+                    }
+                    
+                    composable(
+                        route = "product/{productId}",
+                        arguments = listOf(
+                            navArgument("productId") { type = NavType.StringType }
+                        )
+                    ) { backStackEntry ->
+                        val productId = backStackEntry.arguments?.getString("productId")
+                        var product by remember { mutableStateOf<Product?>(null) }
+                        
+                        LaunchedEffect(productId) {
+                            try {
+                                val id = productId?.toIntOrNull()
+                                if (id != null) {
+                                    product = productViewModel.getProduct(id)
+                                }
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error loading product", e)
+                            }
+                        }
+                        
+                        if (product != null) {
+                            ProductDetailScreen(
+                                product = product!!,
+                                cartViewModel = cartViewModel,
+                                onNavigateBack = { navController.popBackStack() }
+                            )
+                        } else {
+                            ErrorScreen(
+                                message = "Product not found",
+                                onBackPressed = { navController.popBackStack() }
+                            )
+                        }
+                    }
+                    
+                    composable("aboutStore") {
+                        AboutStoreScreen(
+                            onNavigateBack = { navController.popBackStack() }
+                        )
                     }
                 }
             }
@@ -120,7 +238,6 @@ class MainActivity : ComponentActivity() {
     }
     
     override fun onBackPressed() {
-        // Проверяем, может ли WebView вернуться назад
         if (webView?.canGoBack() == true) {
             webView?.goBack()
         } else {
@@ -151,9 +268,9 @@ class MainActivity : ComponentActivity() {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onBackPressed) {
-                    Text("Вернуться назад")
+                    Text("Go Back")
                 }
             }
         }
     }
-} 
+}
