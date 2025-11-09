@@ -54,6 +54,8 @@
 		AA0001360000000000000001 /* EditMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001370000000000000001 /* EditMaintenanceView.swift */; };
 		AA0001400000000000000001 /* KeyboardHeightHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001410000000000000001 /* KeyboardHeightHelper.swift */; };
 		AA0001420000000000000001 /* ImageOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001430000000000000001 /* ImageOptimizer.swift */; };
+		AA0001480000000000000001 /* ChatsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001480000000000000002 /* ChatsListView.swift */; };
+		AA0001490000000000000001 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001490000000000000002 /* Chat.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +111,8 @@
 		AA0001370000000000000001 /* EditMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMaintenanceView.swift; sourceTree = "<group>"; };
 		AA0001410000000000000001 /* KeyboardHeightHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeightHelper.swift; sourceTree = "<group>"; };
 		AA0001430000000000000001 /* ImageOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOptimizer.swift; sourceTree = "<group>"; };
+		AA0001480000000000000002 /* ChatsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsListView.swift; sourceTree = "<group>"; };
+		AA0001490000000000000002 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -160,6 +164,7 @@
 				AA0001110000000000000001 /* MainTabView.swift */,
 				AA0001170000000000000001 /* CarSelectionView.swift */,
 				AA0001250000000000000001 /* MyCarsView.swift */,
+				AA0001480000000000000002 /* ChatsListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -180,6 +185,7 @@
 			children = (
 				AA0000900000000000000001 /* CoreData */,
 				AA0001220000000000000001 /* CarBrandsData.swift */,
+				AA0001490000000000000002 /* Chat.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -356,6 +362,8 @@
 				AA0001300000000000000001 /* MaintenanceViewModel.swift in Sources */,
 				AA0001320000000000000001 /* MaintenanceRecord+CoreDataClass.swift in Sources */,
 				AA0001340000000000000001 /* MaintenanceRecord+CoreDataProperties.swift in Sources */,
+				AA0001480000000000000001 /* ChatsListView.swift in Sources */,
+				AA0001490000000000000001 /* Chat.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

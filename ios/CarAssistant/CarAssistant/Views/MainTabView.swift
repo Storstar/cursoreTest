@@ -4,14 +4,16 @@ struct MainTabView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var carViewModel: CarViewModel
     @StateObject private var maintenanceViewModel = MaintenanceViewModel()
-    @State private var selectedTab: Tab = .maintenance
+    @State private var selectedTab: Tab = .chats
     
     enum Tab: String, CaseIterable {
+        case chats = "Чаты"
         case maintenance = "ТО"
         case profile = "Профиль"
         
         var icon: String {
             switch self {
+            case .chats: return "message.fill"
             case .maintenance: return "wrench.and.screwdriver.fill"
             case .profile: return "person.fill"
             }
@@ -20,6 +22,13 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
+            // Вкладка "Чаты"
+            ChatsListView()
+                .tabItem {
+                    Label(Tab.chats.rawValue, systemImage: Tab.chats.icon)
+                }
+                .tag(Tab.chats)
+            
             // Вкладка "ТО"
             MaintenanceView()
                 .environmentObject(maintenanceViewModel)
