@@ -29,9 +29,12 @@ struct CarSelectionSheet: View {
                                     Group {
                                         if let photoData = car.photoData,
                                            let image = UIImage(data: photoData) {
-                                            Image(uiImage: image)
+                                            // Создаем thumbnail для уменьшения использования памяти
+                                            let thumbnail = ImageOptimizer.shared.createThumbnail(from: image, maxSize: 200) ?? image
+                                            Image(uiImage: thumbnail)
                                                 .resizable()
                                                 .scaledToFill()
+                                                .drawingGroup()
                                                 .frame(width: 60, height: 60)
                                                 .clipShape(Circle())
                                         } else {

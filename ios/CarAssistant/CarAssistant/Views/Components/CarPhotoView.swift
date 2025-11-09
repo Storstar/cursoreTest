@@ -14,11 +14,14 @@ struct CarPhotoView: View {
         Group {
             if let photoData = car.photoData,
                let image = UIImage(data: photoData) {
-                Image(uiImage: image)
+                // Создаем thumbnail для уменьшения использования памяти
+                let thumbnail = ImageOptimizer.shared.createThumbnail(from: image, maxSize: size * 2) ?? image
+                Image(uiImage: thumbnail)
                     .resizable()
                     .scaledToFill()
                     .frame(width: size, height: size)
                     .clipShape(Circle())
+                    .drawingGroup() // Оптимизация рендеринга для уменьшения использования памяти
             } else {
                 ZStack {
                     Circle()

@@ -23,11 +23,14 @@ struct CarCard: View {
                         Group {
                             if let photoData = car.photoData,
                                let image = UIImage(data: photoData) {
-                                Image(uiImage: image)
+                                // Создаем thumbnail для уменьшения использования памяти
+                                let thumbnail = ImageOptimizer.shared.createThumbnail(from: image, maxSize: 400) ?? image
+                                Image(uiImage: thumbnail)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(height: 200)
                                     .clipped()
+                                    .drawingGroup() // Оптимизация рендеринга для уменьшения использования памяти
                             } else {
                                 Image(systemName: "car.fill")
                                     .font(.system(size: 60))

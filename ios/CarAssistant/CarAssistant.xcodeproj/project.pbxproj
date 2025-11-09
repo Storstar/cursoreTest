@@ -19,9 +19,6 @@
 		AA0000420000000000000001 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000430000000000000001 /* CoreDataManager.swift */; };
 		AA0000440000000000000001 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000450000000000000001 /* SpeechRecognizer.swift */; };
 		AA0000460000000000000001 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000470000000000000001 /* Validators.swift */; };
-		AA0000480000000000000001 /* CarData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000490000000000000001 /* CarData.swift */; };
-		AA0000500000000000000001 /* RequestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000510000000000000001 /* RequestData.swift */; };
-		AA0000520000000000000001 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000530000000000000001 /* UserData.swift */; };
 		AA0000540000000000000001 /* Car+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000550000000000000001 /* Car+CoreDataClass.swift */; };
 		AA0000560000000000000001 /* Car+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000570000000000000001 /* Car+CoreDataProperties.swift */; };
 		AA0000580000000000000001 /* Request+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000590000000000000001 /* Request+CoreDataClass.swift */; };
@@ -32,13 +29,12 @@
 		AA0000680000000000000001 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000690000000000000001 /* User+CoreDataProperties.swift */; };
 		AA0000700000000000000001 /* CarInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000710000000000000001 /* CarInputView.swift */; };
 		AA0000720000000000000001 /* CreateRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000730000000000000001 /* CreateRequestView.swift */; };
-		AA0000740000000000000001 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000750000000000000001 /* HistoryView.swift */; };
 		AA0000760000000000000001 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000770000000000000001 /* LoginView.swift */; };
 		AA0000780000000000000001 /* MaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000790000000000000001 /* MaintenanceView.swift */; };
-		AA0000800000000000000001 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000810000000000000001 /* MainView.swift */; };
 		AA0000820000000000000001 /* RegisterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000830000000000000001 /* RegisterView.swift */; };
-		AA0000840000000000000001 /* ResponseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000850000000000000001 /* ResponseView.swift */; };
 		AA0000860000000000000001 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000870000000000000001 /* SettingsView.swift */; };
+		AA0001440000000000000001 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001450000000000000001 /* DateFormatter.swift */; };
+		AA0001460000000000000001 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001470000000000000001 /* LocationManager.swift */; };
 		AA0000880000000000000001 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000890000000000000001 /* WelcomeView.swift */; };
 		AA0000910000000000000001 /* CarCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000920000000000000001 /* CarCard.swift */; };
 		AA0000930000000000000001 /* QuickActionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000940000000000000001 /* QuickActionBar.swift */; };
@@ -57,6 +53,7 @@
 		AA0001340000000000000001 /* MaintenanceRecord+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001350000000000000001 /* MaintenanceRecord+CoreDataProperties.swift */; };
 		AA0001360000000000000001 /* EditMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001370000000000000001 /* EditMaintenanceView.swift */; };
 		AA0001400000000000000001 /* KeyboardHeightHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001410000000000000001 /* KeyboardHeightHelper.swift */; };
+		AA0001420000000000000001 /* ImageOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001430000000000000001 /* ImageOptimizer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,10 +71,9 @@
 		AA0000430000000000000001 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		AA0000450000000000000001 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
 		AA0000470000000000000001 /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
-		AA0000490000000000000001 /* CarData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarData.swift; sourceTree = "<group>"; };
-		AA0000510000000000000001 /* RequestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestData.swift; sourceTree = "<group>"; };
-		AA0000530000000000000001 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		AA0000550000000000000001 /* Car+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Car+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AA0001450000000000000001 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		AA0001470000000000000001 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		AA0000570000000000000001 /* Car+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Car+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		AA0000590000000000000001 /* Request+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request+CoreDataClass.swift"; sourceTree = "<group>"; };
 		AA0000610000000000000001 /* Request+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Request+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -112,6 +108,7 @@
 		AA0001350000000000000001 /* MaintenanceRecord+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MaintenanceRecord+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		AA0001370000000000000001 /* EditMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMaintenanceView.swift; sourceTree = "<group>"; };
 		AA0001410000000000000001 /* KeyboardHeightHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeightHelper.swift; sourceTree = "<group>"; };
+		AA0001430000000000000001 /* ImageOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOptimizer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -154,13 +151,10 @@
 				AA0000970000000000000001 /* Components */,
 				AA0000710000000000000001 /* CarInputView.swift */,
 				AA0000730000000000000001 /* CreateRequestView.swift */,
-				AA0000750000000000000001 /* HistoryView.swift */,
 				AA0000770000000000000001 /* LoginView.swift */,
 				AA0000790000000000000001 /* MaintenanceView.swift */,
 				AA0001370000000000000001 /* EditMaintenanceView.swift */,
-				AA0000810000000000000001 /* MainView.swift */,
 				AA0000830000000000000001 /* RegisterView.swift */,
-				AA0000850000000000000001 /* ResponseView.swift */,
 				AA0000870000000000000001 /* SettingsView.swift */,
 				AA0000890000000000000001 /* WelcomeView.swift */,
 				AA0001110000000000000001 /* MainTabView.swift */,
@@ -185,9 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				AA0000900000000000000001 /* CoreData */,
-				AA0000490000000000000001 /* CarData.swift */,
-				AA0000510000000000000001 /* RequestData.swift */,
-				AA0000530000000000000001 /* UserData.swift */,
 				AA0001220000000000000001 /* CarBrandsData.swift */,
 			);
 			path = Models;
@@ -201,6 +192,9 @@
 				AA0000450000000000000001 /* SpeechRecognizer.swift */,
 				AA0000470000000000000001 /* Validators.swift */,
 				AA0001410000000000000001 /* KeyboardHeightHelper.swift */,
+				AA0001430000000000000001 /* ImageOptimizer.swift */,
+				AA0001450000000000000001 /* DateFormatter.swift */,
+				AA0001470000000000000001 /* LocationManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -328,9 +322,9 @@
 				AA0000440000000000000001 /* SpeechRecognizer.swift in Sources */,
 				AA0000460000000000000001 /* Validators.swift in Sources */,
 				AA0001400000000000000001 /* KeyboardHeightHelper.swift in Sources */,
-				AA0000480000000000000001 /* CarData.swift in Sources */,
-				AA0000500000000000000001 /* RequestData.swift in Sources */,
-				AA0000520000000000000001 /* UserData.swift in Sources */,
+				AA0001420000000000000001 /* ImageOptimizer.swift in Sources */,
+				AA0001440000000000000001 /* DateFormatter.swift in Sources */,
+				AA0001460000000000000001 /* LocationManager.swift in Sources */,
 				AA0000540000000000000001 /* Car+CoreDataClass.swift in Sources */,
 				AA0000560000000000000001 /* Car+CoreDataProperties.swift in Sources */,
 				AA0000580000000000000001 /* Request+CoreDataClass.swift in Sources */,
@@ -341,13 +335,10 @@
 				AA0000680000000000000001 /* User+CoreDataProperties.swift in Sources */,
 				AA0000700000000000000001 /* CarInputView.swift in Sources */,
 				AA0000720000000000000001 /* CreateRequestView.swift in Sources */,
-				AA0000740000000000000001 /* HistoryView.swift in Sources */,
 				AA0000760000000000000001 /* LoginView.swift in Sources */,
 				AA0000780000000000000001 /* MaintenanceView.swift in Sources */,
 				AA0001360000000000000001 /* EditMaintenanceView.swift in Sources */,
-				AA0000800000000000000001 /* MainView.swift in Sources */,
 				AA0000820000000000000001 /* RegisterView.swift in Sources */,
-				AA0000840000000000000001 /* ResponseView.swift in Sources */,
 				AA0000860000000000000001 /* SettingsView.swift in Sources */,
 				AA0000880000000000000001 /* WelcomeView.swift in Sources */,
 				AA0000910000000000000001 /* CarCard.swift in Sources */,

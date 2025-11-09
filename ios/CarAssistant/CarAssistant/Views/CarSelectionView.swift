@@ -198,10 +198,13 @@ struct CarAvatarCard: View {
                     Group {
                         if let photoData = car.photoData,
                            let image = UIImage(data: photoData) {
-                            Image(uiImage: image)
+                            // Создаем thumbnail для уменьшения использования памяти
+                            let thumbnail = ImageOptimizer.shared.createThumbnail(from: image, maxSize: 280) ?? image
+                            Image(uiImage: thumbnail)
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 140, height: 140)
+                                .drawingGroup()
                                 .clipShape(Circle())
                         } else {
                             Image(systemName: "car.fill")

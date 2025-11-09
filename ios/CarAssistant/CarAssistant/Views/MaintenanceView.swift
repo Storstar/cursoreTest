@@ -3,9 +3,10 @@ import CoreData
 
 struct MaintenanceView: View {
     @EnvironmentObject var carViewModel: CarViewModel
-    @StateObject private var maintenanceViewModel = MaintenanceViewModel()
+    @EnvironmentObject var maintenanceViewModel: MaintenanceViewModel
     @State private var showAddMaintenance = false
     @State private var editingRecord: MaintenanceRecord?
+    @State private var loadTask: Task<Void, Never>?
     
     var body: some View {
         NavigationStack {
@@ -129,6 +130,11 @@ struct MaintenanceView: View {
                 if let car = carViewModel.car {
                     maintenanceViewModel.loadMaintenanceRecords(for: car)
                 }
+            }
+            .onDisappear {
+                // Отменяем все задачи при закрытии view
+                loadTask?.cancel()
+                loadTask = nil
             }
         }
     }
@@ -290,6 +296,7 @@ struct AddMaintenanceView: View {
     @State private var showImageOptions = false
     @State private var isAnalyzingImage = false
     @State private var extractedText: String = ""
+    @State private var analyzeTask: Task<Void, Never>?
     
     let maintenanceTypes = ["ТО", "Ремонт", "Замена", "Другое"]
     let serviceTypes = ["Плановое ТО", "Другое"] // Для категории "ТО"
@@ -408,9 +415,19 @@ struct AddMaintenanceView: View {
                 Button("Отмена", role: .cancel) {}
             }
             .onChange(of: selectedImage) { newImage in
+                // Отменяем предыдущую задачу анализа
+                analyzeTask?.cancel()
                 if let image = newImage {
                     analyzeImage(image)
+                } else {
+                    extractedText = ""
                 }
+            }
+            .onDisappear {
+                // Отменяем задачу анализа и очищаем изображение
+                analyzeTask?.cancel()
+                analyzeTask = nil
+                selectedImage = nil
             }
             .alert("Добавить тип работ", isPresented: $showAddServiceType) {
                 TextField("Название типа", text: $customServiceType)
@@ -565,11 +582,13 @@ struct AddMaintenanceView: View {
     
     private func analyzeImage(_ image: UIImage) {
         isAnalyzingImage = true
-        Task {
+        analyzeTask = Task { @MainActor in
+            defer { isAnalyzingImage = false }
+            guard !Task.isCancelled else { return }
             if let text = await maintenanceViewModel.recognizeText(from: image) {
+                guard !Task.isCancelled else { return }
                 extractedText = text
             }
-            isAnalyzingImage = false
         }
     }
     
@@ -579,7 +598,7 @@ struct AddMaintenanceView: View {
             return
         }
         
-        let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+        let imageData = selectedImage.flatMap { ImageOptimizer.shared.optimizeImage($0, maxDimension: 1200, compressionQuality: 0.7) }
         
         // Для запланированных работ используем plannedDate, для остальных - date
         let targetDate = isPlanned ? plannedDate : date

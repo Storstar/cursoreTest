@@ -296,7 +296,7 @@ struct CarInputView: View {
                         if let user = authViewModel.currentUser {
                             // ВАЖНО: Всегда создаем новый автомобиль, никогда не обновляем существующий
                             let carsCountBefore = carViewModel.cars.count
-                            let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+                            let imageData = selectedImage.flatMap { ImageOptimizer.shared.optimizeImage($0, maxDimension: 1200, compressionQuality: 0.7) }
                             carViewModel.saveCar(
                                 brand: selectedBrand,
                                 model: selectedModel,

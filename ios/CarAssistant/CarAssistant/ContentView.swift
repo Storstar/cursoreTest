@@ -15,7 +15,7 @@ struct ContentView: View {
                         if carViewModel.car == nil {
                             CarSelectionView()
                         } else {
-                            MainView()
+                            MainTabView()
                         }
                     } else {
                         WelcomeView(navigationPath: $navigationPath)

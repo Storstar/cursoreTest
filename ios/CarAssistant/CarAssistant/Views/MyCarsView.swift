@@ -51,6 +51,7 @@ struct MyCarsView: View {
         }
         .task {
             // Используем task вместо onAppear для асинхронной загрузки
+            guard !Task.isCancelled else { return }
             if let user = authViewModel.currentUser {
                 await carViewModel.loadCarsAsync(for: user)
             }
@@ -218,9 +219,12 @@ struct CarManagementCard: View {
             Group {
                 if let photoData = car.photoData,
                    let image = UIImage(data: photoData) {
-                    Image(uiImage: image)
+                    // Создаем thumbnail для уменьшения использования памяти
+                    let thumbnail = ImageOptimizer.shared.createThumbnail(from: image, maxSize: 200) ?? image
+                    Image(uiImage: thumbnail)
                         .resizable()
                         .scaledToFill()
+                        .drawingGroup()
                         .frame(width: 45, height: 45)
                         .clipShape(Circle())
                 } else {
@@ -554,7 +558,7 @@ struct CarEditView: View {
                             car.driveType = selectedDriveType.isEmpty ? nil : selectedDriveType
                             car.transmission = selectedTransmission.isEmpty ? nil : selectedTransmission
                             car.vin = vin.isEmpty ? nil : vin
-                            car.photoData = selectedImage?.jpegData(compressionQuality: 0.8)
+                            car.photoData = selectedImage.flatMap { ImageOptimizer.shared.optimizeImage($0, maxDimension: 1200, compressionQuality: 0.7) }
                             car.notes = notes.isEmpty ? nil : notes
                             CoreDataManager.shared.save()
                             carViewModel.loadCars(for: user)

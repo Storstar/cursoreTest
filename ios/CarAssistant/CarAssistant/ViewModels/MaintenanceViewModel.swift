@@ -23,6 +23,10 @@ class MaintenanceViewModel: ObservableObject {
         let fetchRequest: NSFetchRequest<MaintenanceRecord> = MaintenanceRecord.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "car == %@", car)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MaintenanceRecord.date, ascending: false)]
+        fetchRequest.fetchBatchSize = 20 // Оптимизация для больших списков
+        // Оптимизация: не загружаем documentImageData в память сразу (lazy loading)
+        fetchRequest.includesPropertyValues = true
+        fetchRequest.returnsObjectsAsFaults = false
         
         do {
             allRecords = try context.fetch(fetchRequest)
@@ -55,7 +59,12 @@ class MaintenanceViewModel: ObservableObject {
         record.serviceType = serviceType
         record.serviceDescription = description
         record.worksPerformed = worksPerformed
-        record.documentImageData = documentImageData
+        // Оптимизируем изображение перед сохранением
+        if let documentImageData = documentImageData, let image = UIImage(data: documentImageData) {
+            record.documentImageData = ImageOptimizer.shared.optimizeImage(image, maxDimension: 1200, compressionQuality: 0.7)
+        } else {
+            record.documentImageData = documentImageData
+        }
         record.extractedText = extractedText
         record.isPlanned = isPlanned
         record.car = car
@@ -205,7 +214,12 @@ class MaintenanceViewModel: ObservableObject {
         record.serviceType = serviceType
         record.serviceDescription = description
         record.worksPerformed = worksPerformed
-        record.documentImageData = documentImageData
+        // Оптимизируем изображение перед сохранением
+        if let documentImageData = documentImageData, let image = UIImage(data: documentImageData) {
+            record.documentImageData = ImageOptimizer.shared.optimizeImage(image, maxDimension: 1200, compressionQuality: 0.7)
+        } else {
+            record.documentImageData = documentImageData
+        }
         record.extractedText = extractedText
         
         if record.isPlanned {

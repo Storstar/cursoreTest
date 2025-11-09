@@ -19,6 +19,7 @@ struct EditMaintenanceView: View {
     @State private var showImageOptions = false
     @State private var isAnalyzingImage = false
     @State private var extractedText: String
+    @State private var analyzeTask: Task<Void, Never>?
     
     let maintenanceTypes = ["ТО", "Ремонт", "Замена", "Другое"]
     let serviceTypes = ["Плановое ТО", "Другое"] // Для категории "ТО"
@@ -260,9 +261,19 @@ struct EditMaintenanceView: View {
                 Button("Отмена", role: .cancel) {}
             }
             .onChange(of: selectedImage) { newImage in
+                // Отменяем предыдущую задачу анализа
+                analyzeTask?.cancel()
                 if let image = newImage {
                     analyzeImage(image)
+                } else {
+                    extractedText = ""
                 }
+            }
+            .onDisappear {
+                // Отменяем задачу анализа и очищаем изображение
+                analyzeTask?.cancel()
+                analyzeTask = nil
+                selectedImage = nil
             }
             .alert("Добавить тип ТО", isPresented: $showAddServiceType) {
                 TextField("Название типа", text: $customServiceType)
@@ -291,11 +302,13 @@ struct EditMaintenanceView: View {
     
     private func analyzeImage(_ image: UIImage) {
         isAnalyzingImage = true
-        Task {
+        analyzeTask = Task { @MainActor in
+            defer { isAnalyzingImage = false }
+            guard !Task.isCancelled else { return }
             if let text = await maintenanceViewModel.recognizeText(from: image) {
+                guard !Task.isCancelled else { return }
                 extractedText = text
             }
-            isAnalyzingImage = false
         }
     }
     
@@ -304,7 +317,7 @@ struct EditMaintenanceView: View {
             return
         }
         
-        let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+        let imageData = selectedImage.flatMap { ImageOptimizer.shared.optimizeImage($0, maxDimension: 1200, compressionQuality: 0.7) }
         
         maintenanceViewModel.updateMaintenanceRecord(
             record,

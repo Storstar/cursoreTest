@@ -13,11 +13,14 @@ struct CarMiniCard: View {
             Group {
                 if let photoData = car.photoData,
                    let image = UIImage(data: photoData) {
-                    Image(uiImage: image)
+                    // Создаем thumbnail для уменьшения использования памяти
+                    let thumbnail = ImageOptimizer.shared.createThumbnail(from: image, maxSize: 120) ?? image
+                    Image(uiImage: thumbnail)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 60, height: 60)
                         .clipShape(Circle())
+                        .drawingGroup()
                 } else {
                     ZStack {
                         Circle()

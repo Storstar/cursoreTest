@@ -2,10 +2,10 @@ import SwiftUI
 
 struct CreateRequestView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
-    @EnvironmentObject var requestViewModel: RequestViewModel
     @EnvironmentObject var carViewModel: CarViewModel
     @Environment(\.dismiss) var dismiss
     
+    @StateObject private var requestViewModel = RequestViewModel()
     @StateObject private var speechRecognizer = SpeechRecognizer()
     
     @State private var requestText = ""
@@ -14,6 +14,7 @@ struct CreateRequestView: View {
     @State private var showPhotoPicker = false
     @State private var showImageOptions = false
     @State private var isRecording = false
+    @State private var sendTask: Task<Void, Never>?
     @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
@@ -190,17 +191,29 @@ struct CreateRequestView: View {
                 isRecording = false
             }
         }
+        .onDisappear {
+            // Отменяем все задачи и очищаем ресурсы
+            sendTask?.cancel()
+            sendTask = nil
+            selectedImage = nil
+            speechRecognizer.stopRecording()
+        }
     }
     
     private func sendMessage() {
         guard let user = authViewModel.currentUser else { return }
         
+        // Отменяем предыдущую задачу
+        sendTask?.cancel()
+        
         let textToSend = requestText.trimmingCharacters(in: .whitespacesAndNewlines)
         let imageToSend = selectedImage
         
-        if let image = imageToSend, let imageData = image.jpegData(compressionQuality: 0.8) {
-            Task {
+        if let image = imageToSend, let imageData = ImageOptimizer.shared.optimizeImage(image, maxDimension: 1200, compressionQuality: 0.7) {
+            sendTask = Task { @MainActor in
+                guard !Task.isCancelled else { return }
                 await requestViewModel.createPhotoRequest(imageData: imageData, for: user, car: carViewModel.car)
+                guard !Task.isCancelled else { return }
                 if requestViewModel.errorMessage == nil {
                     requestText = ""
                     selectedImage = nil
@@ -208,8 +221,10 @@ struct CreateRequestView: View {
                 }
             }
         } else if !textToSend.isEmpty {
-            Task {
+            sendTask = Task { @MainActor in
+                guard !Task.isCancelled else { return }
                 await requestViewModel.createTextRequest(text: textToSend, for: user, car: carViewModel.car)
+                guard !Task.isCancelled else { return }
                 if requestViewModel.errorMessage == nil {
                     requestText = ""
                     await requestViewModel.loadRequests(for: user)

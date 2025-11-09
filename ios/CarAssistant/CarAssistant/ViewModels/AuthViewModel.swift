@@ -149,6 +149,12 @@ class AuthViewModel: ObservableObject {
             guard let self = self else { return }
             
             let backgroundContext = CoreDataManager.shared.persistentContainer.newBackgroundContext()
+            backgroundContext.undoManager = nil // Отключаем undo для производительности
+            
+            defer {
+                // Освобождаем background context после использования
+                backgroundContext.reset()
+            }
             
             do {
                 let users = try backgroundContext.fetch(fetchRequest)
@@ -156,6 +162,7 @@ class AuthViewModel: ObservableObject {
                     let userObjectID = user.objectID
                     
                     await MainActor.run {
+                        guard !Task.isCancelled else { return }
                         let mainContext = CoreDataManager.shared.viewContext
                         if let mainUser = try? mainContext.existingObject(with: userObjectID) as? User {
                             self.currentUser = mainUser

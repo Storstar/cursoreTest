@@ -31,6 +31,9 @@ class RequestViewModel: ObservableObject {
         fetchRequest.predicate = NSPredicate(format: "user == %@", user)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Request.createdAt, ascending: false)]
         fetchRequest.fetchBatchSize = 20 // Оптимизация для больших списков
+        // Оптимизация: не загружаем imageData в память сразу (lazy loading)
+        fetchRequest.includesPropertyValues = true
+        fetchRequest.returnsObjectsAsFaults = false
         
         do {
             requests = try context.fetch(fetchRequest)
@@ -201,9 +204,7 @@ class RequestViewModel: ObservableObject {
                 return "Нет данных об обслуживании"
             }
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.locale = Locale(identifier: "ru_RU")
+            let dateFormatter = DateFormatterHelper.shared
             
             var historyParts: [String] = []
             
@@ -217,7 +218,7 @@ class RequestViewModel: ObservableObject {
                 recordParts.append("Запись \(index + 1)")
                 
                 // Дата
-                let dateStr = dateFormatter.string(from: record.date)
+                let dateStr = dateFormatter.formatDate(record.date, dateStyle: .medium, timeStyle: .none)
                 recordParts.append("дата: \(dateStr)")
                 
                 // Пробег
@@ -242,7 +243,7 @@ class RequestViewModel: ObservableObject {
                 
                 // Следующее ТО (если указано)
                 if let nextServiceDate = record.nextServiceDate {
-                    let nextDateStr = dateFormatter.string(from: nextServiceDate)
+                    let nextDateStr = dateFormatter.formatDate(nextServiceDate, dateStyle: .medium, timeStyle: .none)
                     recordParts.append("следующее ТО: \(nextDateStr)")
                 }
                 
@@ -302,7 +303,12 @@ class RequestViewModel: ObservableObject {
             
             let request = Request(context: context)
             request.id = UUID()
-            request.imageData = imageData
+            // Оптимизируем изображение перед сохранением
+            if let image = UIImage(data: imageData) {
+                request.imageData = ImageOptimizer.shared.optimizeImage(image, maxDimension: 1200, compressionQuality: 0.7)
+            } else {
+                request.imageData = imageData
+            }
             request.type = "photo"
             request.createdAt = Date()
             request.user = user

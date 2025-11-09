@@ -65,6 +65,9 @@ class CarViewModel: ObservableObject {
         fetchRequest.predicate = NSPredicate(format: "user == %@", user)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Car.year, ascending: false)]
         fetchRequest.fetchBatchSize = 20 // Оптимизация для больших списков
+        // Оптимизация: не загружаем photoData в память сразу (lazy loading)
+        fetchRequest.includesPropertyValues = true
+        fetchRequest.returnsObjectsAsFaults = false // Загружаем объекты полностью, но photoData будет загружен только при обращении
         
         do {
             let fetchedCars = try context.fetch(fetchRequest)
@@ -105,6 +108,7 @@ class CarViewModel: ObservableObject {
         
         // Используем background context для асинхронной загрузки
         let backgroundContext = CoreDataManager.shared.persistentContainer.newBackgroundContext()
+        backgroundContext.undoManager = nil // Отключаем undo для производительности
         
         await Task.detached { [weak self] in
             guard let self = self else { return }
@@ -113,12 +117,21 @@ class CarViewModel: ObservableObject {
             fetchRequest.predicate = NSPredicate(format: "user == %@", user)
             fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Car.year, ascending: false)]
             fetchRequest.fetchBatchSize = 20
+            // Оптимизация: не загружаем photoData в память сразу (lazy loading)
+            fetchRequest.includesPropertyValues = true
+            fetchRequest.returnsObjectsAsFaults = false
+            
+            defer {
+                // Освобождаем background context после использования
+                backgroundContext.reset()
+            }
             
             do {
                 let fetchedCars = try backgroundContext.fetch(fetchRequest)
                 let objectIDs = fetchedCars.map { $0.objectID }
                 
                 await MainActor.run {
+                    guard !Task.isCancelled else { return }
                     // Преобразуем objectIDs в объекты главного контекста
                     let mainContext = CoreDataManager.shared.viewContext
                     let mainCars = objectIDs.compactMap { mainContext.object(with: $0) as? Car }
@@ -142,6 +155,7 @@ class CarViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run {
+                    guard !Task.isCancelled else { return }
                     self.errorMessage = "Ошибка загрузки автомобилей: \(error.localizedDescription)"
                     self.isLoading = false
                 }
@@ -206,7 +220,13 @@ class CarViewModel: ObservableObject {
         newCar.driveType = driveType
         newCar.transmission = transmission
         newCar.vin = vin
-        newCar.photoData = photoData
+        // Оптимизируем изображение перед сохранением
+        if let photoData = photoData, let image = UIImage(data: photoData) {
+            // Сохраняем оптимизированное изображение (макс 1200px, качество 0.7)
+            newCar.photoData = ImageOptimizer.shared.optimizeImage(image, maxDimension: 1200, compressionQuality: 0.7)
+        } else {
+            newCar.photoData = photoData
+        }
         newCar.notes = notes
         newCar.user = user
         
