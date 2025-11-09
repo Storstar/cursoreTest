@@ -3,10 +3,10 @@ import SwiftUI
 struct ChatDetailView: View {
     let chat: Chat
     @Binding var navigationPath: NavigationPath
-    @Binding var messages: [Message]
-    let onChatUpdate: (Chat) -> Void
+    let chatViewModel: ChatViewModel
     @EnvironmentObject var carViewModel: CarViewModel
     @StateObject private var keyboardHelper = KeyboardHeightHelper()
+    @State private var messages: [Message] = []
     @State private var messageText: String = ""
     @State private var showImagePicker = false
     @FocusState private var isInputFocused: Bool
@@ -17,11 +17,10 @@ struct ChatDetailView: View {
         return "\(car.brand) \(car.model)"
     }
     
-    init(chat: Chat, navigationPath: Binding<NavigationPath>, messages: Binding<[Message]>, onChatUpdate: @escaping (Chat) -> Void) {
+    init(chat: Chat, navigationPath: Binding<NavigationPath>, chatViewModel: ChatViewModel) {
         self.chat = chat
         self._navigationPath = navigationPath
-        self._messages = messages
-        self.onChatUpdate = onChatUpdate
+        self.chatViewModel = chatViewModel
         self._currentChat = State(initialValue: chat)
     }
     
@@ -53,7 +52,8 @@ struct ChatDetailView: View {
             if currentChat.id != chat.id {
                 currentChat = chat
             }
-            // Сообщения уже загружены через Binding
+            // Загружаем сообщения из CoreData
+            messages = chatViewModel.loadMessages(for: chat.id)
         }
         .onChange(of: isInputFocused) { focused in
             if focused {
@@ -240,6 +240,10 @@ struct ChatDetailView: View {
             timestamp: Date()
         )
         
+        // Сохраняем сообщение в CoreData
+        chatViewModel.saveMessage(userMessage)
+        
+        // Добавляем в локальный массив
         messages.append(userMessage)
         messageText = ""
         isInputFocused = false
@@ -250,16 +254,16 @@ struct ChatDetailView: View {
             currentChat.title = chatTitle
             currentChat.lastMessage = trimmedText
             currentChat.timestamp = Date()
-            onChatUpdate(currentChat)
+            chatViewModel.updateChat(currentChat)
         } else {
             // Обновляем последнее сообщение
             currentChat.lastMessage = trimmedText
             currentChat.timestamp = Date()
-            onChatUpdate(currentChat)
+            chatViewModel.updateChat(currentChat)
         }
         
         // TODO: Отправить сообщение AI и получить ответ
-        // После получения ответа добавить его в messages и обновить lastMessage
+        // После получения ответа добавить его в messages через chatViewModel.saveMessage() и обновить lastMessage
     }
 }
 
@@ -296,8 +300,7 @@ struct MessageBubble: View {
     ChatDetailView(
         chat: Chat(carId: UUID(), title: "Тест", lastMessage: "Тест"),
         navigationPath: .constant(NavigationPath()),
-        messages: .constant([]),
-        onChatUpdate: { _ in }
+        chatViewModel: ChatViewModel()
     )
     .environmentObject(CarViewModel())
 }

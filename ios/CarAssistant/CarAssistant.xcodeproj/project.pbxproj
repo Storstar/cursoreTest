@@ -58,6 +58,11 @@
 		AA0001490000000000000001 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001490000000000000002 /* Chat.swift */; };
 		AA0001500000000000000001 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001500000000000000002 /* Message.swift */; };
 		AA0001510000000000000001 /* ChatDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001510000000000000002 /* ChatDetailView.swift */; };
+		AA0001520000000000000001 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001520000000000000002 /* ChatViewModel.swift */; };
+		AA0001530000000000000001 /* ChatCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001530000000000000002 /* ChatCoreData+CoreDataClass.swift */; };
+		AA0001540000000000000001 /* ChatCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001540000000000000002 /* ChatCoreData+CoreDataProperties.swift */; };
+		AA0001550000000000000001 /* ChatMessageCoreData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001550000000000000002 /* ChatMessageCoreData+CoreDataClass.swift */; };
+		AA0001560000000000000001 /* ChatMessageCoreData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001560000000000000002 /* ChatMessageCoreData+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -117,6 +122,11 @@
 		AA0001490000000000000002 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		AA0001500000000000000002 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		AA0001510000000000000002 /* ChatDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailView.swift; sourceTree = "<group>"; };
+		AA0001520000000000000002 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		AA0001530000000000000002 /* ChatCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AA0001540000000000000002 /* ChatCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		AA0001550000000000000002 /* ChatMessageCoreData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatMessageCoreData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		AA0001560000000000000002 /* ChatMessageCoreData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatMessageCoreData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -181,6 +191,7 @@
 				AA0000370000000000000001 /* CarViewModel.swift */,
 				AA0000390000000000000001 /* RequestViewModel.swift */,
 				AA0001310000000000000001 /* MaintenanceViewModel.swift */,
+				AA0001520000000000000002 /* ChatViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -238,6 +249,10 @@
 				AA0000630000000000000001 /* Response+CoreDataClass.swift */,
 				AA0000650000000000000001 /* Response+CoreDataProperties.swift */,
 				AA0000670000000000000001 /* User+CoreDataClass.swift */,
+				AA0001530000000000000002 /* ChatCoreData+CoreDataClass.swift */,
+				AA0001540000000000000002 /* ChatCoreData+CoreDataProperties.swift */,
+				AA0001550000000000000002 /* ChatMessageCoreData+CoreDataClass.swift */,
+				AA0001560000000000000002 /* ChatMessageCoreData+CoreDataProperties.swift */,
 				AA0000690000000000000001 /* User+CoreDataProperties.swift */,
 				AA0001330000000000000001 /* MaintenanceRecord+CoreDataClass.swift */,
 				AA0001350000000000000001 /* MaintenanceRecord+CoreDataProperties.swift */,
@@ -372,6 +387,11 @@
 				AA0001490000000000000001 /* Chat.swift in Sources */,
 				AA0001500000000000000001 /* Message.swift in Sources */,
 				AA0001510000000000000001 /* ChatDetailView.swift in Sources */,
+				AA0001520000000000000001 /* ChatViewModel.swift in Sources */,
+				AA0001530000000000000001 /* ChatCoreData+CoreDataClass.swift in Sources */,
+				AA0001540000000000000001 /* ChatCoreData+CoreDataProperties.swift in Sources */,
+				AA0001550000000000000001 /* ChatMessageCoreData+CoreDataClass.swift in Sources */,
+				AA0001560000000000000001 /* ChatMessageCoreData+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

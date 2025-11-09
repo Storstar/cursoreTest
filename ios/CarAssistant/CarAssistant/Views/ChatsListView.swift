@@ -2,14 +2,13 @@ import SwiftUI
 
 struct ChatsListView: View {
     @EnvironmentObject var carViewModel: CarViewModel
-    @State private var allChats: [Chat] = []
+    @StateObject private var chatViewModel = ChatViewModel()
     @State private var navigationPath = NavigationPath()
-    @State private var chatMessages: [UUID: [Message]] = [:] // Хранилище сообщений для каждого чата
     
     // Фильтруем чаты по текущему автомобилю
     private var chats: [Chat] {
         guard let currentCar = carViewModel.car else { return [] }
-        return allChats.filter { $0.carId == currentCar.id }
+        return chatViewModel.chats.filter { $0.carId == currentCar.id }
     }
     
     init() {
@@ -57,32 +56,24 @@ struct ChatsListView: View {
                 ChatDetailView(
                     chat: chat,
                     navigationPath: $navigationPath,
-                    messages: Binding(
-                        get: { 
-                            // Всегда инициализируем массив, если его нет
-                            if chatMessages[chat.id] == nil {
-                                chatMessages[chat.id] = []
-                            }
-                            return chatMessages[chat.id] ?? []
-                        },
-                        set: { chatMessages[chat.id] = $0 }
-                    ),
-                    onChatUpdate: { updatedChat in
-                        updateChat(updatedChat)
-                    }
+                    chatViewModel: chatViewModel
                 )
                 .environmentObject(carViewModel)
-                .onAppear {
-                    // Дополнительная проверка при появлении для надежности
-                    if chatMessages[chat.id] == nil {
-                        chatMessages[chat.id] = []
-                    }
-                }
             }
         }
-        .onChange(of: carViewModel.car?.id) { _ in
+        .onAppear {
+            // Загружаем чаты при появлении
+            if let car = carViewModel.car {
+                chatViewModel.loadChats(for: car.id)
+            }
+        }
+        .onChange(of: carViewModel.car?.id) { newCarId in
             // Очищаем навигацию при смене автомобиля
             navigationPath = NavigationPath()
+            // Загружаем чаты для нового автомобиля
+            if let carId = newCarId {
+                chatViewModel.loadChats(for: carId)
+            }
         }
     }
     
@@ -102,10 +93,6 @@ struct ChatsListView: View {
         List {
             ForEach(chats) { chat in
                 Button(action: {
-                    // Убеждаемся, что для чата есть запись в chatMessages
-                    if chatMessages[chat.id] == nil {
-                        chatMessages[chat.id] = []
-                    }
                     navigationPath.append(chat)
                 }) {
                     ChatRowView(chat: chat)
@@ -132,31 +119,13 @@ struct ChatsListView: View {
         
         // Проверяем, есть ли уже пустой чат ("Новый чат")
         if let emptyChat = chats.first(where: { $0.title == "Новый чат" && $0.lastMessage == "Начните разговор" }) {
-            // Если есть пустой чат, убеждаемся что для него есть запись в chatMessages
-            if chatMessages[emptyChat.id] == nil {
-                chatMessages[emptyChat.id] = []
-            }
             // Открываем существующий пустой чат
             navigationPath.append(emptyChat)
         } else {
-            // Если пустого чата нет, создаем новый
-            let newChat = Chat(
-                carId: car.id,
-                title: "Новый чат",
-                lastMessage: "Начните разговор",
-                timestamp: Date()
-            )
-            allChats.insert(newChat, at: 0)
-            // Инициализируем пустой массив сообщений для нового чата
-            chatMessages[newChat.id] = []
+            // Если пустого чата нет, создаем новый через ViewModel
+            let newChat = chatViewModel.createChat(carId: car.id)
             // Сразу открываем новый чат
             navigationPath.append(newChat)
-        }
-    }
-    
-    private func updateChat(_ updatedChat: Chat) {
-        if let index = allChats.firstIndex(where: { $0.id == updatedChat.id }) {
-            allChats[index] = updatedChat
         }
     }
     
@@ -164,11 +133,8 @@ struct ChatsListView: View {
         // Проверяем, открыт ли удаляемый чат
         let isCurrentChat = navigationPath.count > 0
         
-        // Удаляем чат из списка
-        allChats.removeAll { $0.id == chat.id }
-        
-        // Удаляем сообщения чата
-        chatMessages.removeValue(forKey: chat.id)
+        // Удаляем чат через ViewModel
+        chatViewModel.deleteChat(chat)
         
         // Если удаленный чат был открыт, возвращаемся к списку чатов
         if isCurrentChat {
