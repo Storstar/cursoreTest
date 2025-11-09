@@ -3,7 +3,8 @@ import SwiftUI
 struct ChatsListView: View {
     @EnvironmentObject var carViewModel: CarViewModel
     @State private var allChats: [Chat] = []
-    @State private var showCreateChat = false
+    @State private var navigationPath = NavigationPath()
+    @State private var chatMessages: [UUID: [Message]] = [:] // Хранилище сообщений для каждого чата
     
     // Фильтруем чаты по текущему автомобилю
     private var chats: [Chat] {
@@ -17,64 +18,71 @@ struct ChatsListView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.white
-                .ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                // Список чатов
-                if chats.isEmpty {
-                    emptyStateView
-                } else {
-                    chatListView
-                }
-            }
-            
-            // Floating Action Button в правом нижнем углу
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        createNewChat()
-                    }) {
-                        Image(systemName: "plus")
-                            .font(.system(size: 24, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(width: 56, height: 56)
-                            .background(Color.blue)
-                            .clipShape(Circle())
-                            .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
+        NavigationStack(path: $navigationPath) {
+            ZStack {
+                Color.white
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 0) {
+                    // Список чатов
+                    if chats.isEmpty {
+                        emptyStateView
+                    } else {
+                        chatListView
                     }
-                    .padding(.trailing, 20)
-                    .padding(.bottom, 30) // Отступ от нижнего таба (как на экране работ)
+                }
+                
+                // Floating Action Button в правом нижнем углу
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            createNewChat()
+                        }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 24, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(width: 56, height: 56)
+                                .background(Color.blue)
+                                .clipShape(Circle())
+                                .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 30) // Отступ от нижнего таба (как на экране работ)
+                    }
                 }
             }
-        }
-        .onAppear {
-            // Загружаем тестовые данные при появлении, если есть выбранный автомобиль
-            if let car = carViewModel.car, allChats.isEmpty {
-                loadTestData(for: car)
+            .navigationDestination(for: Chat.self) { chat in
+                ChatDetailView(
+                    chat: chat,
+                    navigationPath: $navigationPath,
+                    messages: Binding(
+                        get: { 
+                            // Всегда инициализируем массив, если его нет
+                            if chatMessages[chat.id] == nil {
+                                chatMessages[chat.id] = []
+                            }
+                            return chatMessages[chat.id] ?? []
+                        },
+                        set: { chatMessages[chat.id] = $0 }
+                    ),
+                    onChatUpdate: { updatedChat in
+                        updateChat(updatedChat)
+                    }
+                )
+                .environmentObject(carViewModel)
+                .onAppear {
+                    // Дополнительная проверка при появлении для надежности
+                    if chatMessages[chat.id] == nil {
+                        chatMessages[chat.id] = []
+                    }
+                }
             }
         }
         .onChange(of: carViewModel.car?.id) { _ in
-            // Обновляем чаты при смене автомобиля
-            if let car = carViewModel.car {
-                loadTestData(for: car)
-            }
-        }
-    }
-    
-    private func loadTestData(for car: Car) {
-        // Добавляем тестовый чат только если его еще нет для этого автомобиля
-        if !allChats.contains(where: { $0.carId == car.id }) {
-            let testChat = Chat(
-                carId: car.id,
-                title: "Горит желтая ма...",
-                lastMessage: "Короткий ответ: с ж...",
-                timestamp: Calendar.current.date(byAdding: .minute, value: -59, to: Date()) ?? Date()
-            )
-            allChats.append(testChat)
+            // Очищаем навигацию при смене автомобиля
+            navigationPath = NavigationPath()
         }
     }
     
@@ -93,16 +101,25 @@ struct ChatsListView: View {
     private var chatListView: some View {
         List {
             ForEach(chats) { chat in
-                ChatRowView(chat: chat)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
-                    .listRowBackground(Color.clear)
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                        Button(role: .destructive) {
-                            deleteChat(chat)
-                        } label: {
-                            Label("Удалить", systemImage: "trash.fill")
-                        }
+                Button(action: {
+                    // Убеждаемся, что для чата есть запись в chatMessages
+                    if chatMessages[chat.id] == nil {
+                        chatMessages[chat.id] = []
                     }
+                    navigationPath.append(chat)
+                }) {
+                    ChatRowView(chat: chat)
+                }
+                .buttonStyle(.plain)
+                .listRowInsets(EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16))
+                .listRowBackground(Color.clear)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        deleteChat(chat)
+                    } label: {
+                        Label("Удалить", systemImage: "trash.fill")
+                    }
+                }
             }
         }
         .listStyle(.plain)
@@ -112,17 +129,51 @@ struct ChatsListView: View {
     
     private func createNewChat() {
         guard let car = carViewModel.car else { return }
-        let newChat = Chat(
-            carId: car.id,
-            title: "Новый чат",
-            lastMessage: "Начните разговор",
-            timestamp: Date()
-        )
-        allChats.insert(newChat, at: 0)
+        
+        // Проверяем, есть ли уже пустой чат ("Новый чат")
+        if let emptyChat = chats.first(where: { $0.title == "Новый чат" && $0.lastMessage == "Начните разговор" }) {
+            // Если есть пустой чат, убеждаемся что для него есть запись в chatMessages
+            if chatMessages[emptyChat.id] == nil {
+                chatMessages[emptyChat.id] = []
+            }
+            // Открываем существующий пустой чат
+            navigationPath.append(emptyChat)
+        } else {
+            // Если пустого чата нет, создаем новый
+            let newChat = Chat(
+                carId: car.id,
+                title: "Новый чат",
+                lastMessage: "Начните разговор",
+                timestamp: Date()
+            )
+            allChats.insert(newChat, at: 0)
+            // Инициализируем пустой массив сообщений для нового чата
+            chatMessages[newChat.id] = []
+            // Сразу открываем новый чат
+            navigationPath.append(newChat)
+        }
+    }
+    
+    private func updateChat(_ updatedChat: Chat) {
+        if let index = allChats.firstIndex(where: { $0.id == updatedChat.id }) {
+            allChats[index] = updatedChat
+        }
     }
     
     private func deleteChat(_ chat: Chat) {
+        // Проверяем, открыт ли удаляемый чат
+        let isCurrentChat = navigationPath.count > 0
+        
+        // Удаляем чат из списка
         allChats.removeAll { $0.id == chat.id }
+        
+        // Удаляем сообщения чата
+        chatMessages.removeValue(forKey: chat.id)
+        
+        // Если удаленный чат был открыт, возвращаемся к списку чатов
+        if isCurrentChat {
+            navigationPath = NavigationPath()
+        }
     }
 }
 
@@ -160,11 +211,6 @@ struct ChatRowView: View {
             }
             
             Spacer()
-            
-            // Стрелка навигации
-            Image(systemName: "chevron.right")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.gray)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)

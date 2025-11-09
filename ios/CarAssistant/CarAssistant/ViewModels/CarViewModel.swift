@@ -106,12 +106,13 @@ class CarViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        // Используем background context для асинхронной загрузки
-        let backgroundContext = CoreDataManager.shared.persistentContainer.newBackgroundContext()
-        backgroundContext.undoManager = nil // Отключаем undo для производительности
-        
         await Task.detached { [weak self] in
             guard let self = self else { return }
+            
+            // Создаем background context внутри detached task для правильной работы с потоками
+            let persistentContainer = CoreDataManager.shared.persistentContainer
+            let backgroundContext = persistentContainer.newBackgroundContext()
+            backgroundContext.undoManager = nil // Отключаем undo для производительности
             
             let fetchRequest: NSFetchRequest<Car> = Car.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "user == %@", user)
@@ -121,13 +122,23 @@ class CarViewModel: ObservableObject {
             fetchRequest.includesPropertyValues = true
             fetchRequest.returnsObjectsAsFaults = false
             
-            defer {
-                // Освобождаем background context после использования
-                backgroundContext.reset()
-            }
-            
             do {
-                let fetchedCars = try backgroundContext.fetch(fetchRequest)
+                // Используем performAndWait для безопасной работы с контекстом
+                var fetchedCars: [Car] = []
+                var fetchError: Error?
+                
+                backgroundContext.performAndWait {
+                    do {
+                        fetchedCars = try backgroundContext.fetch(fetchRequest)
+                    } catch {
+                        fetchError = error
+                    }
+                }
+                
+                if let error = fetchError {
+                    throw error
+                }
+                
                 let objectIDs = fetchedCars.map { $0.objectID }
                 
                 await MainActor.run {

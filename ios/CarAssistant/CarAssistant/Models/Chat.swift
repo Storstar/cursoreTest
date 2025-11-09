@@ -1,11 +1,11 @@
 import Foundation
 
 struct Chat: Identifiable, Hashable {
-    let id: UUID
+    var id: UUID
     let carId: UUID // ID автомобиля, к которому привязан чат
-    let title: String
-    let lastMessage: String
-    let timestamp: Date
+    var title: String
+    var lastMessage: String
+    var timestamp: Date
     
     init(id: UUID = UUID(), carId: UUID, title: String, lastMessage: String, timestamp: Date = Date()) {
         self.id = id

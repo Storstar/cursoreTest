@@ -56,6 +56,8 @@
 		AA0001420000000000000001 /* ImageOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001430000000000000001 /* ImageOptimizer.swift */; };
 		AA0001480000000000000001 /* ChatsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001480000000000000002 /* ChatsListView.swift */; };
 		AA0001490000000000000001 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001490000000000000002 /* Chat.swift */; };
+		AA0001500000000000000001 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001500000000000000002 /* Message.swift */; };
+		AA0001510000000000000001 /* ChatDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001510000000000000002 /* ChatDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -113,6 +115,8 @@
 		AA0001430000000000000001 /* ImageOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOptimizer.swift; sourceTree = "<group>"; };
 		AA0001480000000000000002 /* ChatsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsListView.swift; sourceTree = "<group>"; };
 		AA0001490000000000000002 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		AA0001500000000000000002 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		AA0001510000000000000002 /* ChatDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -165,6 +169,7 @@
 				AA0001170000000000000001 /* CarSelectionView.swift */,
 				AA0001250000000000000001 /* MyCarsView.swift */,
 				AA0001480000000000000002 /* ChatsListView.swift */,
+				AA0001510000000000000002 /* ChatDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -186,6 +191,7 @@
 				AA0000900000000000000001 /* CoreData */,
 				AA0001220000000000000001 /* CarBrandsData.swift */,
 				AA0001490000000000000002 /* Chat.swift */,
+				AA0001500000000000000002 /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -364,6 +370,8 @@
 				AA0001340000000000000001 /* MaintenanceRecord+CoreDataProperties.swift in Sources */,
 				AA0001480000000000000001 /* ChatsListView.swift in Sources */,
 				AA0001490000000000000001 /* Chat.swift in Sources */,
+				AA0001500000000000000001 /* Message.swift in Sources */,
+				AA0001510000000000000001 /* ChatDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
