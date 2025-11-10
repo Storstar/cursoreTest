@@ -183,92 +183,121 @@ struct ChatView: View {
     
     /// Представление активного чата
     private var activeChatView: some View {
-        VStack(spacing: 0) {
-            ChatHeaderView(
-                car: carViewModel.car,
-                onShowHistory: {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        showChatHistory = true
-                    }
-                    // Сохраняем состояние при показе истории
-                    appStateManager.saveState(showChatHistory: true, currentChatId: nil)
-                },
-                onCreateNewChat: {
-                    let newChat = chatViewModel.createNewChat()
-                    // Сохраняем состояние при создании нового чата
-                    appStateManager.saveState(showChatHistory: false, currentChatId: newChat.id)
-                }
-            )
-            
-            // Контент чата
-            ChatContentView(
-                messages: chatViewModel.currentChatMessages,
-                keyboardHeight: keyboardHeight,
-                isLoadingHistory: chatViewModel.isLoadingHistory,
-                hasLoadedAllMessages: chatViewModel.hasLoadedAllMessages,
-                onTapToDismissKeyboard: { hideKeyboard() },
-                onLoadMoreMessages: { chatViewModel.loadMoreMessages() }
-            )
-            .id(chatViewModel.currentChat?.id ?? UUID()) // Пересоздаем view при смене чата
-            
-            // Панель ввода
-            ChatInputBar(
-                text: $messageText,
-                selectedImage: $selectedImage,
-                isRecording: $isRecording,
-                isTextFieldFocused: $isTextFieldFocused,
-                onSend: { sendMessage() },
-                onImageTap: { showImageOptions = true },
-                onVoiceTap: { handleVoiceTap() }
-            )
-        }
-        .offset(x: dragOffset)
-        .simultaneousGesture(
-            DragGesture(minimumDistance: 20)
-                .onChanged { value in
-                    let horizontalMovement = value.translation.width
-                    let verticalMovement = abs(value.translation.height)
-                    
-                    // Активируем только если горизонтальное движение значительно больше вертикального
-                    // и свайп идет слева направо (положительное значение)
-                    // Используем коэффициент 1.5 для более строгого определения горизонтального свайпа
-                    if horizontalMovement > 0 && horizontalMovement > verticalMovement * 1.5 {
-                        isDragging = true
-                        // Ограничиваем максимальное смещение для плавности
-                        dragOffset = min(horizontalMovement, UIScreen.main.bounds.width * 0.5)
-                    } else if isDragging && verticalMovement > horizontalMovement {
-                        // Если пользователь начал двигать вертикально после горизонтального свайпа,
-                        // отменяем горизонтальный свайп, чтобы не мешать вертикальному скроллингу
-                        withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
-                            dragOffset = 0
+        GeometryReader { geometry in
+            VStack(spacing: 0) {
+                ChatHeaderView(
+                    car: carViewModel.car,
+                    onShowHistory: {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            showChatHistory = true
                         }
+                        // Сохраняем состояние при показе истории
+                        appStateManager.saveState(showChatHistory: true, currentChatId: nil)
+                    },
+                    onCreateNewChat: {
+                        let newChat = chatViewModel.createNewChat()
+                        // Сохраняем состояние при создании нового чата
+                        appStateManager.saveState(showChatHistory: false, currentChatId: newChat.id)
+                    }
+                )
+                
+                // Контент чата
+                ChatContentView(
+                    messages: chatViewModel.currentChatMessages,
+                    keyboardHeight: keyboardHeight,
+                    isLoadingHistory: chatViewModel.isLoadingHistory,
+                    hasLoadedAllMessages: chatViewModel.hasLoadedAllMessages,
+                    onTapToDismissKeyboard: { hideKeyboard() },
+                    onLoadMoreMessages: { chatViewModel.loadMoreMessages() }
+                )
+                .id(chatViewModel.currentChat?.id ?? UUID()) // Пересоздаем view при смене чата
+                
+                // Панель ввода
+                ChatInputBar(
+                    text: $messageText,
+                    selectedImage: $selectedImage,
+                    isRecording: $isRecording,
+                    isTextFieldFocused: $isTextFieldFocused,
+                    onSend: { sendMessage() },
+                    onImageTap: { showImageOptions = true },
+                    onVoiceTap: { handleVoiceTap() }
+                )
+            }
+            .offset(x: dragOffset)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 20)
+                    .onChanged { value in
+                        // Проверяем, не начинается ли свайп в области input bar
+                        // Input bar занимает примерно нижние 200pt экрана (скролл вью 60pt + поле ввода ~140pt)
+                        let viewHeight = geometry.size.height
+                        let inputBarAreaHeight: CGFloat = 200
+                        let startY = value.startLocation.y
+                        
+                        // Если свайп начинается в области input bar или ниже, игнорируем его
+                        if startY > viewHeight - inputBarAreaHeight {
+                            return
+                        }
+                        
+                        let horizontalMovement = value.translation.width
+                        let verticalMovement = abs(value.translation.height)
+                        
+                        // Активируем только если горизонтальное движение значительно больше вертикального
+                        // и свайп идет слева направо (положительное значение)
+                        // Используем коэффициент 1.5 для более строгого определения горизонтального свайпа
+                        if horizontalMovement > 0 && horizontalMovement > verticalMovement * 1.5 {
+                            isDragging = true
+                            // Ограничиваем максимальное смещение для плавности
+                            dragOffset = min(horizontalMovement, UIScreen.main.bounds.width * 0.5)
+                        } else if isDragging && verticalMovement > horizontalMovement {
+                            // Если пользователь начал двигать вертикально после горизонтального свайпа,
+                            // отменяем горизонтальный свайп, чтобы не мешать вертикальному скроллингу
+                            withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
+                                dragOffset = 0
+                            }
+                            isDragging = false
+                        }
+                    }
+                    .onEnded { value in
+                        // Проверяем, не начинался ли свайп в области input bar
+                        let viewHeight = geometry.size.height
+                        let inputBarAreaHeight: CGFloat = 200
+                        let startY = value.startLocation.y
+                        
+                        // Если свайп начинался в области input bar или ниже, игнорируем его
+                        if startY > viewHeight - inputBarAreaHeight {
+                            if isDragging {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                    dragOffset = 0
+                                }
+                                isDragging = false
+                            }
+                            return
+                        }
+                        
+                        let horizontalMovement = value.translation.width
+                        let verticalMovement = abs(value.translation.height)
+                        let threshold: CGFloat = 100 // Порог для закрытия чата
+                        
+                        // Закрываем чат только если горизонтальное движение превышает порог
+                        // и значительно больше вертикального
+                        if isDragging && horizontalMovement > threshold && horizontalMovement > verticalMovement * 1.5 {
+                        // Закрываем чат
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            showChatHistory = true
+                        }
+                        // Сохраняем состояние при закрытии чата
+                        appStateManager.saveState(showChatHistory: true, currentChatId: nil)
+                        } else {
+                            // Возвращаем на место
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                dragOffset = 0
+                            }
+                        }
+                        
                         isDragging = false
                     }
-                }
-                .onEnded { value in
-                    let horizontalMovement = value.translation.width
-                    let verticalMovement = abs(value.translation.height)
-                    let threshold: CGFloat = 100 // Порог для закрытия чата
-                    
-                    // Закрываем чат только если горизонтальное движение превышает порог
-                    // и значительно больше вертикального
-                    if isDragging && horizontalMovement > threshold && horizontalMovement > verticalMovement * 1.5 {
-                    // Закрываем чат
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        showChatHistory = true
-                    }
-                    // Сохраняем состояние при закрытии чата
-                    appStateManager.saveState(showChatHistory: true, currentChatId: nil)
-                    } else {
-                        // Возвращаем на место
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                            dragOffset = 0
-                        }
-                    }
-                    
-                    isDragging = false
-                }
-        )
+            )
+        }
     }
     
     // MARK: - Helper Methods

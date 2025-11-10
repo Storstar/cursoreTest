@@ -7,6 +7,29 @@
 
 import SwiftUI
 
+// MARK: - CarProblemButton
+
+/// Модель кнопки проблемы с автомобилем
+struct CarProblemButton: Identifiable {
+    let id = UUID()
+    let icon: String
+    let title: String
+    var isActive: Bool
+    
+    static let defaultButtons: [CarProblemButton] = [
+        CarProblemButton(icon: "questionmark.circle", title: "General Question", isActive: false),
+        CarProblemButton(icon: "check.engine.custom", title: "Check Engine", isActive: false),
+        CarProblemButton(icon: "battery.100", title: "Battery", isActive: false),
+        CarProblemButton(icon: "exclamationmark.octagon", title: "Brake System", isActive: false),
+        CarProblemButton(icon: "gearshape.2", title: "Engine", isActive: false),
+        CarProblemButton(icon: "gearshape", title: "Transmission", isActive: false),
+        CarProblemButton(icon: "car.2", title: "Suspension", isActive: false),
+        CarProblemButton(icon: "bolt", title: "Electrical", isActive: false),
+        CarProblemButton(icon: "snowflake", title: "AC System", isActive: false),
+        CarProblemButton(icon: "circle.dotted", title: "Tires", isActive: false)
+    ]
+}
+
 // MARK: - ChatInputBar
 
 /// Компонент для ввода сообщений в чате
@@ -19,6 +42,7 @@ struct ChatInputBar: View {
     @Binding var isTextFieldFocused: Bool
     
     @State private var textFieldContentHeight: CGFloat = 43 // Начальная высота (1 строка)
+    @State private var problemButtons: [CarProblemButton] = CarProblemButton.defaultButtons
     
     let onSend: () -> Void
     let onImageTap: () -> Void
@@ -29,6 +53,7 @@ struct ChatInputBar: View {
     var body: some View {
         VStack(spacing: 0) {
             imagePreviewView
+            problemButtonsScrollView
             inputFieldView
         }
         .background(
@@ -39,6 +64,25 @@ struct ChatInputBar: View {
     }
     
     // MARK: - Subviews
+    
+    /// Горизонтальный скролл с кнопками проблем
+    private var problemButtonsScrollView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(problemButtons) { button in
+                    ProblemButtonView(
+                        button: button,
+                        onTap: {
+                            toggleButton(button)
+                        }
+                    )
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 8)
+        }
+        .frame(height: 60)
+    }
     
     /// Предпросмотр выбранного изображения
     @ViewBuilder
@@ -204,4 +248,90 @@ struct ChatInputBar: View {
             endPoint: .bottomTrailing
         )
     }
+    
+    // MARK: - Helper Methods
+    
+    /// Переключить состояние кнопки (только одна может быть активна)
+    private func toggleButton(_ button: CarProblemButton) {
+        if let index = problemButtons.firstIndex(where: { $0.id == button.id }) {
+            var updatedButtons = problemButtons
+            
+            // Если нажатая кнопка уже активна, деактивируем её
+            if updatedButtons[index].isActive {
+                updatedButtons[index].isActive = false
+            } else {
+                // Деактивируем все кнопки
+                for i in updatedButtons.indices {
+                    updatedButtons[i].isActive = false
+                }
+                // Активируем только выбранную
+                updatedButtons[index].isActive = true
+            }
+            
+            problemButtons = updatedButtons
+        }
+    }
 }
+
+// MARK: - ProblemButtonView
+
+/// Представление кнопки проблемы
+struct ProblemButtonView: View {
+    let button: CarProblemButton
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 6) {
+                if button.icon == "check.engine.custom" {
+                    Image("check_engine_icon")
+                        .resizable()
+                        .renderingMode(.template)
+                        .scaledToFit()
+                        .frame(width: 18, height: 18)
+                        .foregroundColor(button.isActive ? .white : .orange)
+                } else {
+                    Image(systemName: button.icon)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(button.isActive ? .white : .blue)
+                }
+                
+                Text(button.title)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(button.isActive ? .white : .primary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                Capsule()
+                    .fill(button.isActive ? 
+                          LinearGradient(
+                            colors: [Color.blue, Color.blue.opacity(0.8)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                          ) :
+                          LinearGradient(
+                            colors: [Color.white, Color.white.opacity(0.9)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                          )
+                    )
+                    .shadow(
+                        color: button.isActive ? Color.blue.opacity(0.3) : Color.black.opacity(0.1),
+                        radius: button.isActive ? 4 : 2,
+                        x: 0,
+                        y: 2
+                    )
+            )
+            .overlay(
+                Capsule()
+                    .stroke(
+                        button.isActive ? Color.clear : Color(.systemGray4).opacity(0.3),
+                        lineWidth: 0.5
+                    )
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
