@@ -285,18 +285,15 @@ struct ChatView: View {
         
         // Восстанавливаем состояние только если это не холодный старт
         if !hasRestoredState {
-            if appStateManager.isColdStart {
-                // Холодный старт: всегда начинаем с "Нового чата"
+            if appStateManager.isDeepLinkLaunch {
+                // Запуск через диплинк/пуш: восстанавливаем состояние из диплинка
+                restoreState()
+            } else {
+                // Всегда начинаем с "Нового чата" при перезаходе в приложение
                 showChatHistory = false
                 chatViewModel.currentChat = nil
                 chatViewModel.currentChatMessages = []
                 appStateManager.saveState(showChatHistory: false, currentChatId: nil)
-            } else if appStateManager.isDeepLinkLaunch {
-                // Запуск через диплинк/пуш: восстанавливаем состояние из диплинка
-                restoreState()
-            } else {
-                // Восстановление из фона: восстанавливаем сохраненное состояние
-                restoreState()
             }
             hasRestoredState = true
         }

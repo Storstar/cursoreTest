@@ -11,12 +11,7 @@ struct ContentView: View {
             Group {
                 if authViewModel.isAuthenticated {
                     if let user = authViewModel.currentUser {
-                        // Всегда показываем экран выбора авто при входе, если нет выбранного авто
-                        if carViewModel.car == nil {
-                            CarSelectionView()
-                        } else {
-                            MainView()
-                        }
+                        MainView()
                     } else {
                         WelcomeView(navigationPath: $navigationPath)
                     }

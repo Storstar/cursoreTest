@@ -46,7 +46,6 @@
 		AA0001100000000000000001 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001110000000000000001 /* MainTabView.swift */; };
 		AA0001120000000000000001 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001130000000000000001 /* ImagePicker.swift */; };
 		AA0001140000000000000001 /* ImageSourcePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001150000000000000001 /* ImageSourcePicker.swift */; };
-		AA0001160000000000000001 /* CarSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001170000000000000001 /* CarSelectionView.swift */; };
 		AA0001180000000000000001 /* CarMiniCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001190000000000000001 /* CarMiniCard.swift */; };
 		AA0001230000000000000001 /* CarBrandsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001220000000000000001 /* CarBrandsData.swift */; };
 		AA0001240000000000000001 /* MyCarsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001250000000000000001 /* MyCarsView.swift */; };
@@ -116,7 +115,6 @@
 		AA0001110000000000000001 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		AA0001130000000000000001 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		AA0001150000000000000001 /* ImageSourcePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSourcePicker.swift; sourceTree = "<group>"; };
-		AA0001170000000000000001 /* CarSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarSelectionView.swift; sourceTree = "<group>"; };
 		AA0001190000000000000001 /* CarMiniCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarMiniCard.swift; sourceTree = "<group>"; };
 		AA0001220000000000000001 /* CarBrandsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarBrandsData.swift; sourceTree = "<group>"; };
 		AA0001250000000000000001 /* MyCarsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCarsView.swift; sourceTree = "<group>"; };
@@ -194,7 +192,6 @@
 				AA0000870000000000000001 /* SettingsView.swift */,
 				AA0000890000000000000001 /* WelcomeView.swift */,
 				AA0001110000000000000001 /* MainTabView.swift */,
-				AA0001170000000000000001 /* CarSelectionView.swift */,
 				AA0001250000000000000001 /* MyCarsView.swift */,
 				AA0001430000000000000001 /* ChatView.swift */,
 				AA0001690000000000000001 /* ChatContentView.swift */,
@@ -401,7 +398,6 @@
 				AA0001100000000000000001 /* MainTabView.swift in Sources */,
 				AA0001120000000000000001 /* ImagePicker.swift in Sources */,
 				AA0001140000000000000001 /* ImageSourcePicker.swift in Sources */,
-				AA0001160000000000000001 /* CarSelectionView.swift in Sources */,
 				AA0001180000000000000001 /* CarMiniCard.swift in Sources */,
 				AA0001230000000000000001 /* CarBrandsData.swift in Sources */,
 				AA0001240000000000000001 /* MyCarsView.swift in Sources */,
