@@ -46,6 +46,7 @@ struct ChatView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
     @State private var hasRestoredState = false
+    @State private var selectedTopic: Topic? = nil
     
     // MARK: - Task Management
     
@@ -212,16 +213,19 @@ struct ChatView: View {
                 )
                 .id(chatViewModel.currentChat?.id ?? UUID()) // Пересоздаем view при смене чата
                 
-                // Панель ввода
-                ChatInputBar(
-                    text: $messageText,
-                    selectedImage: $selectedImage,
-                    isRecording: $isRecording,
-                    isTextFieldFocused: $isTextFieldFocused,
-                    onSend: { sendMessage() },
-                    onImageTap: { showImageOptions = true },
-                    onVoiceTap: { handleVoiceTap() }
-                )
+            // Панель ввода
+            ChatInputBar(
+                text: $messageText,
+                selectedImage: $selectedImage,
+                isRecording: $isRecording,
+                isTextFieldFocused: $isTextFieldFocused,
+                onSend: { sendMessage() },
+                onImageTap: { showImageOptions = true },
+                onVoiceTap: { handleVoiceTap() },
+                onTopicSelected: { topic in
+                    selectedTopic = topic
+                }
+            )
             }
             .offset(x: dragOffset)
             .simultaneousGesture(
@@ -442,8 +446,12 @@ struct ChatView: View {
                 imageData: compressedImageData,
                 requestViewModel: requestViewModel,
                 for: user,
-                car: carViewModel.car
+                car: carViewModel.car,
+                topic: selectedTopic
             )
+            
+            // Сбрасываем выбранную тему после отправки
+            selectedTopic = nil
             
             // После отправки скролл будет выполнен автоматически в ChatContentView
         }

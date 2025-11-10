@@ -301,7 +301,8 @@ class ChatViewModel: ObservableObject {
         imageData: Data?,
         requestViewModel: RequestViewModel,
         for user: User,
-        car: Car?
+        car: Car?,
+        topic: Topic? = nil
     ) async {
         isLoading = true
         errorMessage = nil
@@ -347,7 +348,8 @@ class ChatViewModel: ObservableObject {
                 for: user,
                 car: car,
                 chatId: chatId,
-                chatHistory: chatHistory
+                chatHistory: chatHistory,
+                topic: topic
             )
         } else if let text = text, !text.isEmpty {
             await requestViewModel.createTextRequest(
@@ -355,7 +357,8 @@ class ChatViewModel: ObservableObject {
                 for: user,
                 car: car,
                 chatId: chatId,
-                chatHistory: chatHistory
+                chatHistory: chatHistory,
+                topic: topic
             )
         }
         

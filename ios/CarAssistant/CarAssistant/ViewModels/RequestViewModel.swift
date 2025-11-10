@@ -41,7 +41,7 @@ class RequestViewModel: ObservableObject {
         }
     }
     
-    func createTextRequest(text: String, for user: User, car: Car?, chatId: UUID? = nil, chatHistory: [(role: String, content: String)] = []) async {
+    func createTextRequest(text: String, for user: User, car: Car?, chatId: UUID? = nil, chatHistory: [(role: String, content: String)] = [], topic: Topic? = nil) async {
         errorMessage = nil
         
         if let error = Validators.validateRequestText(text) {
@@ -70,39 +70,111 @@ class RequestViewModel: ObservableObject {
         
         // Теперь пытаемся получить ответ от AI
         do {
-            // Извлекаем данные об автомобиле для нового формата
-            let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
-            
-            print("📤 Отправка запроса к OpenRouter...")
-            print("   Модель: \(carModel), Год: \(carYear)")
-            
-            // Отправляем запрос с новым форматом, включая историю чата
-            let responseText = try await AIService.shared.sendMessageWithCarContext(
-                userMessage: text,
-                carModel: carModel,
-                carYear: carYear,
-                serviceHistory: serviceHistory,
-                fullCarContext: fullCarContext,
-                userLocation: userLocation,
-                chatHistory: chatHistory
-            )
-            
-            print("✅ Получен ответ от OpenRouter: \(responseText.prefix(100))...")
-            
-            // Создаем ответ и связываем с запросом
-            let response = Response(context: context)
-            response.id = UUID()
-            response.text = responseText
-            response.createdAt = Date()
-            response.request = request
-            
-            CoreDataManager.shared.save()
-            
-            // Уведомляем об изменении после получения ответа
-            await MainActor.run {
-                loadRequests(for: user)
+            // Используем PromptBuilder, если указана тема, иначе используем старый метод
+            if let topic = topic {
+                // Используем PromptBuilder
+                let builder = PromptBuilder()
+                
+                // Конвертируем данные
+                guard let vehicle = PromptBuilder.vehicle(from: car) else {
+                    errorMessage = "Не удалось получить данные об автомобиле"
+                    isLoading = false
+                    return
+                }
+                
+                let geo = PromptBuilder.geo(from: user)
+                
+                // Загружаем историю обслуживания
+                let maintenanceRecords: [MaintenanceRecordData]
+                do {
+                    let fetchRequest: NSFetchRequest<MaintenanceRecord> = MaintenanceRecord.fetchRequest()
+                    if let car = car {
+                        fetchRequest.predicate = NSPredicate(format: "car == %@", car)
+                    }
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MaintenanceRecord.date, ascending: false)]
+                    let records = try context.fetch(fetchRequest)
+                    maintenanceRecords = PromptBuilder.maintenanceRecords(from: records)
+                } catch {
+                    print("Ошибка загрузки истории обслуживания: \(error)")
+                    maintenanceRecords = []
+                }
+                
+                // Строим system prompt
+                let systemPrompt = builder.buildSystemPrompt(
+                    vehicle: vehicle,
+                    records: maintenanceRecords,
+                    geo: geo,
+                    topic: topic,
+                    hasImages: false
+                )
+                
+                // Конвертируем историю чата в формат для PromptBuilder
+                let chatHistoryFormatted: [[String: String]] = chatHistory.map { item in
+                    ["role": item.role, "content": item.content]
+                }
+                
+                // Строим messages
+                let messages = builder.buildMessages(
+                    systemPrompt: systemPrompt,
+                    chatHistory: chatHistoryFormatted,
+                    userContent: UserContent.text(text)
+                )
+                
+                print("📤 Отправка запроса к OpenRouter через PromptBuilder...")
+                print("   Тема: \(topic.rawValue)")
+                
+                // Отправляем запрос
+                let responseText = try await AIService.shared.sendRequestWithMessages(messages: messages)
+                
+                print("✅ Получен ответ от OpenRouter: \(responseText.prefix(100))...")
+                
+                // Создаем ответ и связываем с запросом
+                let response = Response(context: context)
+                response.id = UUID()
+                response.text = responseText
+                response.createdAt = Date()
+                response.request = request
+                
+                CoreDataManager.shared.save()
+                
+                // Уведомляем об изменении после получения ответа
+                await MainActor.run {
+                    loadRequests(for: user)
+                }
+            } else {
+                // Используем старый метод
+                let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
+                
+                print("📤 Отправка запроса к OpenRouter...")
+                print("   Модель: \(carModel), Год: \(carYear)")
+                
+                // Отправляем запрос с новым форматом, включая историю чата
+                let responseText = try await AIService.shared.sendMessageWithCarContext(
+                    userMessage: text,
+                    carModel: carModel,
+                    carYear: carYear,
+                    serviceHistory: serviceHistory,
+                    fullCarContext: fullCarContext,
+                    userLocation: userLocation,
+                    chatHistory: chatHistory
+                )
+                
+                print("✅ Получен ответ от OpenRouter: \(responseText.prefix(100))...")
+                
+                // Создаем ответ и связываем с запросом
+                let response = Response(context: context)
+                response.id = UUID()
+                response.text = responseText
+                response.createdAt = Date()
+                response.request = request
+                
+                CoreDataManager.shared.save()
+                
+                // Уведомляем об изменении после получения ответа
+                await MainActor.run {
+                    loadRequests(for: user)
+                }
             }
-            
         } catch {
             // Логируем ошибку для отладки
             print("❌ Ошибка при запросе к OpenRouter: \(error)")
@@ -340,31 +412,99 @@ class RequestViewModel: ObservableObject {
         isLoading = false
     }
     
-    func createPhotoRequest(imageData: Data, userMessage: String? = nil, for user: User, car: Car?, chatId: UUID? = nil, chatHistory: [(role: String, content: String)] = []) async {
+    func createPhotoRequest(imageData: Data, userMessage: String? = nil, for user: User, car: Car?, chatId: UUID? = nil, chatHistory: [(role: String, content: String)] = [], topic: Topic? = nil) async {
         errorMessage = nil
         isLoading = true
         
         do {
-            // Извлекаем данные об автомобиле для нового формата
-            let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
+            // Используем PromptBuilder, если указана тема, иначе используем старый метод
+            let responseText: String
             
-            print("📤 Отправка фото запроса к OpenRouter...")
-            print("   Модель: \(carModel), Год: \(carYear)")
-            if let userMessage = userMessage, !userMessage.isEmpty {
-                print("   Текст пользователя: \(userMessage.prefix(50))...")
+            if let topic = topic {
+                // Используем PromptBuilder
+                let builder = PromptBuilder()
+                
+                // Конвертируем данные
+                guard let vehicle = PromptBuilder.vehicle(from: car) else {
+                    errorMessage = "Не удалось получить данные об автомобиле"
+                    isLoading = false
+                    return
+                }
+                
+                let geo = PromptBuilder.geo(from: user)
+                
+                // Загружаем историю обслуживания
+                let maintenanceRecords: [MaintenanceRecordData]
+                do {
+                    let fetchRequest: NSFetchRequest<MaintenanceRecord> = MaintenanceRecord.fetchRequest()
+                    if let car = car {
+                        fetchRequest.predicate = NSPredicate(format: "car == %@", car)
+                    }
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MaintenanceRecord.date, ascending: false)]
+                    let records = try context.fetch(fetchRequest)
+                    maintenanceRecords = PromptBuilder.maintenanceRecords(from: records)
+                } catch {
+                    print("Ошибка загрузки истории обслуживания: \(error)")
+                    maintenanceRecords = []
+                }
+                
+                // Конвертируем изображение в base64
+                let base64Image = imageData.base64EncodedString()
+                
+                // Строим system prompt
+                let systemPrompt = builder.buildSystemPrompt(
+                    vehicle: vehicle,
+                    records: maintenanceRecords,
+                    geo: geo,
+                    topic: topic,
+                    hasImages: true
+                )
+                
+                // Конвертируем историю чата в формат для PromptBuilder
+                let chatHistoryFormatted: [[String: String]] = chatHistory.map { item in
+                    ["role": item.role, "content": item.content]
+                }
+                
+                // Строим messages
+                let messages = builder.buildMessages(
+                    systemPrompt: systemPrompt,
+                    chatHistory: chatHistoryFormatted,
+                    userContent: UserContent.images(
+                        imagesBase64: [base64Image],
+                        text: userMessage
+                    )
+                )
+                
+                print("📤 Отправка фото запроса к OpenRouter через PromptBuilder...")
+                print("   Тема: \(topic.rawValue)")
+                if let userMessage = userMessage, !userMessage.isEmpty {
+                    print("   Текст пользователя: \(userMessage.prefix(50))...")
+                }
+                
+                // Отправляем запрос
+                responseText = try await AIService.shared.sendRequestWithMessages(messages: messages)
+            } else {
+                // Используем старый метод
+                let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
+                
+                print("📤 Отправка фото запроса к OpenRouter...")
+                print("   Модель: \(carModel), Год: \(carYear)")
+                if let userMessage = userMessage, !userMessage.isEmpty {
+                    print("   Текст пользователя: \(userMessage.prefix(50))...")
+                }
+                
+                // Отправляем запрос с новым форматом, включая историю чата и текст пользователя
+                responseText = try await AIService.shared.sendPhotoRequest(
+                    imageData: imageData,
+                    userMessage: userMessage,
+                    carModel: carModel,
+                    carYear: carYear,
+                    serviceHistory: serviceHistory,
+                    fullCarContext: fullCarContext,
+                    userLocation: userLocation,
+                    chatHistory: chatHistory
+                )
             }
-            
-            // Отправляем запрос с новым форматом, включая историю чата и текст пользователя
-            let responseText = try await AIService.shared.sendPhotoRequest(
-                imageData: imageData,
-                userMessage: userMessage,
-                carModel: carModel,
-                carYear: carYear,
-                serviceHistory: serviceHistory,
-                fullCarContext: fullCarContext,
-                userLocation: userLocation,
-                chatHistory: chatHistory
-            )
             
             print("✅ Получен ответ от OpenRouter: \(responseText.prefix(100))...")
             

@@ -245,6 +245,32 @@ class AIService {
         return try await sendRequest(requestBody: requestBody)
     }
     
+    /// Отправить запрос используя PromptBuilder
+    /// - Parameters:
+    ///   - messages: Массив сообщений, сформированный PromptBuilder
+    ///   - model: Модель ИИ (по умолчанию используется модель из конфигурации)
+    /// - Returns: Ответ от ИИ
+    func sendRequestWithMessages(
+        messages: [[String: Any]],
+        model: String? = nil
+    ) async throws -> String {
+        // Проверяем наличие API ключа
+        guard !apiKey.isEmpty else {
+            throw AIServiceError.apiKeyNotSet
+        }
+        
+        // Используем переданную модель или модель по умолчанию
+        let modelToUse = model ?? self.model
+        
+        // Формируем тело запроса
+        let requestBody: [String: Any] = [
+            "model": modelToUse,
+            "messages": messages
+        ]
+        
+        return try await sendRequest(requestBody: requestBody)
+    }
+    
     // MARK: - Private Methods
     
     /// Отправить HTTP запрос к OpenRouter API

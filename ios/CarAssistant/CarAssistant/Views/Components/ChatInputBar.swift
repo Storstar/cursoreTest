@@ -47,6 +47,7 @@ struct ChatInputBar: View {
     let onSend: () -> Void
     let onImageTap: () -> Void
     let onVoiceTap: () -> Void
+    let onTopicSelected: ((Topic?) -> Void)?
     
     // MARK: - Body
     
@@ -259,6 +260,8 @@ struct ChatInputBar: View {
             // Если нажатая кнопка уже активна, деактивируем её
             if updatedButtons[index].isActive {
                 updatedButtons[index].isActive = false
+                // Уведомляем об отмене выбора темы
+                onTopicSelected?(nil)
             } else {
                 // Деактивируем все кнопки
                 for i in updatedButtons.indices {
@@ -266,6 +269,11 @@ struct ChatInputBar: View {
                 }
                 // Активируем только выбранную
                 updatedButtons[index].isActive = true
+                
+                // Уведомляем о выбранной теме
+                if let topic = PromptBuilder.topic(from: button.title) {
+                    onTopicSelected?(topic)
+                }
             }
             
             problemButtons = updatedButtons
