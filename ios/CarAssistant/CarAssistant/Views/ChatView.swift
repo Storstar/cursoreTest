@@ -177,8 +177,12 @@ struct ChatView: View {
             ChatContentView(
                 messages: chatViewModel.currentChatMessages,
                 keyboardHeight: keyboardHeight,
-                onTapToDismissKeyboard: { hideKeyboard() }
+                isLoadingHistory: chatViewModel.isLoadingHistory,
+                hasLoadedAllMessages: chatViewModel.hasLoadedAllMessages,
+                onTapToDismissKeyboard: { hideKeyboard() },
+                onLoadMoreMessages: { chatViewModel.loadMoreMessages() }
             )
+            .id(chatViewModel.currentChat?.id ?? UUID()) // Пересоздаем view при смене чата
             
             // Панель ввода
             ChatInputBar(

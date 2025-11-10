@@ -15,7 +15,18 @@ struct ChatContentView: View {
     
     let messages: [ChatMessage]
     let keyboardHeight: CGFloat
+    let isLoadingHistory: Bool
+    let hasLoadedAllMessages: Bool
     let onTapToDismissKeyboard: () -> Void
+    let onLoadMoreMessages: () -> Void
+    
+    // MARK: - State Properties
+    
+    @State private var isFirstAppear = true
+    @State private var lastMessageCount = 0
+    @State private var firstMessageVisible = false
+    @State private var anchorMessageId: UUID?
+    @State private var lastLoadMoreTime: Date?
     
     // MARK: - Body
     
@@ -51,9 +62,46 @@ struct ChatContentView: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.top, 100)
                     } else {
+                        // Индикатор загрузки истории вверху
+                        if isLoadingHistory {
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .padding()
+                                Spacer()
+                            }
+                        }
+                        
                         ForEach(messages) { message in
                             ChatBubble(message: message)
                                 .id(message.id)
+                                .onAppear {
+                                    // Отслеживаем появление первого сообщения для подгрузки истории
+                                    if message.id == messages.first?.id {
+                                        firstMessageVisible = true
+                                        // Сохраняем ID первого сообщения для сохранения позиции скролла
+                                        anchorMessageId = message.id
+                                        // Если не все сообщения загружены, загружаем больше
+                                        // Добавляем задержку, чтобы не вызывать слишком часто
+                                        if !hasLoadedAllMessages && !isLoadingHistory {
+                                            let now = Date()
+                                            if let lastTime = lastLoadMoreTime {
+                                                // Защита от множественных вызовов - минимум 0.5 секунды между вызовами
+                                                if now.timeIntervalSince(lastTime) < 0.5 {
+                                                    return
+                                                }
+                                            }
+                                            lastLoadMoreTime = now
+                                            onLoadMoreMessages()
+                                        }
+                                    }
+                                }
+                                .onDisappear {
+                                    // Отслеживаем исчезновение первого сообщения
+                                    if message.id == messages.first?.id {
+                                        firstMessageVisible = false
+                                    }
+                                }
                         }
                     }
                 }
@@ -63,20 +111,43 @@ struct ChatContentView: View {
             }
             .scrollBounceBehavior(.basedOnSize) // Ограничиваем bounce эффект на основе размера контента (iOS 16+)
             .onAppear {
-                // Один автоскролл при первом появлении (к низу)
-                if !messages.isEmpty {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        if let lastMessage = messages.last {
-                            withAnimation(.easeInOut(duration: 0.25)) {
-                                proxy.scrollTo(lastMessage.id, anchor: .bottom)
-                            }
+                // При первом появлении делаем мгновенный скролл без анимации
+                // чтобы не тратить ресурсы на рендеринг всех сообщений сверху вниз
+                if isFirstAppear && !messages.isEmpty {
+                    if let lastMessage = messages.last {
+                        // Мгновенный скролл без анимации для оптимизации
+                        // Используем Task для выполнения после рендеринга
+                        Task { @MainActor in
+                            // Небольшая задержка для гарантии, что элемент отрендерен
+                            try? await Task.sleep(nanoseconds: 10_000_000) // 0.01 секунды
+                            proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                        }
+                    }
+                    isFirstAppear = false
+                    lastMessageCount = messages.count
+                }
+            }
+            .onChange(of: isLoadingHistory) { isLoading in
+                // При завершении загрузки истории сохраняем позицию скролла
+                if !isLoading && anchorMessageId != nil {
+                    // Сохраняем позицию скролла, скролля к якорному сообщению
+                    if let anchorId = anchorMessageId {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            proxy.scrollTo(anchorId, anchor: .top)
                         }
                     }
                 }
             }
+            .onChange(of: messages.count) { newCount in
+                // Обновляем счетчик сообщений
+                if !isFirstAppear {
+                    lastMessageCount = newCount
+                }
+            }
             .onChange(of: messages.last?.id) { newLastMessageId in
-                // При изменении последнего сообщения (отправка нового или получение ответа): прокручиваем к нему
-                if let lastMessageId = newLastMessageId {
+                // При изменении последнего сообщения (новое сообщение или обновление текста): прокручиваем к нему
+                // Только если это не первое появление и не идет загрузка истории
+                if !isFirstAppear && !isLoadingHistory, let lastMessageId = newLastMessageId {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                         withAnimation(.easeInOut(duration: 0.3)) {
                             proxy.scrollTo(lastMessageId, anchor: .bottom)
@@ -86,7 +157,7 @@ struct ChatContentView: View {
             }
             .onChange(of: keyboardHeight) { newHeight in
                 // При появлении/скрытии клавиатуры прокручиваем к последнему сообщению
-                if newHeight > 0 && !messages.isEmpty {
+                if newHeight > 0 && !messages.isEmpty && !isFirstAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         if let lastMessage = messages.last {
                             withAnimation(.easeOut(duration: 0.25)) {
