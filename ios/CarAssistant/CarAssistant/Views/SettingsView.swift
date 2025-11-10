@@ -21,68 +21,11 @@ struct SettingsView: View {
                             .foregroundColor(.secondary)
                     } else {
                         ForEach(carViewModel.cars, id: \.objectID) { car in
-                            CarManagementCard(
-                                car: car,
-                                isDefault: carViewModel.car?.objectID == car.objectID,
-                                onSetDefault: {
-                                    carViewModel.selectCar(car)
-                                },
-                                onEdit: {
-                                    editingCar = car
-                                },
-                                onDelete: {
-                                    deleteCar(car)
-                                }
-                            )
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                // Тап по карточке открывает редактирование
-                                editingCar = car
-                            }
-                            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-                            .listRowBackground(Color.clear)
-                            .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                                Button {
-                                    editingCar = car
-                                } label: {
-                                    Label("Редактировать", systemImage: "pencil")
-                                }
-                                .tint(.blue)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(role: .destructive) {
-                                    deleteCar(car)
-                                } label: {
-                                    Label("Удалить", systemImage: "trash")
-                                }
-                            }
+                            carRow(car: car)
                         }
                     }
                     
-                    // Кнопка "Добавить авто"
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            showAddCar = true
-                        }) {
-                            HStack {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 20, weight: .semibold))
-                                Text("Добавить авто")
-                                    .font(.system(size: 17, weight: .semibold))
-                            }
-                            .foregroundColor(.blue)
-                            .padding(.horizontal, 32)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .fill(Color.blue.opacity(0.1))
-                            )
-                        }
-                        Spacer()
-                    }
-                    .listRowInsets(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
-                    .listRowBackground(Color.clear)
+                    addCarButton
                 }
                 
                 // Геопозиция
@@ -128,6 +71,13 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Профиль")
+            .scrollDismissesKeyboard(.interactively)
+            .simultaneousGesture(
+                TapGesture()
+                    .onEnded { _ in
+                        hideKeyboard()
+                    }
+            )
             .sheet(isPresented: $showAddCar) {
                 CarInputView(navigationPath: .constant(NavigationPath()))
                     .environmentObject(authViewModel)
@@ -157,22 +107,88 @@ struct SettingsView: View {
                 }
             }
             .onChange(of: locationManager.city) { newValue in
-                if let newValue = newValue {
-                    city = newValue
-                    saveLocation()
-                }
+                guard let newValue = newValue else { return }
+                city = newValue
+                saveLocation()
             }
             .onChange(of: locationManager.country) { newValue in
-                if let newValue = newValue {
-                    country = newValue
-                    saveLocation()
-                }
+                guard let newValue = newValue else { return }
+                country = newValue
+                saveLocation()
             }
             .onChange(of: locationManager.isAuthorized) { newValue in
                 isLocationAuthorized = newValue
             }
-            // УБРАНО .refreshable - чтобы не мешать свайпу вниз для закрытия sheet'ов добавления/редактирования авто
         }
+    }
+    
+    // MARK: - View Builders
+    
+    @ViewBuilder
+    private func carRow(car: Car) -> some View {
+        let isDefault = carViewModel.car?.objectID == car.objectID
+        
+        CarManagementCard(
+            car: car,
+            isDefault: isDefault,
+            onSetDefault: {
+                carViewModel.selectCar(car)
+            },
+            onEdit: {
+                editingCar = car
+            },
+            onDelete: {
+                deleteCar(car)
+            }
+        )
+        .contentShape(Rectangle())
+        .onTapGesture {
+            editingCar = car
+        }
+        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+        .listRowBackground(Color.clear)
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+            Button {
+                editingCar = car
+            } label: {
+                Label("Редактировать", systemImage: "pencil")
+            }
+            .tint(.blue)
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button(role: .destructive) {
+                deleteCar(car)
+            } label: {
+                Label("Удалить", systemImage: "trash")
+            }
+        }
+    }
+    
+    private var addCarButton: some View {
+        HStack {
+            Spacer()
+            Button {
+                showAddCar = true
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 20, weight: .semibold))
+                    Text("Добавить авто")
+                        .font(.system(size: 17, weight: .semibold))
+                }
+                .foregroundColor(.blue)
+                .padding(.horizontal, 32)
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.blue.opacity(0.1))
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
+            Spacer()
+        }
+        .listRowInsets(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+        .listRowBackground(Color.clear)
     }
     
     private func deleteCar(_ car: Car) {
@@ -194,7 +210,13 @@ struct SettingsView: View {
         user.country = country.isEmpty ? nil : country
         CoreDataManager.shared.save()
     }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
+
+// MARK: - LocationManager
 
 // LocationManager для определения геопозиции
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
@@ -238,7 +260,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         guard let location = locations.first else { return }
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
-            guard let self = self, let placemark = placemarks?.first else { return }
+            guard let self = self else { return }
+            if let error = error {
+                print("Geocoding error: \(error.localizedDescription)")
+                return
+            }
+            guard let placemark = placemarks?.first else { return }
             DispatchQueue.main.async {
                 self.city = placemark.locality
                 self.country = placemark.country
@@ -248,6 +275,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location error: \(error.localizedDescription)")
+        DispatchQueue.main.async {
+            self.isAuthorized = false
+        }
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

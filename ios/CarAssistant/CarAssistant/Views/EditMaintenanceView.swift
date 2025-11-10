@@ -235,13 +235,20 @@ struct EditMaintenanceView: View {
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
                     }
-                    .accessibilityLabel("Закрыть")
+                    .accessibilityLabel("Отмена")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Сохранить") {
+                    Button(action: {
                         saveMaintenance()
+                    }) {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.blue)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
                     .disabled(serviceType.isEmpty || mileage.isEmpty)
+                    .accessibilityLabel("Сохранить")
                 }
             }
             .sheet(isPresented: $showImagePicker) {

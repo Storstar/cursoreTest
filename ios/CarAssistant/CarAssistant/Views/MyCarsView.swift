@@ -543,25 +543,30 @@ struct CarEditView: View {
                 }
             }
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(.primary)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .accessibilityLabel("Отмена")
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Сохранить") {
-                        if let user = authViewModel.currentUser {
-                            car.brand = selectedBrand
-                            car.model = selectedModel
-                            car.year = selectedYear
-                            car.engine = selectedEngine
-                            car.fuelType = selectedFuelType.isEmpty ? nil : selectedFuelType
-                            car.driveType = selectedDriveType.isEmpty ? nil : selectedDriveType
-                            car.transmission = selectedTransmission.isEmpty ? nil : selectedTransmission
-                            car.vin = vin.isEmpty ? nil : vin
-                            car.photoData = selectedImage?.jpegData(compressionQuality: 0.8)
-                            car.notes = notes.isEmpty ? nil : notes
-                            CoreDataManager.shared.save()
-                            carViewModel.loadCars(for: user)
-                            dismiss()
-                        }
+                    Button(action: {
+                        saveCar()
+                    }) {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.blue)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
                     }
                     .disabled(selectedBrand.isEmpty || selectedModel.isEmpty)
+                    .accessibilityLabel("Сохранить")
                 }
             }
             .onAppear {
@@ -595,6 +600,24 @@ struct CarEditView: View {
                 }
                 Button("Отмена", role: .cancel) {}
             }
+        }
+    }
+    
+    private func saveCar() {
+        if let user = authViewModel.currentUser {
+            car.brand = selectedBrand
+            car.model = selectedModel
+            car.year = selectedYear
+            car.engine = selectedEngine
+            car.fuelType = selectedFuelType.isEmpty ? nil : selectedFuelType
+            car.driveType = selectedDriveType.isEmpty ? nil : selectedDriveType
+            car.transmission = selectedTransmission.isEmpty ? nil : selectedTransmission
+            car.vin = vin.isEmpty ? nil : vin
+            car.photoData = selectedImage?.jpegData(compressionQuality: 0.8)
+            car.notes = notes.isEmpty ? nil : notes
+            CoreDataManager.shared.save()
+            carViewModel.loadCars(for: user)
+            dismiss()
         }
     }
     

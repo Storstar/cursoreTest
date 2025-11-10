@@ -75,7 +75,8 @@ struct CarInputView: View {
     }
     
     var body: some View {
-        Form {
+        NavigationStack {
+            Form {
             Section {
                 HStack {
                     Spacer()
@@ -284,78 +285,36 @@ struct CarInputView: View {
                         .foregroundColor(.red)
                 }
             }
-            
-            Section {
-                Button(action: {
-                    brandError = Validators.validateBrand(selectedBrand)
-                    modelError = Validators.validateModel(selectedModel)
-                    yearError = Validators.validateYear(selectedYear)
-                    engineError = Validators.validateEngine(selectedEngine)
-                    
-                    if brandError == nil && modelError == nil && yearError == nil && engineError == nil {
-                        if let user = authViewModel.currentUser {
-                            // ВАЖНО: Всегда создаем новый автомобиль, никогда не обновляем существующий
-                            let carsCountBefore = carViewModel.cars.count
-                            let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
-                            carViewModel.saveCar(
-                                brand: selectedBrand,
-                                model: selectedModel,
-                                year: selectedYear,
-                                engine: selectedEngine,
-                                fuelType: selectedFuelType.isEmpty ? nil : selectedFuelType,
-                                driveType: selectedDriveType.isEmpty ? nil : selectedDriveType,
-                                transmission: selectedTransmission.isEmpty ? nil : selectedTransmission,
-                                vin: vin.isEmpty ? nil : vin,
-                                photoData: imageData,
-                                notes: notes.isEmpty ? nil : notes,
-                                for: user
-                            )
-                            
-                            if carViewModel.errorMessage == nil {
-                                // Обновляем список автомобилей
-                                carViewModel.loadCars(for: user)
-                                
-                                // Проверяем, что автомобиль действительно добавился
-                                let carsCountAfter = carViewModel.cars.count
-                                if carsCountAfter > carsCountBefore {
-                                    print("✅ Новый автомобиль успешно добавлен. Было: \(carsCountBefore), стало: \(carsCountAfter)")
-                                } else {
-                                    print("⚠️ Внимание: Количество автомобилей не изменилось!")
-                                }
-                                
-                                // Очищаем поля формы
-                                selectedBrand = ""
-                                selectedModel = ""
-                                selectedYear = Int16(Calendar.current.component(.year, from: Date()))
-                                selectedEngine = ""
-                                selectedFuelType = ""
-                                selectedDriveType = ""
-                                selectedTransmission = ""
-                                vin = ""
-                                notes = ""
-                                selectedImage = nil
-                                brandSearchText = ""
-                                modelSearchText = ""
-                                brandError = nil
-                                modelError = nil
-                                yearError = nil
-                                engineError = nil
-                                isBrandFieldFocused = false
-                                isModelFieldFocused = false
-                                
-                                // Закрываем sheet
-                                dismiss()
-                            }
-                        }
-                    }
-                }) {
-                    Text("Сохранить")
-                        .frame(maxWidth: .infinity)
-                }
-            }
         }
         .navigationTitle("Добавить автомобиль")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.primary)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .accessibilityLabel("Отмена")
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    saveCar()
+                }) {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.blue)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .disabled(selectedBrand.isEmpty || selectedModel.isEmpty || selectedEngine.isEmpty)
+                .accessibilityLabel("Сохранить")
+            }
+        }
         .scrollDismissesKeyboard(.interactively) // Автоматически скрывает клавиатуру при прокрутке
         .safeAreaInset(edge: .bottom) {
             // Добавляем нижний inset, равный высоте клавиатуры
@@ -422,6 +381,71 @@ struct CarInputView: View {
                 showPhotoPicker = true
             }
             Button("Отмена", role: .cancel) {}
+        }
+        }
+    }
+    
+    private func saveCar() {
+        brandError = Validators.validateBrand(selectedBrand)
+        modelError = Validators.validateModel(selectedModel)
+        yearError = Validators.validateYear(selectedYear)
+        engineError = Validators.validateEngine(selectedEngine)
+        
+        if brandError == nil && modelError == nil && yearError == nil && engineError == nil {
+            if let user = authViewModel.currentUser {
+                // ВАЖНО: Всегда создаем новый автомобиль, никогда не обновляем существующий
+                let carsCountBefore = carViewModel.cars.count
+                let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+                carViewModel.saveCar(
+                    brand: selectedBrand,
+                    model: selectedModel,
+                    year: selectedYear,
+                    engine: selectedEngine,
+                    fuelType: selectedFuelType.isEmpty ? nil : selectedFuelType,
+                    driveType: selectedDriveType.isEmpty ? nil : selectedDriveType,
+                    transmission: selectedTransmission.isEmpty ? nil : selectedTransmission,
+                    vin: vin.isEmpty ? nil : vin,
+                    photoData: imageData,
+                    notes: notes.isEmpty ? nil : notes,
+                    for: user
+                )
+                
+                if carViewModel.errorMessage == nil {
+                    // Обновляем список автомобилей
+                    carViewModel.loadCars(for: user)
+                    
+                    // Проверяем, что автомобиль действительно добавился
+                    let carsCountAfter = carViewModel.cars.count
+                    if carsCountAfter > carsCountBefore {
+                        print("✅ Новый автомобиль успешно добавлен. Было: \(carsCountBefore), стало: \(carsCountAfter)")
+                    } else {
+                        print("⚠️ Внимание: Количество автомобилей не изменилось!")
+                    }
+                    
+                    // Очищаем поля формы
+                    selectedBrand = ""
+                    selectedModel = ""
+                    selectedYear = Int16(Calendar.current.component(.year, from: Date()))
+                    selectedEngine = ""
+                    selectedFuelType = ""
+                    selectedDriveType = ""
+                    selectedTransmission = ""
+                    vin = ""
+                    notes = ""
+                    selectedImage = nil
+                    brandSearchText = ""
+                    modelSearchText = ""
+                    brandError = nil
+                    modelError = nil
+                    yearError = nil
+                    engineError = nil
+                    isBrandFieldFocused = false
+                    isModelFieldFocused = false
+                    
+                    // Закрываем sheet
+                    dismiss()
+                }
+            }
         }
     }
     
