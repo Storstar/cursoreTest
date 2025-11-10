@@ -5,6 +5,7 @@ struct CarAssistantApp: App {
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var carViewModel = CarViewModel()
     @StateObject private var themeManager = ThemeManager.shared
+    @StateObject private var languageManager = LanguageManager.shared
     
     @Environment(\.scenePhase) private var scenePhase
     
@@ -22,6 +23,7 @@ struct CarAssistantApp: App {
                 .environmentObject(authViewModel)
                 .environmentObject(carViewModel)
                 .environmentObject(themeManager)
+                .environmentObject(languageManager)
                 .environment(\.managedObjectContext, persistenceController.viewContext)
                 .preferredColorScheme(themeManager.colorScheme)
                 .onAppear {
@@ -43,9 +45,16 @@ struct CarAssistantApp: App {
     private func handleScenePhaseChange(_ phase: ScenePhase) {
         switch phase {
         case .background:
-            // Приложение ушло в фон - сохраняем состояние
+            // Приложение ушло в фон - сохраняем состояние и освобождаем ресурсы
             // Состояние уже сохраняется в ChatView при изменениях
             appStateManager.markEnteredBackground()
+            
+            // Освобождаем память при переходе в фон
+            // Очищаем кэш автомобилей для экономии памяти
+            carViewModel.invalidateCache()
+            
+            // Уведомляем об освобождении памяти
+            NotificationCenter.default.post(name: NSNotification.Name("AppDidEnterBackground"), object: nil)
         case .inactive:
             // Приложение стало неактивным (переход между состояниями)
             break

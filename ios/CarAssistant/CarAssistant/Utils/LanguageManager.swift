@@ -148,6 +148,11 @@ class LanguageManager: ObservableObject {
         }
     }
     
+    /// Получить словарь локализации для конкретного языка (публичный метод)
+    func getLocalizationStrings(for language: AppLanguage) -> [String: String] {
+        return getLocalizationDictionary(for: language)
+    }
+    
     /// Сохранить текущий язык
     private func saveLanguage() {
         userDefaults.set(currentLanguage.rawValue, forKey: languageKey)

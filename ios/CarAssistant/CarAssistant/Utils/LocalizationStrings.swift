@@ -837,11 +837,6 @@ struct LocalizationStrings {
         "maintenanceInput.mileageLabel": "المسافة:",
         "maintenanceInput.documentAttached": "مستند مرفق",
         
-        // Car Management
-        "carInput.editCar": "تعديل السيارة",
-        "carInput.myCars": "سياراتي",
-        "carInput.addFirstCar": "إضافة أول سيارة",
-        
         // Maintenance Types
         "maintenanceType.maintenance": "الصيانة",
         "maintenanceType.repair": "الإصلاح",

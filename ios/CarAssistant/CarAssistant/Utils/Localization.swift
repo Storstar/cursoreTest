@@ -211,6 +211,28 @@ struct Localization {
         static var all: [String] {
             [gasoline, diesel, hybrid, electric, gas, gasGasoline]
         }
+        
+        // Ключи для каждого типа топлива
+        private static let keys = ["fuelType.gasoline", "fuelType.diesel", "fuelType.hybrid", "fuelType.electric", "fuelType.gas", "fuelType.gasGasoline"]
+        
+        // Преобразовать локализованную строку в ключ
+        static func key(for localizedString: String) -> String? {
+            // Проверяем все языки, чтобы найти соответствующий ключ
+            for key in keys {
+                for language in LanguageManager.AppLanguage.allCases {
+                    let strings = LanguageManager.shared.getLocalizationStrings(for: language)
+                    if let value = strings[key], value == localizedString {
+                        return key
+                    }
+                }
+            }
+            return nil
+        }
+        
+        // Преобразовать ключ в локализованную строку
+        static func localizedString(for key: String) -> String {
+            return localized(key)
+        }
     }
     
     // MARK: - Drive Types
@@ -224,6 +246,28 @@ struct Localization {
         
         static var all: [String] {
             [front, rear, full, fourWD, aws]
+        }
+        
+        // Ключи для каждого типа привода
+        private static let keys = ["driveType.front", "driveType.rear", "driveType.full", "driveType.fourWD", "driveType.aws"]
+        
+        // Преобразовать локализованную строку в ключ
+        static func key(for localizedString: String) -> String? {
+            // Проверяем все языки, чтобы найти соответствующий ключ
+            for key in keys {
+                for language in LanguageManager.AppLanguage.allCases {
+                    let strings = LanguageManager.shared.getLocalizationStrings(for: language)
+                    if let value = strings[key], value == localizedString {
+                        return key
+                    }
+                }
+            }
+            return nil
+        }
+        
+        // Преобразовать ключ в локализованную строку
+        static func localizedString(for key: String) -> String {
+            return localized(key)
         }
     }
     
@@ -239,6 +283,28 @@ struct Localization {
         
         static var all: [String] {
             [manual, automatic, robot, cvt, dsg, dct]
+        }
+        
+        // Ключи для каждого типа коробки передач
+        private static let keys = ["transmission.manual", "transmission.automatic", "transmission.robot", "transmission.cvt", "transmission.dsg", "transmission.dct"]
+        
+        // Преобразовать локализованную строку в ключ
+        static func key(for localizedString: String) -> String? {
+            // Проверяем все языки, чтобы найти соответствующий ключ
+            for key in keys {
+                for language in LanguageManager.AppLanguage.allCases {
+                    let strings = LanguageManager.shared.getLocalizationStrings(for: language)
+                    if let value = strings[key], value == localizedString {
+                        return key
+                    }
+                }
+            }
+            return nil
+        }
+        
+        // Преобразовать ключ в локализованную строку
+        static func localizedString(for key: String) -> String {
+            return localized(key)
         }
     }
     

@@ -575,9 +575,50 @@ struct CarEditView: View {
                 selectedModel = car.model ?? ""
                 selectedYear = car.year
                 selectedEngine = car.engine ?? ""
-                selectedFuelType = car.fuelType ?? ""
-                selectedDriveType = car.driveType ?? ""
-                selectedTransmission = car.transmission ?? ""
+                // Преобразуем сохраненные значения (могут быть ключами или локализованными строками)
+                if let fuelType = car.fuelType, !fuelType.isEmpty {
+                    // Проверяем, является ли значение ключом
+                    if fuelType.hasPrefix("fuelType.") {
+                        selectedFuelType = Localization.FuelType.localizedString(for: fuelType)
+                    } else {
+                        // Это локализованная строка, преобразуем в ключ, а затем в текущую локализацию
+                        if let key = Localization.FuelType.key(for: fuelType) {
+                            selectedFuelType = Localization.FuelType.localizedString(for: key)
+                        } else {
+                            selectedFuelType = fuelType
+                        }
+                    }
+                } else {
+                    selectedFuelType = ""
+                }
+                
+                if let driveType = car.driveType, !driveType.isEmpty {
+                    if driveType.hasPrefix("driveType.") {
+                        selectedDriveType = Localization.DriveType.localizedString(for: driveType)
+                    } else {
+                        if let key = Localization.DriveType.key(for: driveType) {
+                            selectedDriveType = Localization.DriveType.localizedString(for: key)
+                        } else {
+                            selectedDriveType = driveType
+                        }
+                    }
+                } else {
+                    selectedDriveType = ""
+                }
+                
+                if let transmission = car.transmission, !transmission.isEmpty {
+                    if transmission.hasPrefix("transmission.") {
+                        selectedTransmission = Localization.Transmission.localizedString(for: transmission)
+                    } else {
+                        if let key = Localization.Transmission.key(for: transmission) {
+                            selectedTransmission = Localization.Transmission.localizedString(for: key)
+                        } else {
+                            selectedTransmission = transmission
+                        }
+                    }
+                } else {
+                    selectedTransmission = ""
+                }
                 vin = car.vin ?? ""
                 notes = car.notes ?? ""
                 // Загружаем изображение с оптимизацией для экономии памяти
@@ -612,9 +653,38 @@ struct CarEditView: View {
             car.model = selectedModel
             car.year = selectedYear
             car.engine = selectedEngine
-            car.fuelType = selectedFuelType.isEmpty ? nil : selectedFuelType
-            car.driveType = selectedDriveType.isEmpty ? nil : selectedDriveType
-            car.transmission = selectedTransmission.isEmpty ? nil : selectedTransmission
+            // Сохраняем ключи вместо локализованных строк
+            if selectedFuelType.isEmpty {
+                car.fuelType = nil
+            } else {
+                // Преобразуем локализованную строку в ключ
+                if let key = Localization.FuelType.key(for: selectedFuelType) {
+                    car.fuelType = key
+                } else {
+                    // Если не удалось найти ключ, сохраняем как есть (для обратной совместимости)
+                    car.fuelType = selectedFuelType
+                }
+            }
+            
+            if selectedDriveType.isEmpty {
+                car.driveType = nil
+            } else {
+                if let key = Localization.DriveType.key(for: selectedDriveType) {
+                    car.driveType = key
+                } else {
+                    car.driveType = selectedDriveType
+                }
+            }
+            
+            if selectedTransmission.isEmpty {
+                car.transmission = nil
+            } else {
+                if let key = Localization.Transmission.key(for: selectedTransmission) {
+                    car.transmission = key
+                } else {
+                    car.transmission = selectedTransmission
+                }
+            }
             car.vin = vin.isEmpty ? nil : vin
             // Сжимаем изображение перед сохранением в Core Data для экономии памяти
             car.photoData = selectedImage.flatMap { ImageOptimizer.compressImage($0, maxDimension: 800, compressionQuality: 0.7) }

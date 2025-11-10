@@ -278,6 +278,13 @@ struct SettingsView: View {
                     isLocationLoading = false
                 }
             }
+            .onDisappear {
+                // Останавливаем LocationManager при закрытии экрана для экономии памяти
+                locationManager.stop()
+                // Отменяем все таймауты
+                loadingTimeoutTask?.cancel()
+                loadingTimeoutTask = nil
+            }
             }
             .scrollContentBackground(.hidden) // Скрываем фон List, чтобы был виден градиент
         }
@@ -398,12 +405,26 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var fullAddress: String? // Полный адрес для использования ИИ
     @Published var isAuthorized = false
     private var locationRequestTimeout: DispatchWorkItem?
+    private var currentGeocoder: CLGeocoder?
     
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
         checkAuthorization()
+        
+        // Подписываемся на уведомление о переходе в фон
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAppDidEnterBackground),
+            name: NSNotification.Name("AppDidEnterBackground"),
+            object: nil
+        )
+    }
+    
+    @objc private func handleAppDidEnterBackground() {
+        // Останавливаем все операции при переходе в фон
+        stop()
     }
     
     func checkAuthorization() {
@@ -469,11 +490,16 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         locationRequestTimeout?.cancel()
         locationRequestTimeout = nil
         
+        // Отменяем предыдущий геокодер, если он есть
+        currentGeocoder?.cancelGeocode()
+        
         let geocoder = CLGeocoder()
+        currentGeocoder = geocoder
         
         // Устанавливаем таймаут для геокодирования (10 секунд)
         var geocodingCompleted = false
-        let timeoutWork = DispatchWorkItem { [weak self] in
+        var timeoutWork: DispatchWorkItem?
+        timeoutWork = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
             if !geocodingCompleted {
                 geocodingCompleted = true
@@ -487,16 +513,20 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                     self.administrativeArea = nil
                     self.subAdministrativeArea = nil
                     self.fullAddress = nil
+                    self.currentGeocoder = nil
                 }
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: timeoutWork)
+        if let timeout = timeoutWork {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: timeout)
+        }
         
         geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
             guard let self = self else { return }
             guard !geocodingCompleted else { return }
             geocodingCompleted = true
-            timeoutWork.cancel()
+            timeoutWork?.cancel()
+            self.currentGeocoder = nil
             
             DispatchQueue.main.async {
                 if let error = error {
@@ -577,5 +607,34 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         checkAuthorization()
+    }
+    
+    /// Остановить все операции LocationManager для экономии памяти
+    func stop() {
+        // Отменяем все таймауты
+        locationRequestTimeout?.cancel()
+        locationRequestTimeout = nil
+        
+        // Отменяем геокодирование
+        currentGeocoder?.cancelGeocode()
+        currentGeocoder = nil
+        
+        // Останавливаем обновления местоположения
+        locationManager.stopUpdatingLocation()
+        
+        // Очищаем все данные
+        city = nil
+        country = nil
+        street = nil
+        postalCode = nil
+        administrativeArea = nil
+        subAdministrativeArea = nil
+        fullAddress = nil
+    }
+    
+    deinit {
+        // Убеждаемся, что все ресурсы освобождены
+        NotificationCenter.default.removeObserver(self)
+        stop()
     }
 }
