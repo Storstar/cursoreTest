@@ -5,6 +5,7 @@ struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var carViewModel: CarViewModel
     @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var languageManager: LanguageManager
     @Environment(\.colorScheme) var systemColorScheme
     @State private var showAddCar = false
     @State private var editingCar: Car?
@@ -23,9 +24,9 @@ struct SettingsView: View {
                 
                 List {
                 // Список автомобилей
-                Section(header: Text("Мои автомобили")) {
+                Section(header: Text(Localization.Settings.myCars)) {
                     if carViewModel.cars.isEmpty {
-                        Text("Нет сохранённых автомобилей")
+                        Text(Localization.Settings.noCars)
                             .foregroundColor(.secondary)
                     } else {
                         ForEach(carViewModel.cars, id: \.objectID) { car in
@@ -37,11 +38,11 @@ struct SettingsView: View {
                 }
                 
                 // Геопозиция
-                Section(header: Text("Геопозиция")) {
+                Section(header: Text(Localization.Settings.geolocation)) {
                     HStack {
                         Image(systemName: isLocationAuthorized ? "location.fill" : "location.circle")
                             .foregroundColor(isLocationAuthorized ? .blue : .secondary)
-                        Text("Автоматически определено")
+                        Text(Localization.Settings.autoDetermined)
                             .foregroundColor(.secondary)
                         
                         if isLocationUpdated {
@@ -80,7 +81,7 @@ struct SettingsView: View {
                             } else {
                                 Image(systemName: "location.circle.fill")
                             }
-                            Text(isLocationLoading ? "Определение..." : "Определить местоположение")
+                            Text(isLocationLoading ? Localization.Settings.determining : Localization.Settings.determineLocation)
                         }
                         .foregroundColor(.blue)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -90,11 +91,11 @@ struct SettingsView: View {
                 }
                 
                 // Внешний вид
-                Section(header: Text("Внешний вид")) {
+                Section(header: Text(Localization.Settings.appearance)) {
                     HStack {
                         Image(systemName: themeManager.colorScheme == .dark ? "moon.fill" : "sun.max.fill")
                             .foregroundColor(.blue)
-                        Text("Тема")
+                        Text(Localization.Settings.theme)
                         
                         Spacer()
                         
@@ -114,31 +115,49 @@ struct SettingsView: View {
                                 }
                             }
                         )) {
-                            Text("Светлая").tag("light")
-                            Text("Темная").tag("dark")
+                            Text(Localization.Settings.lightTheme).tag("light")
+                            Text(Localization.Settings.darkTheme).tag("dark")
+                        }
+                        .pickerStyle(.menu)
+                    }
+                    
+                    HStack {
+                        Image(systemName: "globe")
+                            .foregroundColor(.blue)
+                        Text(Localization.Settings.language)
+                        
+                        Spacer()
+                        
+                        Picker("", selection: Binding(
+                            get: { languageManager.currentLanguage },
+                            set: { newValue in
+                                languageManager.setLanguage(newValue)
+                            }
+                        )) {
+                            ForEach(LanguageManager.AppLanguage.allCases, id: \.self) { language in
+                                Text(language.nativeName).tag(language)
+                            }
                         }
                         .pickerStyle(.menu)
                     }
                 }
                 
                 // Аккаунт
-                Section(header: Text("Аккаунт")) {
-                    Button(action: {
+                Section(header: Text(Localization.Settings.account)) {
+                    Button(role: .destructive, action: {
+                        print("🔴 Logout button tapped")
                         authViewModel.logout()
+                        print("🔴 Logout completed. isAuthenticated: \(authViewModel.isAuthenticated)")
                     }) {
-                        Text("Выйти")
-                            .foregroundColor(.red)
+                        HStack {
+                            Text(Localization.Settings.logout)
+                            Spacer()
+                        }
                     }
                 }
             }
-            .navigationTitle("Профиль")
+            .navigationTitle(Localization.Settings.profile)
             .scrollDismissesKeyboard(.interactively)
-            .simultaneousGesture(
-                TapGesture()
-                    .onEnded { _ in
-                        hideKeyboard()
-                    }
-            )
             .sheet(isPresented: $showAddCar) {
                 CarInputView(navigationPath: .constant(NavigationPath()))
                     .environmentObject(authViewModel)
@@ -312,7 +331,7 @@ struct SettingsView: View {
             Button {
                 editingCar = car
             } label: {
-                Label("Редактировать", systemImage: "pencil")
+                Label(Localization.Common.edit, systemImage: "pencil")
             }
             .tint(.blue)
         }
@@ -320,7 +339,7 @@ struct SettingsView: View {
             Button(role: .destructive) {
                 deleteCar(car)
             } label: {
-                Label("Удалить", systemImage: "trash")
+                Label(Localization.Common.delete, systemImage: "trash")
             }
         }
     }
@@ -334,7 +353,7 @@ struct SettingsView: View {
                 HStack {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: 20, weight: .semibold))
-                    Text("Добавить авто")
+                    Text(Localization.Settings.addCar)
                         .font(.system(size: 17, weight: .semibold))
                 }
                 .foregroundColor(.blue)

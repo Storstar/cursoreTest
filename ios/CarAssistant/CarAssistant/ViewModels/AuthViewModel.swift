@@ -121,8 +121,13 @@ class AuthViewModel: ObservableObject {
     }
     
     func logout() {
+        // Очищаем состояние аутентификации
         currentUser = nil
         isAuthenticated = false
+        errorMessage = nil
+        
+        // Очищаем сохраненный выбор автомобиля
+        UserDefaults.standard.removeObject(forKey: "selectedCarId")
     }
     
     func checkAuthentication() {

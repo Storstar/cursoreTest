@@ -19,7 +19,7 @@ struct MyCarsView: View {
                 #endif
             }
         }
-        .navigationTitle("Мои автомобили")
+        .navigationTitle(Localization.CarInput.myCars)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -99,11 +99,11 @@ struct MyCarsView: View {
                 .font(.system(size: 80))
                 .foregroundColor(.blue.opacity(0.3))
             
-            Text("Нет автомобилей")
+            Text(Localization.Settings.noCars)
                 .font(.system(size: 24, weight: .semibold))
                 .foregroundColor(.primary)
             
-            Text("Добавьте первый автомобиль")
+            Text(Localization.CarInput.addFirstCar)
                 .font(.system(size: 16, weight: .regular))
                 .foregroundColor(.secondary)
             
@@ -112,7 +112,7 @@ struct MyCarsView: View {
             }) {
                 HStack(spacing: 12) {
                     Image(systemName: "plus.circle.fill")
-                    Text("Добавить автомобиль")
+                    Text(Localization.CarInput.addCar)
                         .font(.system(size: 18, weight: .semibold))
                 }
                 .foregroundColor(.white)
@@ -158,7 +158,7 @@ struct MyCarsView: View {
                             Button {
                                 editingCar = car
                             } label: {
-                                Label("Редактировать", systemImage: "pencil")
+                                Label(Localization.Common.edit, systemImage: "pencil")
                             }
                             .tint(.blue)
                         }
@@ -166,7 +166,7 @@ struct MyCarsView: View {
                             Button(role: .destructive) {
                                 deleteCar(car)
                             } label: {
-                                Label("Удалить", systemImage: "trash")
+                                Label(Localization.Common.delete, systemImage: "trash")
                             }
                         }
                     }
@@ -317,9 +317,9 @@ struct CarEditView: View {
         return max(minHeight, min(preferredHeight, available))
     }
     
-    let fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ", "Газ/Бензин"]
-    let driveTypes = ["Передний", "Задний", "Полный", "4WD", "AWD"]
-    let transmissions = ["Механическая", "Автоматическая", "Робот", "Вариатор", "DSG", "DCT"]
+    var fuelTypes: [String] { Localization.FuelType.all }
+    var driveTypes: [String] { Localization.DriveType.all }
+    var transmissions: [String] { Localization.Transmission.all }
     
     var filteredBrands: [String] {
         if brandSearchText.isEmpty {
@@ -351,9 +351,9 @@ struct CarEditView: View {
                     }
                 }
                 
-                Section(header: Text("Марка")) {
+                Section(header: Text(Localization.CarInput.brand)) {
                     VStack(alignment: .leading, spacing: 0) {
-                        TextField("Марка", text: $brandSearchText)
+                        TextField(Localization.CarInput.brand, text: $brandSearchText)
                             .focused($isBrandFieldFocused)
                             .onChange(of: brandSearchText) { newValue in
                                 selectedBrand = newValue
@@ -408,10 +408,10 @@ struct CarEditView: View {
                     }
                 }
                 
-                Section(header: Text("Модель")) {
+                Section(header: Text(Localization.CarInput.model)) {
                     if !selectedBrand.isEmpty {
                         VStack(alignment: .leading, spacing: 0) {
-                            TextField("Модель", text: $modelSearchText)
+                            TextField(Localization.CarInput.model, text: $modelSearchText)
                                 .focused($isModelFieldFocused)
                                 .onChange(of: modelSearchText) { newValue in
                                     selectedModel = newValue
@@ -461,60 +461,60 @@ struct CarEditView: View {
                             }
                         }
                     } else {
-                        Text("Сначала введите марку")
+                        Text(Localization.CarInput.enterBrandFirst)
                             .foregroundColor(.secondary)
                     }
                 }
                 
-                Section("Год") {
-                    Picker("Год", selection: $selectedYear) {
+                Section(Localization.CarInput.year) {
+                    Picker(Localization.CarInput.year, selection: $selectedYear) {
                         ForEach(carViewModel.years, id: \.self) { year in
                             Text("\(year)").tag(year)
                         }
                     }
                 }
                 
-                Section("Двигатель") {
-                    Picker("Двигатель", selection: $selectedEngine) {
+                Section(Localization.CarInput.engine) {
+                    Picker(Localization.CarInput.engine, selection: $selectedEngine) {
                         ForEach(carViewModel.engines, id: \.self) { engine in
                             Text(engine).tag(engine)
                         }
                     }
                 }
                 
-                Section(header: Text("Дополнительные параметры")) {
-                    Picker("Тип топлива", selection: $selectedFuelType) {
-                        Text("Не указано").tag("")
+                Section(header: Text(Localization.CarInput.additionalParams)) {
+                    Picker(Localization.CarInput.fuelType, selection: $selectedFuelType) {
+                        Text(Localization.CarInput.notSpecified).tag("")
                         ForEach(fuelTypes, id: \.self) { fuelType in
                             Text(fuelType).tag(fuelType)
                         }
                     }
                     
-                    Picker("Привод", selection: $selectedDriveType) {
-                        Text("Не указано").tag("")
+                    Picker(Localization.CarInput.driveType, selection: $selectedDriveType) {
+                        Text(Localization.CarInput.notSpecified).tag("")
                         ForEach(driveTypes, id: \.self) { driveType in
                             Text(driveType).tag(driveType)
                         }
                     }
                     
-                    Picker("Коробка передач", selection: $selectedTransmission) {
-                        Text("Не указано").tag("")
+                    Picker(Localization.CarInput.transmission, selection: $selectedTransmission) {
+                        Text(Localization.CarInput.notSpecified).tag("")
                         ForEach(transmissions, id: \.self) { transmission in
                             Text(transmission).tag(transmission)
                         }
                     }
                     
-                    TextField("VIN (необязательно)", text: $vin)
+                    TextField(Localization.CarInput.vinOptional, text: $vin)
                         .autocapitalization(.allCharacters)
                         .disableAutocorrection(true)
                 }
                 
-                Section(header: Text("Дополнительная информация")) {
-                    TextField("Заметки, особенности, пожелания...", text: $notes, axis: .vertical)
+                Section(header: Text(Localization.CarInput.additionalInfo)) {
+                    TextField(Localization.CarInput.notes, text: $notes, axis: .vertical)
                         .lineLimit(3...10)
                 }
             }
-            .navigationTitle("Редактировать авто")
+            .navigationTitle(Localization.CarInput.editCar)
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.interactively) // Автоматически скрывает клавиатуру при прокрутке
             .safeAreaInset(edge: .bottom) {
@@ -554,7 +554,7 @@ struct CarEditView: View {
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
                     }
-                    .accessibilityLabel("Отмена")
+                    .accessibilityLabel(Localization.Common.cancel)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -567,7 +567,7 @@ struct CarEditView: View {
                             .contentShape(Rectangle())
                     }
                     .disabled(selectedBrand.isEmpty || selectedModel.isEmpty)
-                    .accessibilityLabel("Сохранить")
+                    .accessibilityLabel(Localization.Common.save)
                 }
             }
             .onAppear {
@@ -594,14 +594,14 @@ struct CarEditView: View {
             .sheet(isPresented: $showPhotoPicker) {
                 ImagePicker(image: $selectedImage, sourceType: .photoLibrary)
             }
-            .confirmationDialog("Выберите источник", isPresented: $showImageOptions, titleVisibility: .visible) {
-                Button("Камера") {
+            .confirmationDialog(Localization.CarInput.selectSource, isPresented: $showImageOptions, titleVisibility: .visible) {
+                Button(Localization.CarInput.camera) {
                     showImagePicker = true
                 }
-                Button("Галерея") {
+                Button(Localization.CarInput.gallery) {
                     showPhotoPicker = true
                 }
-                Button("Отмена", role: .cancel) {}
+                Button(Localization.Common.cancel, role: .cancel) {}
             }
         }
     }
@@ -682,7 +682,7 @@ struct CarEditView: View {
                             Image(systemName: "camera.fill")
                                 .font(.system(size: 32))
                                 .foregroundColor(.white)
-                            Text("Добавить фото")
+                            Text(Localization.CarInput.addPhoto)
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.white)
                         }

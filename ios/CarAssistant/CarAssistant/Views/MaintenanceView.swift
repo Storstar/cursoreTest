@@ -27,11 +27,11 @@ struct MaintenanceView: View {
                                 .foregroundColor(.blue.opacity(0.6))
                             
                             VStack(spacing: 8) {
-                                Text("Нет записей о работах")
+                                Text(Localization.Maintenance.noRecords)
                                     .font(.system(size: 20, weight: .semibold))
                                     .foregroundColor(.primary)
                                 
-                                Text("Добавьте первую запись о работах")
+                                Text(Localization.Maintenance.addMaintenance)
                                     .font(.system(size: 16, weight: .regular))
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
@@ -45,7 +45,7 @@ struct MaintenanceView: View {
                     List {
                         // Предстоящие работы
                         if !maintenanceViewModel.upcomingServices.isEmpty {
-                            Section(header: Text("Предстоящие работы")) {
+                            Section(header: Text(Localization.Maintenance.upcomingServices)) {
                                 ForEach(maintenanceViewModel.upcomingServices, id: \.id) { record in
                                     UpcomingServiceCard(record: record)
                                         .contentShape(Rectangle())
@@ -56,7 +56,7 @@ struct MaintenanceView: View {
                                             Button(role: .destructive) {
                                                 maintenanceViewModel.deleteMaintenanceRecord(record)
                                             } label: {
-                                                Label("Удалить", systemImage: "trash")
+                                                Label(Localization.Common.delete, systemImage: "trash")
                                             }
                                         }
                                 }
@@ -64,9 +64,9 @@ struct MaintenanceView: View {
                         }
                         
                         // История работ
-                        Section(header: Text("История работ")) {
+                        Section(header: Text(Localization.Maintenance.history)) {
                             if maintenanceViewModel.maintenanceRecords.isEmpty {
-                                Text("Нет записей о работах")
+                                Text(Localization.Maintenance.noRecords)
                                     .foregroundColor(.secondary)
                             } else {
                                 ForEach(maintenanceViewModel.maintenanceRecords, id: \.id) { record in
@@ -84,11 +84,11 @@ struct MaintenanceView: View {
                                         editingRecord = record
                                     }
                                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                        Button(role: .destructive) {
-                                            maintenanceViewModel.deleteMaintenanceRecord(record)
-                                        } label: {
-                                            Label("Удалить", systemImage: "trash")
-                                        }
+                                    Button(role: .destructive) {
+                                        maintenanceViewModel.deleteMaintenanceRecord(record)
+                                    } label: {
+                                        Label(Localization.Common.delete, systemImage: "trash")
+                                    }
                                     }
                                 }
                             }
@@ -111,7 +111,7 @@ struct MaintenanceView: View {
                 }
             }
             .scrollContentBackground(.hidden) // Скрываем фон List, чтобы был виден градиент
-            .navigationTitle("Работы")
+            .navigationTitle(Localization.Maintenance.title)
             .sheet(isPresented: $showAddMaintenance) {
                 AddMaintenanceView()
                     .environmentObject(carViewModel)
@@ -194,15 +194,15 @@ struct UpcomingServiceCard: View {
                     
                     if let days = daysUntilService {
                         if isOverdue {
-                            Text("Просрочено на \(abs(days)) дн.")
+                            Text("\(Localization.MaintenanceInput.overdue) \(abs(days)) \(Localization.MaintenanceInput.days)")
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.red)
                         } else if days <= 30 {
-                            Text("Через \(days) дн.")
+                            Text("\(Localization.MaintenanceInput.inDays) \(days) \(Localization.MaintenanceInput.days)")
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.orange)
                         } else {
-                            Text("Через \(days) дн.")
+                            Text("\(Localization.MaintenanceInput.inDays) \(days) \(Localization.MaintenanceInput.days)")
                                 .font(.system(size: 12, weight: .regular))
                                 .foregroundColor(.secondary)
                         }
@@ -273,7 +273,7 @@ struct MaintenanceHistoryCard: View {
                     .foregroundColor(.secondary)
             }
             
-            Text("Пробег: \(record.mileage) км")
+                Text("\(Localization.MaintenanceInput.mileageLabel) \(record.mileage) км")
                 .font(.system(size: 14, weight: .regular))
                 .foregroundColor(.secondary)
             
@@ -289,7 +289,7 @@ struct MaintenanceHistoryCard: View {
                     Image(systemName: "photo.fill")
                         .font(.system(size: 12))
                         .foregroundColor(.blue)
-                    Text("Документ прикреплен")
+                    Text(Localization.MaintenanceInput.documentAttached)
                         .font(.system(size: 12, weight: .regular))
                         .foregroundColor(.blue)
                 }
@@ -317,12 +317,12 @@ struct AddMaintenanceView: View {
     @State private var isAnalyzingImage = false
     @State private var extractedText: String = ""
     
-    let maintenanceTypes = ["ТО", "Ремонт", "Замена", "Другое"]
-    let serviceTypes = ["Плановое ТО", "Другое"] // Для категории "ТО"
-    let replacementTypes = ["Замена масла", "Замена фильтров", "Замена тормозов", "Замена шин", "Диагностика", "Другое"] // Для категории "Замена"
-    let repairTypes = ["Ремонт двигателя", "Ремонт коробки передач", "Ремонт подвески", "Ремонт тормозов", "Ремонт кузова", "Ремонт электрики", "Другое"]
+    var maintenanceTypes: [String] { Localization.MaintenanceType.maintenanceTypes }
+    var serviceTypes: [String] { Localization.MaintenanceType.serviceTypes }
+    var replacementTypes: [String] { Localization.MaintenanceType.replacementTypes }
+    var repairTypes: [String] { Localization.MaintenanceType.repairTypes }
     
-    @State private var selectedMaintenanceType: String = "ТО"
+    @State private var selectedMaintenanceType: String = ""
     @State private var customServiceType: String = ""
     @State private var showAddServiceType = false
     @State private var showAddRepairType = false
@@ -333,21 +333,21 @@ struct AddMaintenanceView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Дата и пробег")) {
+                Section(header: Text(Localization.MaintenanceInput.dateAndMileage)) {
                     if isPlanned {
-                        DatePicker("Дата запланированной работы", selection: $plannedDate, displayedComponents: .date)
+                        DatePicker(Localization.MaintenanceInput.plannedDate, selection: $plannedDate, displayedComponents: .date)
                     } else {
-                        DatePicker("Дата работ", selection: $date, displayedComponents: .date)
+                        DatePicker(Localization.MaintenanceInput.workDate, selection: $date, displayedComponents: .date)
                     }
                     
                     if !isPlanned {
-                        TextField("Пробег (км)", text: $mileage)
+                        TextField(Localization.MaintenanceInput.mileage, text: $mileage)
                             .keyboardType(.numberPad)
                     }
                 }
                 
-                Section(header: Text("Работы")) {
-                    Picker("Работы", selection: $selectedMaintenanceType) {
+                Section(header: Text(Localization.MaintenanceInput.works)) {
+                    Picker(Localization.MaintenanceInput.works, selection: $selectedMaintenanceType) {
                         ForEach(maintenanceTypes, id: \.self) { type in
                             Text(type).tag(type)
                         }
@@ -356,23 +356,28 @@ struct AddMaintenanceView: View {
                     
                     typeWorkSection
                 }
+                .onAppear {
+                    if selectedMaintenanceType.isEmpty {
+                        selectedMaintenanceType = maintenanceTypes.first ?? ""
+                    }
+                }
                 
-                Section(header: Text("Описание")) {
-                    TextField("Описание работ", text: $description, axis: .vertical)
+                Section(header: Text(Localization.MaintenanceInput.description)) {
+                    TextField(Localization.MaintenanceInput.worksDescription, text: $description, axis: .vertical)
                         .lineLimit(3...6)
                 }
                 
-                Section(header: Text("Выполненные работы")) {
-                    TextField("Список выполненных работ", text: $worksPerformed, axis: .vertical)
+                Section(header: Text(Localization.MaintenanceInput.performedWorks)) {
+                    TextField(Localization.MaintenanceInput.performedWorksList, text: $worksPerformed, axis: .vertical)
                         .lineLimit(3...6)
                 }
                 
-                Section(header: Text("Документ (чек/наряд)")) {
+                Section(header: Text(Localization.MaintenanceInput.document)) {
                     documentSection
                 }
                 
-                Section(header: Text("Запланированная работа")) {
-                    Toggle("Запланированная работа", isOn: $isPlanned)
+                Section(header: Text(Localization.MaintenanceInput.plannedWork)) {
+                    Toggle(Localization.MaintenanceInput.plannedWork, isOn: $isPlanned)
                     
                     if isPlanned {
                         // Дата задается в начале экрана, пробег не нужен для запланированных работ
@@ -380,7 +385,7 @@ struct AddMaintenanceView: View {
                 }
                 
                 if !extractedText.isEmpty {
-                    Section(header: Text("Распознанный текст")) {
+                    Section(header: Text(Localization.MaintenanceInput.recognizedText)) {
                         ScrollView {
                             Text(extractedText)
                                 .font(.system(size: 12, design: .monospaced))
@@ -389,14 +394,14 @@ struct AddMaintenanceView: View {
                         }
                         .frame(height: 100)
                         
-                        Button("Использовать распознанный текст") {
+                        Button(Localization.MaintenanceInput.useRecognizedText) {
                             useExtractedText()
                         }
                         .foregroundColor(.blue)
                     }
                 }
             }
-            .navigationTitle("Работы")
+            .navigationTitle(Localization.Maintenance.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -409,7 +414,7 @@ struct AddMaintenanceView: View {
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
                     }
-                    .accessibilityLabel("Отмена")
+                    .accessibilityLabel(Localization.Common.cancel)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -422,7 +427,7 @@ struct AddMaintenanceView: View {
                             .contentShape(Rectangle())
                     }
                     .disabled(serviceType.isEmpty || (!isPlanned && mileage.isEmpty))
-                    .accessibilityLabel("Сохранить")
+                    .accessibilityLabel(Localization.Common.save)
                 }
             }
             .sheet(isPresented: $showImagePicker) {
@@ -431,50 +436,50 @@ struct AddMaintenanceView: View {
             .sheet(isPresented: $showPhotoPicker) {
                 ImagePicker(image: $selectedImage, sourceType: .photoLibrary)
             }
-            .confirmationDialog("Выберите источник", isPresented: $showImageOptions, titleVisibility: .visible) {
-                Button("Камера") {
+            .confirmationDialog(Localization.CarInput.selectSource, isPresented: $showImageOptions, titleVisibility: .visible) {
+                Button(Localization.CarInput.camera) {
                     showImagePicker = true
                 }
-                Button("Галерея") {
+                Button(Localization.CarInput.gallery) {
                     showPhotoPicker = true
                 }
-                Button("Отмена", role: .cancel) {}
+                Button(Localization.Common.cancel, role: .cancel) {}
             }
             .onChange(of: selectedImage) { newImage in
                 if let image = newImage {
                     analyzeImage(image)
                 }
             }
-            .alert("Добавить тип работ", isPresented: $showAddServiceType) {
-                TextField("Название типа", text: $customServiceType)
-                Button("Добавить") {
+            .alert(Localization.MaintenanceInput.addWorkType, isPresented: $showAddServiceType) {
+                TextField(Localization.MaintenanceInput.addTypeName, text: $customServiceType)
+                Button(Localization.MaintenanceInput.addType) {
                     if !customServiceType.isEmpty {
                         serviceType = customServiceType
                     }
                 }
-                Button("Отмена", role: .cancel) {}
+                Button(Localization.Common.cancel, role: .cancel) {}
             } message: {
-                Text("Введите название нового типа работ")
+                Text(Localization.MaintenanceInput.enterWorkTypeName)
             }
-            .alert("Добавить тип ремонта", isPresented: $showAddRepairType) {
-                TextField("Название типа", text: $customServiceType)
-                Button("Добавить") {
+            .alert(Localization.MaintenanceInput.addRepairType, isPresented: $showAddRepairType) {
+                TextField(Localization.MaintenanceInput.addTypeName, text: $customServiceType)
+                Button(Localization.MaintenanceInput.addType) {
                     if !customServiceType.isEmpty {
                         serviceType = customServiceType
                     }
                 }
-                Button("Отмена", role: .cancel) {}
+                Button(Localization.Common.cancel, role: .cancel) {}
             } message: {
-                Text("Введите название нового типа ремонта")
+                Text(Localization.MaintenanceInput.enterRepairType)
             }
         }
     }
     
     @ViewBuilder
     private var typeWorkSection: some View {
-        if selectedMaintenanceType == "ТО" {
-            Picker("Работы", selection: $serviceType) {
-                Text("Выберите тип").tag("")
+        if selectedMaintenanceType == Localization.MaintenanceType.maintenance {
+            Picker(Localization.MaintenanceInput.works, selection: $serviceType) {
+                Text(Localization.MaintenanceInput.selectType).tag("")
                 ForEach(serviceTypes, id: \.self) { type in
                     Text(type).tag(type)
                 }
@@ -487,14 +492,14 @@ struct AddMaintenanceView: View {
                 }) {
                     HStack {
                         Image(systemName: "plus.circle.fill")
-                        Text("Добавить \"\(serviceType)\"")
+                        Text("\(Localization.MaintenanceInput.addType) \"\(serviceType)\"")
                     }
                     .foregroundColor(.blue)
                 }
             }
-        } else if selectedMaintenanceType == "Ремонт" {
-            Picker("Работы", selection: $serviceType) {
-                Text("Выберите тип").tag("")
+        } else if selectedMaintenanceType == Localization.MaintenanceType.repair {
+            Picker(Localization.MaintenanceInput.works, selection: $serviceType) {
+                Text(Localization.MaintenanceInput.selectType).tag("")
                 ForEach(repairTypes, id: \.self) { type in
                     Text(type).tag(type)
                 }
@@ -507,14 +512,14 @@ struct AddMaintenanceView: View {
                 }) {
                     HStack {
                         Image(systemName: "plus.circle.fill")
-                        Text("Добавить \"\(serviceType)\"")
+                        Text("\(Localization.MaintenanceInput.addType) \"\(serviceType)\"")
                     }
                     .foregroundColor(.blue)
                 }
             }
-        } else if selectedMaintenanceType == "Замена" {
-            Picker("Работы", selection: $serviceType) {
-                Text("Выберите тип").tag("")
+        } else if selectedMaintenanceType == Localization.MaintenanceType.replacement {
+            Picker(Localization.MaintenanceInput.works, selection: $serviceType) {
+                Text(Localization.MaintenanceInput.selectType).tag("")
                 ForEach(replacementTypes, id: \.self) { type in
                     Text(type).tag(type)
                 }
@@ -527,13 +532,13 @@ struct AddMaintenanceView: View {
                 }) {
                     HStack {
                         Image(systemName: "plus.circle.fill")
-                        Text("Добавить \"\(serviceType)\"")
+                        Text("\(Localization.MaintenanceInput.addType) \"\(serviceType)\"")
                     }
                     .foregroundColor(.blue)
                 }
             }
         } else {
-            TextField("Опишите тип работы", text: $serviceType)
+            TextField(Localization.MaintenanceInput.describeWorkType, text: $serviceType)
         }
     }
     
@@ -557,7 +562,7 @@ struct AddMaintenanceView: View {
                 }
                 
                 VStack(alignment: .leading) {
-                    Button("Удалить фото") {
+                    Button(Localization.MaintenanceInput.deletePhoto) {
                         selectedImage = nil
                         extractedText = ""
                     }
@@ -567,12 +572,12 @@ struct AddMaintenanceView: View {
                         HStack {
                             ProgressView()
                                 .scaleEffect(0.8)
-                            Text("Анализ...")
+                            Text(Localization.MaintenanceInput.analyzing)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
                     } else if !extractedText.isEmpty {
-                        Text("Текст распознан")
+                        Text(Localization.MaintenanceInput.textRecognized)
                             .font(.caption)
                             .foregroundColor(.green)
                     }
@@ -586,7 +591,7 @@ struct AddMaintenanceView: View {
             }) {
                 HStack {
                     Image(systemName: "photo.badge.plus")
-                    Text("Прикрепить фото")
+                    Text(Localization.MaintenanceInput.attachPhoto)
                 }
             }
         }

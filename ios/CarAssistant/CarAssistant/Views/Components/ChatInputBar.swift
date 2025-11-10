@@ -16,18 +16,20 @@ struct CarProblemButton: Identifiable {
     let title: String
     var isActive: Bool
     
-    static let defaultButtons: [CarProblemButton] = [
-        CarProblemButton(icon: "questionmark.circle", title: "General Question", isActive: false),
-        CarProblemButton(icon: "check.engine.custom", title: "Check Engine", isActive: false),
-        CarProblemButton(icon: "battery.100", title: "Battery", isActive: false),
-        CarProblemButton(icon: "exclamationmark.octagon", title: "Brake System", isActive: false),
-        CarProblemButton(icon: "gearshape.2", title: "Engine", isActive: false),
-        CarProblemButton(icon: "gearshape", title: "Transmission", isActive: false),
-        CarProblemButton(icon: "car.2", title: "Suspension", isActive: false),
-        CarProblemButton(icon: "bolt", title: "Electrical", isActive: false),
-        CarProblemButton(icon: "snowflake", title: "AC System", isActive: false),
-        CarProblemButton(icon: "circle.dotted", title: "Tires", isActive: false)
-    ]
+    static var defaultButtons: [CarProblemButton] {
+        [
+            CarProblemButton(icon: "questionmark.circle", title: Localization.Chat.generalQuestion, isActive: false),
+            CarProblemButton(icon: "check.engine.custom", title: Localization.Chat.checkEngine, isActive: false),
+            CarProblemButton(icon: "battery.100", title: Localization.Chat.battery, isActive: false),
+            CarProblemButton(icon: "exclamationmark.octagon", title: Localization.Chat.brakeSystem, isActive: false),
+            CarProblemButton(icon: "gearshape.2", title: Localization.Chat.engine, isActive: false),
+            CarProblemButton(icon: "gearshape", title: Localization.Chat.transmission, isActive: false),
+            CarProblemButton(icon: "car.2", title: Localization.Chat.suspension, isActive: false),
+            CarProblemButton(icon: "bolt", title: Localization.Chat.electrical, isActive: false),
+            CarProblemButton(icon: "snowflake", title: Localization.Chat.acSystem, isActive: false),
+            CarProblemButton(icon: "circle.dotted", title: Localization.Chat.tires, isActive: false)
+        ]
+    }
 }
 
 // MARK: - ChatInputBar
@@ -209,7 +211,7 @@ struct ChatInputBar: View {
     private var textField: some View {
         MultilineTextField(
             text: $text,
-            placeholder: "Напишите сообщение...",
+            placeholder: Localization.Chat.writeMessage,
             maxLines: 4, // Максимум 4 строки, затем внутренний скролл
             isFocused: $isTextFieldFocused,
             contentHeight: $textFieldContentHeight
@@ -377,25 +379,25 @@ struct ChatInputBar: View {
     private func topicButtonTitle(for topic: Topic) -> String? {
         switch topic {
         case .general_question:
-            return "General Question"
+            return Localization.Chat.generalQuestion
         case .check_engine:
-            return "Check Engine"
+            return Localization.Chat.checkEngine
         case .battery:
-            return "Battery"
+            return Localization.Chat.battery
         case .brakes:
-            return "Brake System"
+            return Localization.Chat.brakeSystem
         case .engine:
-            return "Engine"
+            return Localization.Chat.engine
         case .transmission:
-            return "Transmission"
+            return Localization.Chat.transmission
         case .suspension:
-            return "Suspension"
+            return Localization.Chat.suspension
         case .electrical:
-            return "Electrical"
+            return Localization.Chat.electrical
         case .air_conditioning:
-            return "AC System"
+            return Localization.Chat.acSystem
         case .tires:
-            return "Tires"
+            return Localization.Chat.tires
         }
     }
 }

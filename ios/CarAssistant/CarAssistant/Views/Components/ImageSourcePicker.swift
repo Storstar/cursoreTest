@@ -26,7 +26,7 @@ struct ImageSourcePicker: View {
                         Image(systemName: "camera.fill")
                             .font(.system(size: 20))
                             .foregroundColor(.blue)
-                        Text("Сделать фото")
+                        Text(Localization.Photo.takePhoto)
                             .font(.system(size: 17, weight: .regular))
                             .foregroundColor(.primary)
                         Spacer()
@@ -49,7 +49,7 @@ struct ImageSourcePicker: View {
                         Image(systemName: "photo.on.rectangle")
                             .font(.system(size: 20))
                             .foregroundColor(.blue)
-                        Text("Выбрать из галереи")
+                        Text(Localization.Photo.chooseFromGallery)
                             .font(.system(size: 17, weight: .regular))
                             .foregroundColor(.primary)
                         Spacer()
@@ -67,7 +67,7 @@ struct ImageSourcePicker: View {
                 Button(action: {
                     onDismiss()
                 }) {
-                    Text("Отмена")
+                    Text(Localization.Common.cancel)
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.blue)
                         .frame(maxWidth: .infinity)

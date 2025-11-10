@@ -48,9 +48,9 @@ struct CarInputView: View {
         return max(minHeight, min(preferredHeight, available))
     }
     
-    let fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ", "Газ/Бензин"]
-    let driveTypes = ["Передний", "Задний", "Полный", "4WD", "AWD"]
-    let transmissions = ["Механическая", "Автоматическая", "Робот", "Вариатор", "DSG", "DCT"]
+    var fuelTypes: [String] { Localization.FuelType.all }
+    var driveTypes: [String] { Localization.DriveType.all }
+    var transmissions: [String] { Localization.Transmission.all }
     
     var filteredBrands: [String] {
         if brandSearchText.isEmpty {
@@ -85,9 +85,9 @@ struct CarInputView: View {
                 }
             }
             
-            Section(header: Text("Марка")) {
+            Section(header: Text(Localization.CarInput.brand)) {
                 VStack(alignment: .leading, spacing: 0) {
-                    TextField("Марка", text: $brandSearchText)
+                    TextField(Localization.CarInput.brand, text: $brandSearchText)
                         .focused($isBrandFieldFocused)
                         .onChange(of: brandSearchText) { newValue in
                             selectedBrand = newValue
@@ -151,10 +151,10 @@ struct CarInputView: View {
                 }
             }
             
-            Section(header: Text("Модель")) {
+            Section(header: Text(Localization.CarInput.model)) {
                 if !selectedBrand.isEmpty {
                     VStack(alignment: .leading, spacing: 0) {
-                        TextField("Модель", text: $modelSearchText)
+                        TextField(Localization.CarInput.model, text: $modelSearchText)
                             .focused($isModelFieldFocused)
                             .onChange(of: modelSearchText) { newValue in
                                 selectedModel = newValue
@@ -206,7 +206,7 @@ struct CarInputView: View {
                         }
                     }
                 } else {
-                    Text("Сначала введите марку")
+                    Text(Localization.CarInput.enterBrandFirst)
                         .foregroundColor(.secondary)
                 }
                 
@@ -218,8 +218,8 @@ struct CarInputView: View {
                 }
             }
             
-            Section(header: Text("Год")) {
-                Picker("Год", selection: $selectedYear) {
+            Section(header: Text(Localization.CarInput.year)) {
+                Picker(Localization.CarInput.year, selection: $selectedYear) {
                     ForEach(carViewModel.years, id: \.self) { year in
                         Text("\(year)").tag(year)
                     }
@@ -232,9 +232,9 @@ struct CarInputView: View {
                 }
             }
             
-            Section(header: Text("Двигатель")) {
-                Picker("Двигатель", selection: $selectedEngine) {
-                    Text("Выберите двигатель").tag("")
+            Section(header: Text(Localization.CarInput.engine)) {
+                Picker(Localization.CarInput.engine, selection: $selectedEngine) {
+                    Text(Localization.CarInput.selectEngine).tag("")
                     ForEach(carViewModel.engines, id: \.self) { engine in
                         Text(engine).tag(engine)
                     }
@@ -247,35 +247,35 @@ struct CarInputView: View {
                 }
             }
             
-            Section(header: Text("Дополнительные параметры")) {
-                Picker("Тип топлива", selection: $selectedFuelType) {
-                    Text("Не указано").tag("")
+            Section(header: Text(Localization.CarInput.additionalParams)) {
+                Picker(Localization.CarInput.fuelType, selection: $selectedFuelType) {
+                    Text(Localization.CarInput.notSpecified).tag("")
                     ForEach(fuelTypes, id: \.self) { fuelType in
                         Text(fuelType).tag(fuelType)
                     }
                 }
                 
-                Picker("Привод", selection: $selectedDriveType) {
-                    Text("Не указано").tag("")
+                Picker(Localization.CarInput.driveType, selection: $selectedDriveType) {
+                    Text(Localization.CarInput.notSpecified).tag("")
                     ForEach(driveTypes, id: \.self) { driveType in
                         Text(driveType).tag(driveType)
                     }
                 }
                 
-                Picker("Коробка передач", selection: $selectedTransmission) {
-                    Text("Не указано").tag("")
+                Picker(Localization.CarInput.transmission, selection: $selectedTransmission) {
+                    Text(Localization.CarInput.notSpecified).tag("")
                     ForEach(transmissions, id: \.self) { transmission in
                         Text(transmission).tag(transmission)
                     }
                 }
                 
-                TextField("VIN (необязательно)", text: $vin)
+                TextField(Localization.CarInput.vinOptional, text: $vin)
                     .autocapitalization(.allCharacters)
                     .disableAutocorrection(true)
             }
             
-            Section(header: Text("Дополнительная информация")) {
-                TextField("Заметки, особенности, пожелания...", text: $notes, axis: .vertical)
+            Section(header: Text(Localization.CarInput.additionalInfo)) {
+                TextField(Localization.CarInput.notes, text: $notes, axis: .vertical)
                     .lineLimit(3...10)
             }
             
@@ -286,7 +286,7 @@ struct CarInputView: View {
                 }
             }
         }
-        .navigationTitle("Добавить автомобиль")
+        .navigationTitle(Localization.CarInput.addCar)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -299,7 +299,7 @@ struct CarInputView: View {
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
-                .accessibilityLabel("Отмена")
+                .accessibilityLabel(Localization.Common.cancel)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -312,7 +312,7 @@ struct CarInputView: View {
                         .contentShape(Rectangle())
                 }
                 .disabled(selectedBrand.isEmpty || selectedModel.isEmpty || selectedEngine.isEmpty)
-                .accessibilityLabel("Сохранить")
+                .accessibilityLabel(Localization.Common.save)
             }
         }
         .scrollDismissesKeyboard(.interactively) // Автоматически скрывает клавиатуру при прокрутке
@@ -373,14 +373,14 @@ struct CarInputView: View {
         .sheet(isPresented: $showPhotoPicker) {
             ImagePicker(image: $selectedImage, sourceType: .photoLibrary)
         }
-        .confirmationDialog("Выберите источник", isPresented: $showImageOptions, titleVisibility: .visible) {
-            Button("Камера") {
+        .confirmationDialog(Localization.CarInput.selectSource, isPresented: $showImageOptions, titleVisibility: .visible) {
+            Button(Localization.CarInput.camera) {
                 showImagePicker = true
             }
-            Button("Галерея") {
+            Button(Localization.CarInput.gallery) {
                 showPhotoPicker = true
             }
-            Button("Отмена", role: .cancel) {}
+            Button(Localization.Common.cancel, role: .cancel) {}
         }
         }
     }
@@ -507,7 +507,7 @@ struct CarInputView: View {
                             Image(systemName: "camera.fill")
                                 .font(.system(size: 32))
                                 .foregroundColor(.white)
-                            Text("Добавить фото")
+                            Text(Localization.CarInput.addPhoto)
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.white)
                         }
