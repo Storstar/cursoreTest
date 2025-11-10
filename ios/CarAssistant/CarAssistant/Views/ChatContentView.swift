@@ -15,7 +15,6 @@ struct ChatContentView: View {
     
     let messages: [ChatMessage]
     let keyboardHeight: CGFloat
-    let onScrollToBottom: () -> Void
     let onTapToDismissKeyboard: () -> Void
     
     // MARK: - Body
@@ -75,10 +74,14 @@ struct ChatContentView: View {
                     }
                 }
             }
-            .onChange(of: messages.count) { newCount in
-                // При отправке/приходе нового сообщения: автоскролл только если пользователь "у низа"
-                if newCount > 0 {
-                    scrollToBottomIfNeeded(proxy: proxy)
+            .onChange(of: messages.last?.id) { newLastMessageId in
+                // При изменении последнего сообщения (отправка нового или получение ответа): прокручиваем к нему
+                if let lastMessageId = newLastMessageId {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            proxy.scrollTo(lastMessageId, anchor: .bottom)
+                        }
+                    }
                 }
             }
             .onChange(of: keyboardHeight) { newHeight in
@@ -124,13 +127,13 @@ struct ChatContentView: View {
     
     // MARK: - Helper Methods
     
-    /// Прокрутить к низу, если пользователь "у низа" (gap ≤ 80pt)
-    private func scrollToBottomIfNeeded(proxy: ScrollViewProxy) {
+    /// Прокрутить к последнему сообщению
+    private func scrollToBottom(proxy: ScrollViewProxy) {
         guard let lastMessage = messages.last else { return }
         
-        // Упрощенная логика: считаем что пользователь у низа при отправке/приходе нового сообщения
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(.easeInOut(duration: 0.25)) {
+        // Прокручиваем к последнему сообщению с небольшой задержкой для корректного отображения
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            withAnimation(.easeInOut(duration: 0.3)) {
                 proxy.scrollTo(lastMessage.id, anchor: .bottom)
             }
         }

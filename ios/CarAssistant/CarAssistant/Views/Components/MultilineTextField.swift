@@ -107,17 +107,16 @@ struct MultilineTextField: UIViewRepresentable {
             }
         }
         
-        // Обновляем высоту контента
-        DispatchQueue.main.async {
-            let textToMeasure = (text.isEmpty || text == placeholder) ? " " : text
-            let tempText = uiView.text
-            uiView.text = textToMeasure
-            let newHeight = uiView.sizeThatFits(CGSize(width: uiView.bounds.width > 0 ? uiView.bounds.width : UIScreen.main.bounds.width - 100, height: .greatestFiniteMagnitude)).height
-            uiView.text = tempText
-            
-            if abs(context.coordinator.lastContentHeight - newHeight) > 1 {
-                context.coordinator.lastContentHeight = newHeight
-                context.coordinator.updateContentHeight(newHeight)
+        // Обновляем высоту контента только если текст изменился извне
+        if !isEditing && !text.isEmpty {
+            DispatchQueue.main.async {
+                let width = uiView.bounds.width > 0 ? uiView.bounds.width : UIScreen.main.bounds.width - 100
+                let newHeight = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude)).height
+                
+                if abs(context.coordinator.lastContentHeight - newHeight) > 1 {
+                    context.coordinator.lastContentHeight = newHeight
+                    context.coordinator.updateContentHeight(newHeight)
+                }
             }
         }
     }
@@ -140,10 +139,8 @@ struct MultilineTextField: UIViewRepresentable {
         }
         
         func updateContentHeight(_ height: CGFloat) {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.contentHeight.wrappedValue = height
-            }
+            // Обновляем напрямую, так как мы уже в главном потоке
+            contentHeight.wrappedValue = height
         }
         
         func textViewDidChange(_ textView: UITextView) {

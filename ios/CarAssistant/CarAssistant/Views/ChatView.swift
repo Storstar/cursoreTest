@@ -38,6 +38,10 @@ struct ChatView: View {
     @State private var isTextFieldFocused = false
     @State private var keyboardHeight: CGFloat = 0
     
+    // MARK: - Task Management
+    
+    @State private var sendMessageTask: Task<Void, Never>?
+    
     // MARK: - Initialization
     
     init(onChatStateChange: ((Bool) -> Void)? = nil) {
@@ -165,7 +169,6 @@ struct ChatView: View {
             ChatContentView(
                 messages: chatViewModel.currentChatMessages,
                 keyboardHeight: keyboardHeight,
-                onScrollToBottom: { },
                 onTapToDismissKeyboard: { hideKeyboard() }
             )
             
@@ -213,8 +216,21 @@ struct ChatView: View {
     
     /// Очистка при закрытии экрана
     private func cleanup() {
+        // Отменяем все активные задачи
+        sendMessageTask?.cancel()
+        sendMessageTask = nil
+        
+        // Очищаем изображения
         selectedImage = nil
-        chatViewModel.currentChatMessages = []
+        
+        // Останавливаем запись, если она активна
+        if isRecording {
+            speechRecognizer.stopRecording()
+            isRecording = false
+        }
+        
+        // Скрываем клавиатуру
+        hideKeyboard()
     }
     
     /// Скрыть клавиатуру
@@ -222,7 +238,6 @@ struct ChatView: View {
         isTextFieldFocused = false
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
-    
     
     /// Обработать нажатие на кнопку голосового ввода
     private func handleVoiceTap() {
@@ -256,7 +271,10 @@ struct ChatView: View {
         isRecording = false
         isTextFieldFocused = false
         
-        Task {
+        // Отменяем предыдущую задачу, если она еще выполняется
+        sendMessageTask?.cancel()
+        
+        sendMessageTask = Task {
             // Оптимизация изображения перед отправкой
             var compressedImageData: Data? = nil
             if let imageToSend = imageToSend {
