@@ -12,9 +12,10 @@ struct CarPhotoView: View {
     
     var body: some View {
         Group {
+            // Используем thumbnail для экономии памяти
             if let photoData = car.photoData,
-               let image = UIImage(data: photoData) {
-                Image(uiImage: image)
+               let thumbnail = ImageOptimizer.createThumbnail(from: photoData, maxSize: size * UIScreen.main.scale) {
+                Image(uiImage: thumbnail)
                     .resizable()
                     .scaledToFill()
                     .frame(width: size, height: size)

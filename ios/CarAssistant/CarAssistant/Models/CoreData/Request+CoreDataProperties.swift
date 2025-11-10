@@ -12,6 +12,7 @@ extension Request {
     @NSManaged public var imageData: Data?
     @NSManaged public var text: String?
     @NSManaged public var type: String
+    @NSManaged public var topic: String? // Тема проблемы (Topic.rawValue)
     @NSManaged public var car: Car?
     @NSManaged public var response: Response?
     @NSManaged public var user: User?

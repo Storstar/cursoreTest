@@ -395,7 +395,8 @@ struct CarInputView: View {
             if let user = authViewModel.currentUser {
                 // ВАЖНО: Всегда создаем новый автомобиль, никогда не обновляем существующий
                 let carsCountBefore = carViewModel.cars.count
-                let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+                // Сжимаем изображение перед сохранением в Core Data для экономии памяти
+                let imageData = selectedImage.flatMap { ImageOptimizer.compressImage($0, maxDimension: 800, compressionQuality: 0.7) }
                 carViewModel.saveCar(
                     brand: selectedBrand,
                     model: selectedModel,
@@ -454,15 +455,28 @@ struct CarInputView: View {
         VStack(spacing: 12) {
             if let image = selectedImage {
                 ZStack(alignment: .topTrailing) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(Color.blue, lineWidth: 3)
-                        )
+                    // Используем thumbnail для экономии памяти (120x120 = 240pt на retina = 480px)
+                    if let thumbnail = ImageOptimizer.createThumbnail(from: image, maxSize: 240) {
+                        Image(uiImage: thumbnail)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.blue, lineWidth: 3)
+                            )
+                    } else {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.blue, lineWidth: 3)
+                            )
+                    }
                     
                     Button(action: {
                         selectedImage = nil

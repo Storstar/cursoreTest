@@ -51,9 +51,11 @@ struct EditMaintenanceView: View {
             _selectedMaintenanceType = State(initialValue: "Другое")
         }
         
-        if let imageData = record.documentImageData,
-           let uiImage = UIImage(data: imageData) {
-            _selectedImage = State(initialValue: uiImage)
+        // Загружаем изображение с оптимизацией для экономии памяти
+        if let imageData = record.documentImageData {
+            // Используем downsampling для экономии памяти (80x80 = 160pt на retina = 320px)
+            let optimizedImage = ImageOptimizer.downsampleImage(data: imageData, to: CGSize(width: 320, height: 320))
+            _selectedImage = State(initialValue: optimizedImage)
         }
     }
     
@@ -154,11 +156,20 @@ struct EditMaintenanceView: View {
                 Section(header: Text("Документ (чек/наряд)")) {
                     if let image = selectedImage {
                         HStack {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 80, height: 80)
-                                .cornerRadius(8)
+                            // Используем thumbnail для экономии памяти (80x80 = 160pt на retina = 320px)
+                            if let thumbnail = ImageOptimizer.createThumbnail(from: image, maxSize: 160) {
+                                Image(uiImage: thumbnail)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
+                                    .cornerRadius(8)
+                            } else {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
+                                    .cornerRadius(8)
+                            }
                             
                             VStack(alignment: .leading) {
                                 Button("Удалить фото") {
@@ -311,7 +322,8 @@ struct EditMaintenanceView: View {
             return
         }
         
-        let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+        // Сжимаем изображение перед сохранением в Core Data для экономии памяти
+        let imageData = selectedImage.flatMap { ImageOptimizer.compressImage($0, maxDimension: 800, compressionQuality: 0.7) }
         
         maintenanceViewModel.updateMaintenanceRecord(
             record,

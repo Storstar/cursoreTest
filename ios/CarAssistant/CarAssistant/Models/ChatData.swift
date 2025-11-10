@@ -26,6 +26,9 @@ struct Chat: Identifiable {
     /// Все запросы в этом чате
     var requests: [Request]
     
+    /// Тема чата (проблема, выбранная пользователем)
+    var topic: Topic?
+    
     // MARK: - Initialization
     
     init(
@@ -33,13 +36,15 @@ struct Chat: Identifiable {
         title: String,
         lastMessage: String? = nil,
         lastMessageDate: Date = Date(),
-        requests: [Request] = []
+        requests: [Request] = [],
+        topic: Topic? = nil
     ) {
         self.id = id
         self.title = title
         self.lastMessage = lastMessage
         self.lastMessageDate = lastMessageDate
         self.requests = requests
+        self.topic = topic
     }
 }
 
@@ -53,8 +58,12 @@ struct ChatMessage: Identifiable, Equatable {
     /// Текст сообщения
     let text: String?
     
-    /// Данные изображения (если есть)
+    /// Данные изображения (если есть) - используется только для новых сообщений
+    /// Для старых сообщений используется lazy loading через requestId
     let imageData: Data?
+    
+    /// ID Request для lazy loading imageData (предотвращает утечки памяти)
+    let requestId: UUID?
     
     /// Флаг: сообщение от пользователя или от ИИ
     let isFromUser: Bool
@@ -74,6 +83,7 @@ struct ChatMessage: Identifiable, Equatable {
         id: UUID = UUID(),
         text: String? = nil,
         imageData: Data? = nil,
+        requestId: UUID? = nil,
         isFromUser: Bool,
         timestamp: Date = Date(),
         isLoading: Bool = false,
@@ -82,6 +92,7 @@ struct ChatMessage: Identifiable, Equatable {
         self.id = id
         self.text = text
         self.imageData = imageData
+        self.requestId = requestId
         self.isFromUser = isFromUser
         self.timestamp = timestamp
         self.isLoading = isLoading
@@ -94,6 +105,7 @@ struct ChatMessage: Identifiable, Equatable {
         return lhs.id == rhs.id &&
                lhs.text == rhs.text &&
                lhs.imageData == rhs.imageData &&
+               lhs.requestId == rhs.requestId &&
                lhs.isFromUser == rhs.isFromUser &&
                lhs.timestamp == rhs.timestamp &&
                lhs.isLoading == rhs.isLoading &&

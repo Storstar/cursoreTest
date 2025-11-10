@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import CoreData
 
 // MARK: - ChatBubble
 
@@ -15,6 +16,12 @@ struct ChatBubble: View {
     // MARK: - Properties
     
     let message: ChatMessage
+    
+    // MARK: - State
+    
+    @State private var loadedImageData: Data?
+    @State private var isLoadingImage = false
+    @State private var imageLoadTask: Task<Void, Never>?
     
     // MARK: - Body
     
@@ -41,21 +48,37 @@ struct ChatBubble: View {
     // MARK: - Subviews
     
     /// Изображение в сообщении (если есть)
+    /// Использует lazy loading для предотвращения утечек памяти
     @ViewBuilder
     private var imageView: some View {
-        if let imageData = message.imageData,
-           let uiImage = UIImage(data: imageData) {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: 280, maxHeight: 220)
-                .cornerRadius(16)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                )
-                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
-                .padding(.bottom, 4)
+        // Сначала проверяем imageData из сообщения (для новых сообщений)
+        if let imageData = message.imageData ?? loadedImageData {
+            // Используем downsampling для экономии памяти
+            let targetSize = CGSize(width: 280 * UIScreen.main.scale, height: 220 * UIScreen.main.scale)
+            if let optimizedImage = ImageOptimizer.downsampleImage(data: imageData, to: targetSize) {
+                Image(uiImage: optimizedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 280, maxHeight: 220)
+                    .cornerRadius(16)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
+                    .padding(.bottom, 4)
+                    .onDisappear {
+                        // Освобождаем память при исчезновении изображения
+                        cancelImageLoad()
+                    }
+            }
+        } else if let requestId = message.requestId, loadedImageData == nil && !isLoadingImage {
+            // Lazy loading для старых сообщений
+            ProgressView()
+                .frame(width: 280, height: 220)
+                .onAppear {
+                    loadImageData(requestId: requestId)
+                }
         }
     }
     
@@ -117,6 +140,58 @@ struct ChatBubble: View {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+    
+    /// Загрузить imageData из Request по требованию (lazy loading)
+    /// - Parameter requestId: ID Request
+    private func loadImageData(requestId: UUID) {
+        guard !isLoadingImage else { return }
+        
+        isLoadingImage = true
+        
+        let task = Task { @MainActor in
+            defer {
+                isLoadingImage = false
+            }
+            
+            // Проверяем отмену перед началом
+            try? Task.checkCancellation()
+            
+            let context = CoreDataManager.shared.viewContext
+            let fetchRequest: NSFetchRequest<Request> = Request.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", requestId as CVarArg)
+            fetchRequest.fetchLimit = 1
+            
+            do {
+                // Проверяем отмену перед запросом
+                try Task.checkCancellation()
+                
+                let requests = try context.fetch(fetchRequest)
+                
+                // Проверяем отмену после запроса
+                try Task.checkCancellation()
+                
+                if let request = requests.first,
+                   let imageData = request.imageData {
+                    // Загружаем только если изображение видимо и задача не отменена
+                    try Task.checkCancellation()
+                    loadedImageData = imageData
+                }
+            } catch {
+                if !Task.isCancelled {
+                    print("Ошибка загрузки imageData: \(error)")
+                }
+            }
+        }
+        
+        // Сохраняем task для отмены при исчезновении
+        imageLoadTask = task
+    }
+    
+    private func cancelImageLoad() {
+        imageLoadTask?.cancel()
+        imageLoadTask = nil
+        loadedImageData = nil
     }
 }
 

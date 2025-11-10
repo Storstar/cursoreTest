@@ -206,7 +206,24 @@ class CarViewModel: ObservableObject {
         newCar.driveType = driveType
         newCar.transmission = transmission
         newCar.vin = vin
-        newCar.photoData = photoData
+        // Сжимаем изображение перед сохранением в Core Data для экономии памяти
+        // Если photoData уже сжат, используем его, иначе сжимаем
+        if let photoData = photoData {
+            // Проверяем размер - если больше 500KB, сжимаем еще сильнее
+            if photoData.count > 500_000 {
+                // Пытаемся создать UIImage и сжать заново
+                // Используем downsampling для экономии памяти при проверке размера
+                if let image = ImageOptimizer.downsampleImage(data: photoData, to: CGSize(width: 800, height: 800)) {
+                    newCar.photoData = ImageOptimizer.compressImage(image, maxDimension: 800, compressionQuality: 0.6)
+                } else {
+                    newCar.photoData = photoData
+                }
+            } else {
+                newCar.photoData = photoData
+            }
+        } else {
+            newCar.photoData = nil
+        }
         newCar.notes = notes
         newCar.user = user
         

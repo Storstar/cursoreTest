@@ -22,6 +22,7 @@
         <attribute name="id" optional="NO" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>
+        <attribute name="topic" optional="YES" attributeType="String"/>
         <attribute name="type" optional="NO" attributeType="String"/>
         <relationship name="car" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Car" inverseName="requests" inverseEntity="Car"/>
         <relationship name="response" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Response" inverseName="request" inverseEntity="Response"/>

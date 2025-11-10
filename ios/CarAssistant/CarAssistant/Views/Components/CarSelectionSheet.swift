@@ -27,9 +27,10 @@ struct CarSelectionSheet: View {
                             }) {
                                 HStack(spacing: 16) {
                                     Group {
+                                        // Используем thumbnail для экономии памяти (60x60 = 120pt на retina = 240px)
                                         if let photoData = car.photoData,
-                                           let image = UIImage(data: photoData) {
-                                            Image(uiImage: image)
+                                           let thumbnail = ImageOptimizer.createThumbnail(from: photoData, maxSize: 120) {
+                                            Image(uiImage: thumbnail)
                                                 .resizable()
                                                 .scaledToFill()
                                                 .frame(width: 60, height: 60)

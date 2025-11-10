@@ -515,11 +515,20 @@ struct AddMaintenanceView: View {
     private var documentSection: some View {
         if let image = selectedImage {
             HStack {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 80, height: 80)
-                    .cornerRadius(8)
+                // Используем thumbnail для экономии памяти (80x80 = 160pt на retina = 320px)
+                if let thumbnail = ImageOptimizer.createThumbnail(from: image, maxSize: 160) {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 80)
+                        .cornerRadius(8)
+                } else {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 80)
+                        .cornerRadius(8)
+                }
                 
                 VStack(alignment: .leading) {
                     Button("Удалить фото") {
@@ -586,7 +595,8 @@ struct AddMaintenanceView: View {
             return
         }
         
-        let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+        // Сжимаем изображение перед сохранением в Core Data для экономии памяти
+        let imageData = selectedImage.flatMap { ImageOptimizer.compressImage($0, maxDimension: 800, compressionQuality: 0.7) }
         
         // Для запланированных работ используем plannedDate, для остальных - date
         let targetDate = isPlanned ? plannedDate : date

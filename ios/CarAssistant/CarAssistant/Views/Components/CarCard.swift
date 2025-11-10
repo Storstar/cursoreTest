@@ -21,9 +21,10 @@ struct CarCard: View {
                     .frame(height: 200)
                     .overlay(
                         Group {
+                            // Используем downsampling для экономии памяти (200pt на retina = 400px)
                             if let photoData = car.photoData,
-                               let image = UIImage(data: photoData) {
-                                Image(uiImage: image)
+                               let optimizedImage = ImageOptimizer.downsampleImage(data: photoData, to: CGSize(width: 400, height: 400)) {
+                                Image(uiImage: optimizedImage)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(height: 200)

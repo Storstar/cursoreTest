@@ -125,8 +125,6 @@ struct ChatRow: View {
     let onTap: () -> Void
     let onDelete: () -> Void
     
-    @State private var showDeleteConfirmation = false
-    
     // MARK: - Body
     
     var body: some View {
@@ -135,45 +133,116 @@ struct ChatRow: View {
                 chatIcon
                 chatInfo
                 Spacer()
-                deleteButton
                 chevronIcon
             }
             .padding(20)
             .background(chatRowBackground)
         }
         .buttonStyle(PlainButtonStyle())
-        .confirmationDialog(
-            "Удалить чат?",
-            isPresented: $showDeleteConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button("Удалить", role: .destructive) {
-                onDelete()
+        .contextMenu {
+            Button(role: .destructive, action: onDelete) {
+                Label("Удалить", systemImage: "trash")
             }
-            Button("Отмена", role: .cancel) {}
-        } message: {
-            Text("Вы уверены, что хотите удалить этот чат?")
         }
     }
     
     // MARK: - Subviews
     
-    /// Иконка чата
+    /// Иконка чата (темы)
     private var chatIcon: some View {
         Circle()
             .fill(
                 LinearGradient(
-                    colors: [Color.blue.opacity(0.6), Color.blue.opacity(0.3)],
+                    colors: topicGradientColors,
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
             )
             .frame(width: 56, height: 56)
             .overlay(
-                Image(systemName: "bubble.left.and.bubble.right.fill")
+                Group {
+                    if let topic = chat.topic {
+                        topicIcon(for: topic)
+                    } else {
+                        Image(systemName: "bubble.left.and.bubble.right.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                    }
+                }
+            )
+    }
+    
+    /// Иконка темы
+    private func topicIcon(for topic: Topic) -> some View {
+        Group {
+            if topic == .check_engine {
+                Image("check_engine_icon")
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .frame(width: 28, height: 28)
+                    .foregroundColor(.white)
+            } else {
+                Image(systemName: topicIconName(for: topic))
                     .font(.system(size: 24))
                     .foregroundColor(.white)
-            )
+            }
+        }
+    }
+    
+    /// Имя иконки для темы
+    private func topicIconName(for topic: Topic) -> String {
+        switch topic {
+        case .general_question:
+            return "questionmark.circle.fill"
+        case .check_engine:
+            return "check.engine.custom"
+        case .battery:
+            return "battery.100"
+        case .brakes:
+            return "exclamationmark.octagon.fill"
+        case .engine:
+            return "gearshape.2.fill"
+        case .transmission:
+            return "gearshape.fill"
+        case .suspension:
+            return "car.2.fill"
+        case .electrical:
+            return "bolt.fill"
+        case .air_conditioning:
+            return "snowflake"
+        case .tires:
+            return "circle.dotted"
+        }
+    }
+    
+    /// Цвета градиента для темы
+    private var topicGradientColors: [Color] {
+        if let topic = chat.topic {
+            switch topic {
+            case .general_question:
+                return [Color.blue.opacity(0.6), Color.blue.opacity(0.3)]
+            case .check_engine:
+                return [Color.orange.opacity(0.7), Color.orange.opacity(0.4)]
+            case .battery:
+                return [Color.green.opacity(0.6), Color.green.opacity(0.3)]
+            case .brakes:
+                return [Color.red.opacity(0.6), Color.red.opacity(0.3)]
+            case .engine:
+                return [Color.purple.opacity(0.6), Color.purple.opacity(0.3)]
+            case .transmission:
+                return [Color.indigo.opacity(0.6), Color.indigo.opacity(0.3)]
+            case .suspension:
+                return [Color.teal.opacity(0.6), Color.teal.opacity(0.3)]
+            case .electrical:
+                return [Color.yellow.opacity(0.6), Color.yellow.opacity(0.3)]
+            case .air_conditioning:
+                return [Color.cyan.opacity(0.6), Color.cyan.opacity(0.3)]
+            case .tires:
+                return [Color.gray.opacity(0.6), Color.gray.opacity(0.3)]
+            }
+        }
+        return [Color.blue.opacity(0.6), Color.blue.opacity(0.3)]
     }
     
     /// Информация о чате
@@ -195,21 +264,6 @@ struct ChatRow: View {
                 .font(.system(size: 13, weight: .regular))
                 .foregroundColor(.secondary)
         }
-    }
-    
-    /// Кнопка удаления
-    private var deleteButton: some View {
-        Button(action: { showDeleteConfirmation = true }) {
-            Image(systemName: "trash")
-                .font(.system(size: 16, weight: .medium))
-                .foregroundColor(.red)
-                .frame(width: 36, height: 36)
-                .background(
-                    Circle()
-                        .fill(Color.red.opacity(0.1))
-                )
-        }
-        .buttonStyle(PlainButtonStyle())
     }
     
     /// Иконка стрелки

@@ -44,6 +44,7 @@ struct ChatInputBar: View {
     @State private var textFieldContentHeight: CGFloat = 43 // Начальная высота (1 строка)
     @State private var problemButtons: [CarProblemButton] = CarProblemButton.defaultButtons
     
+    let selectedTopic: Topic? // Текущая выбранная тема
     let onSend: () -> Void
     let onImageTap: () -> Void
     let onVoiceTap: () -> Void
@@ -62,25 +63,67 @@ struct ChatInputBar: View {
                 .ignoresSafeArea(edges: .bottom)
         )
         .padding(.bottom, 0)
+        .onChange(of: selectedTopic) { newTopic in
+            updateButtonsForTopic(newTopic)
+        }
+        .onAppear {
+            updateButtonsForTopic(selectedTopic)
+        }
     }
     
     // MARK: - Subviews
     
     /// Горизонтальный скролл с кнопками проблем
     private var problemButtonsScrollView: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(problemButtons) { button in
-                    ProblemButtonView(
-                        button: button,
-                        onTap: {
-                            toggleButton(button)
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(problemButtons) { button in
+                        ProblemButtonView(
+                            button: button,
+                            onTap: {
+                                let buttonId = button.id
+                                let wasActive = button.isActive
+                                toggleButton(button)
+                                // Прокручиваем к выбранной кнопке, если она стала активной
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    if let updatedButton = problemButtons.first(where: { $0.id == buttonId }),
+                                       updatedButton.isActive && !wasActive {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            proxy.scrollTo(buttonId, anchor: .trailing)
+                                        }
+                                    }
+                                }
+                            }
+                        )
+                        .id(button.id)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            }
+            .onChange(of: selectedTopic) { newTopic in
+                // Прокручиваем к активной кнопке при изменении темы
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                    if let topic = newTopic,
+                       let buttonTitle = topicButtonTitle(for: topic),
+                       let activeButton = problemButtons.first(where: { $0.title == buttonTitle && $0.isActive }) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            proxy.scrollTo(activeButton.id, anchor: .trailing)
                         }
-                    )
+                    }
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .onAppear {
+                // Прокручиваем к активной кнопке при появлении
+                if let activeButton = problemButtons.first(where: { $0.isActive }) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            proxy.scrollTo(activeButton.id, anchor: .trailing)
+                        }
+                    }
+                }
+            }
         }
         .frame(height: 60)
     }
@@ -90,15 +133,28 @@ struct ChatInputBar: View {
     private var imagePreviewView: some View {
         if let image = selectedImage {
             HStack(spacing: 12) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 60, height: 60)
-                    .cornerRadius(12)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                    )
+                // Используем thumbnail для экономии памяти (60x60 = 120pt на retina = 240px)
+                if let thumbnail = ImageOptimizer.createThumbnail(from: image, maxSize: 120) {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 60, height: 60)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                        )
+                } else {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 60, height: 60)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                        )
+                }
                 
                 Button(action: { selectedImage = nil }) {
                     Image(systemName: "xmark.circle.fill")
@@ -277,6 +333,60 @@ struct ChatInputBar: View {
             }
             
             problemButtons = updatedButtons
+        }
+    }
+    
+    /// Обновить кнопки в соответствии с выбранной темой
+    private func updateButtonsForTopic(_ topic: Topic?) {
+        var updatedButtons = problemButtons
+        
+        // Сбрасываем все кнопки
+        for i in updatedButtons.indices {
+            updatedButtons[i].isActive = false
+        }
+        
+        // Активируем кнопку, соответствующую теме
+        if let topic = topic,
+           let buttonTitle = topicButtonTitle(for: topic),
+           let index = updatedButtons.firstIndex(where: { $0.title == buttonTitle }) {
+            updatedButtons[index].isActive = true
+        }
+        
+        problemButtons = updatedButtons
+    }
+    
+    /// Прокрутить к активной кнопке (используется из ScrollViewReader)
+    private func scrollToActiveButton(proxy: ScrollViewProxy) {
+        if let activeButton = problemButtons.first(where: { $0.isActive }) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                proxy.scrollTo(activeButton.id, anchor: .trailing)
+            }
+        }
+    }
+    
+    /// Получить название кнопки для темы
+    private func topicButtonTitle(for topic: Topic) -> String? {
+        switch topic {
+        case .general_question:
+            return "General Question"
+        case .check_engine:
+            return "Check Engine"
+        case .battery:
+            return "Battery"
+        case .brakes:
+            return "Brake System"
+        case .engine:
+            return "Engine"
+        case .transmission:
+            return "Transmission"
+        case .suspension:
+            return "Suspension"
+        case .electrical:
+            return "Electrical"
+        case .air_conditioning:
+            return "AC System"
+        case .tires:
+            return "Tires"
         }
     }
 }

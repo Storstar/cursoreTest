@@ -10,10 +10,11 @@ struct CarMiniCard: View {
     var body: some View {
         HStack(spacing: 16) {
             // Фото авто
+            // Используем thumbnail для экономии памяти (60x60 = 120pt на retina = 240px)
             Group {
                 if let photoData = car.photoData,
-                   let image = UIImage(data: photoData) {
-                    Image(uiImage: image)
+                   let thumbnail = ImageOptimizer.createThumbnail(from: photoData, maxSize: 120) {
+                    Image(uiImage: thumbnail)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 60, height: 60)

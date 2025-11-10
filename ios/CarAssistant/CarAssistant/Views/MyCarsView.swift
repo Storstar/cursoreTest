@@ -215,10 +215,11 @@ struct CarManagementCard: View {
     var body: some View {
         HStack(spacing: 10) {
             // Фото/иконка авто
+            // Используем thumbnail для экономии памяти (45x45 = 90pt на retina = 180px)
             Group {
                 if let photoData = car.photoData,
-                   let image = UIImage(data: photoData) {
-                    Image(uiImage: image)
+                   let thumbnail = ImageOptimizer.createThumbnail(from: photoData, maxSize: 90) {
+                    Image(uiImage: thumbnail)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 45, height: 45)
@@ -579,8 +580,10 @@ struct CarEditView: View {
                 selectedTransmission = car.transmission ?? ""
                 vin = car.vin ?? ""
                 notes = car.notes ?? ""
+                // Загружаем изображение с оптимизацией для экономии памяти
                 if let photoData = car.photoData {
-                    selectedImage = UIImage(data: photoData)
+                    // Используем downsampling для экономии памяти (120x120 = 240pt на retina = 480px)
+                    selectedImage = ImageOptimizer.downsampleImage(data: photoData, to: CGSize(width: 480, height: 480))
                 }
                 brandSearchText = car.brand ?? ""
                 modelSearchText = car.model ?? ""
@@ -613,7 +616,8 @@ struct CarEditView: View {
             car.driveType = selectedDriveType.isEmpty ? nil : selectedDriveType
             car.transmission = selectedTransmission.isEmpty ? nil : selectedTransmission
             car.vin = vin.isEmpty ? nil : vin
-            car.photoData = selectedImage?.jpegData(compressionQuality: 0.8)
+            // Сжимаем изображение перед сохранением в Core Data для экономии памяти
+            car.photoData = selectedImage.flatMap { ImageOptimizer.compressImage($0, maxDimension: 800, compressionQuality: 0.7) }
             car.notes = notes.isEmpty ? nil : notes
             CoreDataManager.shared.save()
             carViewModel.loadCars(for: user)
@@ -626,15 +630,28 @@ struct CarEditView: View {
         VStack(spacing: 12) {
             if let image = selectedImage {
                 ZStack(alignment: .topTrailing) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(Color.blue, lineWidth: 3)
-                        )
+                    // Используем thumbnail для экономии памяти (120x120 = 240pt на retina = 480px)
+                    if let thumbnail = ImageOptimizer.createThumbnail(from: image, maxSize: 240) {
+                        Image(uiImage: thumbnail)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.blue, lineWidth: 3)
+                            )
+                    } else {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.blue, lineWidth: 3)
+                            )
+                    }
                     
                     Button(action: {
                         selectedImage = nil

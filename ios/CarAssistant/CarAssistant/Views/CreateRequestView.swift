@@ -69,11 +69,20 @@ struct CreateRequestView: View {
             VStack(spacing: 0) {
                 if let image = selectedImage {
                     HStack {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 60, height: 60)
-                            .cornerRadius(8)
+                        // Используем thumbnail для экономии памяти (60x60 = 120pt на retina = 240px)
+                        if let thumbnail = ImageOptimizer.createThumbnail(from: image, maxSize: 120) {
+                            Image(uiImage: thumbnail)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 60, height: 60)
+                                .cornerRadius(8)
+                        } else {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 60, height: 60)
+                                .cornerRadius(8)
+                        }
                         
                         Button(action: {
                             selectedImage = nil
@@ -198,7 +207,8 @@ struct CreateRequestView: View {
         let textToSend = requestText.trimmingCharacters(in: .whitespacesAndNewlines)
         let imageToSend = selectedImage
         
-        if let image = imageToSend, let imageData = image.jpegData(compressionQuality: 0.8) {
+        // Сжимаем изображение перед отправкой для экономии памяти
+        if let image = imageToSend, let imageData = ImageOptimizer.compressImage(image, maxDimension: 1200, compressionQuality: 0.7) {
             Task {
                 await requestViewModel.createPhotoRequest(imageData: imageData, for: user, car: carViewModel.car)
                 if requestViewModel.errorMessage == nil {

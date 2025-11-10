@@ -98,6 +98,13 @@ struct ChatView: View {
         .onChange(of: chatViewModel.currentChat?.id) { newChatId in
             // Сохраняем ID текущего чата при его изменении
             appStateManager.saveState(showChatHistory: showChatHistory, currentChatId: newChatId)
+            
+            // Восстанавливаем тему из текущего чата
+            if let currentChat = chatViewModel.currentChat {
+                selectedTopic = currentChat.topic
+            } else {
+                selectedTopic = nil
+            }
         }
         .onChange(of: carViewModel.car?.id) { newCarId in
             handleCarChange()
@@ -136,6 +143,12 @@ struct ChatView: View {
             }
         }
         .onDisappear {
+            // Отменяем все активные задачи для предотвращения утечек памяти
+            sendMessageTask?.cancel()
+            sendMessageTask = nil
+            
+            // Очищаем изображение из памяти
+            selectedImage = nil
             cleanup()
         }
     }
@@ -160,6 +173,8 @@ struct ChatView: View {
             chats: chatViewModel.chats,
             onChatTap: { chat in
                 chatViewModel.openChat(chat)
+                // Восстанавливаем тему из открытого чата
+                selectedTopic = chat.topic
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     showChatHistory = false
                 }
@@ -167,7 +182,7 @@ struct ChatView: View {
                 appStateManager.saveState(showChatHistory: false, currentChatId: chat.id)
             },
             onCreateNewChat: {
-                let newChat = chatViewModel.createNewChat()
+                let newChat = chatViewModel.createNewChat(topic: selectedTopic)
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     showChatHistory = false
                 }
@@ -196,7 +211,7 @@ struct ChatView: View {
                         appStateManager.saveState(showChatHistory: true, currentChatId: nil)
                     },
                     onCreateNewChat: {
-                        let newChat = chatViewModel.createNewChat()
+                        let newChat = chatViewModel.createNewChat(topic: selectedTopic)
                         // Сохраняем состояние при создании нового чата
                         appStateManager.saveState(showChatHistory: false, currentChatId: newChat.id)
                     }
@@ -219,11 +234,29 @@ struct ChatView: View {
                 selectedImage: $selectedImage,
                 isRecording: $isRecording,
                 isTextFieldFocused: $isTextFieldFocused,
+                selectedTopic: selectedTopic,
                 onSend: { sendMessage() },
                 onImageTap: { showImageOptions = true },
                 onVoiceTap: { handleVoiceTap() },
                 onTopicSelected: { topic in
                     selectedTopic = topic
+                    // Сохраняем тему в текущий чат и в Core Data
+                    if let currentChat = chatViewModel.currentChat {
+                        // Обновляем тему в чате
+                        var updatedChat = currentChat
+                        updatedChat.topic = topic
+                        chatViewModel.currentChat = updatedChat
+                        
+                        // Обновляем чат в списке
+                        if let index = chatViewModel.chats.firstIndex(where: { $0.id == currentChat.id }) {
+                            chatViewModel.chats[index].topic = topic
+                        }
+                        
+                        // Сохраняем тему в Core Data - обновляем все Request в чате
+                        Task { @MainActor in
+                            await chatViewModel.updateChatTopic(chatId: currentChat.id, topic: topic)
+                        }
+                    }
                 }
             )
             }
@@ -342,6 +375,8 @@ struct ChatView: View {
             // Ищем чат в загруженных чатах
             if let chat = chatViewModel.chats.first(where: { $0.id == chatId }) {
                 chatViewModel.openChat(chat)
+                // Восстанавливаем тему из открытого чата
+                selectedTopic = chat.topic
             } else if !showChatHistory {
                 // Если был открыт активный чат, но чат не найден, показываем новый чат
                 chatViewModel.currentChat = nil
@@ -360,8 +395,18 @@ struct ChatView: View {
         
         Task { @MainActor in
             chatViewModel.loadChats(for: user, car: carViewModel.car)
-            chatViewModel.currentChat = nil
-            chatViewModel.currentChatMessages = []
+            
+            // Восстанавливаем текущий чат и тему, если чат был открыт
+            if let currentChatId = appStateManager.currentChatId,
+               let chat = chatViewModel.chats.first(where: { $0.id == currentChatId }) {
+                chatViewModel.openChat(chat)
+                // Восстанавливаем тему из чата
+                selectedTopic = chat.topic
+            } else {
+                chatViewModel.currentChat = nil
+                chatViewModel.currentChatMessages = []
+                selectedTopic = nil
+            }
             selectedImage = nil
         }
     }
@@ -441,6 +486,11 @@ struct ChatView: View {
                 compressedImageData = compressImage(imageToSend)
             }
             
+            // Очищаем изображение из памяти после сжатия
+            defer {
+                compressedImageData = nil
+            }
+            
             await chatViewModel.sendMessage(
                 text: textToSend.isEmpty ? nil : textToSend,
                 imageData: compressedImageData,
@@ -450,8 +500,8 @@ struct ChatView: View {
                 topic: selectedTopic
             )
             
-            // Сбрасываем выбранную тему после отправки
-            selectedTopic = nil
+            // НЕ сбрасываем выбранную тему после отправки - она должна сохраняться в чате
+            // Тема остается выбранной до тех пор, пока пользователь не изменит её вручную
             
             // После отправки скролл будет выполнен автоматически в ChatContentView
         }
@@ -461,37 +511,8 @@ struct ChatView: View {
     /// - Parameter image: Исходное изображение
     /// - Returns: Сжатые данные изображения
     private func compressImage(_ image: UIImage) -> Data? {
-        let maxDimension: CGFloat = 1200
-        let scale: CGFloat
-        
-        if image.size.width > image.size.height {
-            scale = min(1.0, maxDimension / image.size.width)
-        } else {
-            scale = min(1.0, maxDimension / image.size.height)
-        }
-        
-        let scaledSize = CGSize(
-            width: image.size.width * scale,
-            height: image.size.height * scale
-        )
-        
-        UIGraphicsBeginImageContextWithOptions(scaledSize, false, 0.0)
-        image.draw(in: CGRect(origin: .zero, size: scaledSize))
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        guard let scaledImage = scaledImage else { return nil }
-        
-        if let imageData = scaledImage.jpegData(compressionQuality: 0.7) {
-            // Если изображение все еще слишком большое, сжимаем сильнее
-            if imageData.count > 1_000_000 {
-                return scaledImage.jpegData(compressionQuality: 0.5)
-            } else {
-                return imageData
-            }
-        }
-        
-        return nil
+        // Используем ImageOptimizer для оптимизации
+        return ImageOptimizer.compressImage(image, maxDimension: 1200, compressionQuality: 0.7)
     }
 }
 
@@ -544,20 +565,35 @@ struct ChatHeaderView: View {
     private var carInfoView: some View {
         if let car = car {
             HStack(spacing: 12) {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [Color.blue.opacity(0.6), Color.blue.opacity(0.3)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
+                // Отображаем фото автомобиля, если оно есть, иначе стандартную иконку
+                // Используем thumbnail для экономии памяти (44x44 = 88pt на retina = 176px)
+                if let photoData = car.photoData,
+                   let thumbnail = ImageOptimizer.createThumbnail(from: photoData, maxSize: 88) {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 44, height: 44)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.3), lineWidth: 1)
                         )
-                    )
-                    .frame(width: 44, height: 44)
-                    .overlay(
-                        Image(systemName: "car.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-                    )
+                } else {
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.blue.opacity(0.6), Color.blue.opacity(0.3)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 44, height: 44)
+                        .overlay(
+                            Image(systemName: "car.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(.white)
+                        )
+                }
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(car.brand ?? "") \(car.model ?? "")")

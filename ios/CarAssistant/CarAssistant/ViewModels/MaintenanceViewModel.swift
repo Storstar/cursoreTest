@@ -23,6 +23,8 @@ class MaintenanceViewModel: ObservableObject {
         let fetchRequest: NSFetchRequest<MaintenanceRecord> = MaintenanceRecord.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "car == %@", car)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MaintenanceRecord.date, ascending: false)]
+        fetchRequest.fetchBatchSize = 20
+        fetchRequest.fetchLimit = 50 // Ограничиваем количество записей для экономии памяти
         
         do {
             allRecords = try context.fetch(fetchRequest)

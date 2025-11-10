@@ -31,6 +31,7 @@ class RequestViewModel: ObservableObject {
         fetchRequest.predicate = NSPredicate(format: "user == %@", user)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Request.createdAt, ascending: false)]
         fetchRequest.fetchBatchSize = 20 // Оптимизация для больших списков
+        fetchRequest.fetchLimit = 50 // Ограничиваем количество загружаемых Request для экономии памяти
         
         do {
             requests = try context.fetch(fetchRequest)
@@ -60,6 +61,7 @@ class RequestViewModel: ObservableObject {
         request.user = user
         request.car = car // Связываем запрос с автомобилем
         request.chatId = chatId // Связываем запрос с чатом (если указан)
+        request.topic = topic?.rawValue // Сохраняем тему проблемы
         
         // Сохраняем запрос БЕЗ ответа (ответ добавим позже)
         // Это позволит показать сообщение пользователя и индикатор загрузки
@@ -448,8 +450,10 @@ class RequestViewModel: ObservableObject {
                     maintenanceRecords = []
                 }
                 
-                // Конвертируем изображение в base64
-                let base64Image = imageData.base64EncodedString()
+                // Конвертируем изображение в base64 (освобождаем после использования)
+                let base64Image = autoreleasepool { () -> String in
+                    return imageData.base64EncodedString()
+                }
                 
                 // Строим system prompt
                 let systemPrompt = builder.buildSystemPrompt(
@@ -460,8 +464,12 @@ class RequestViewModel: ObservableObject {
                     hasImages: true
                 )
                 
+                // Ограничиваем историю чата для предотвращения утечек памяти
+                let maxHistoryItems = 20
+                let limitedChatHistory = Array(chatHistory.suffix(maxHistoryItems))
+                
                 // Конвертируем историю чата в формат для PromptBuilder
-                let chatHistoryFormatted: [[String: String]] = chatHistory.map { item in
+                let chatHistoryFormatted: [[String: String]] = limitedChatHistory.map { item in
                     ["role": item.role, "content": item.content]
                 }
                 
@@ -483,6 +491,8 @@ class RequestViewModel: ObservableObject {
                 
                 // Отправляем запрос
                 responseText = try await AIService.shared.sendRequestWithMessages(messages: messages)
+                
+                // base64Image будет автоматически освобожден после выхода из области видимости
             } else {
                 // Используем старый метод
                 let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
@@ -520,6 +530,7 @@ class RequestViewModel: ObservableObject {
             request.user = user
             request.car = car // Связываем запрос с автомобилем
             request.chatId = chatId // Связываем запрос с чатом (если указан)
+            request.topic = topic?.rawValue // Сохраняем тему проблемы
             
             let response = Response(context: context)
             response.id = UUID()

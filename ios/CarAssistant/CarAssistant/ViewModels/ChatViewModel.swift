@@ -120,6 +120,7 @@ class ChatViewModel: ObservableObject {
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Request.createdAt, ascending: false)]
         fetchRequest.fetchBatchSize = 20
+        fetchRequest.fetchLimit = 50 // Ограничиваем количество загружаемых Request для экономии памяти
         
         do {
             let requests = try context.fetch(fetchRequest)
@@ -152,12 +153,27 @@ class ChatViewModel: ObservableObject {
                     return nil
                 }()
                 
+                // Восстанавливаем тему из первого Request
+                let topic: Topic? = {
+                    if let topicString = firstRequest?.topic,
+                       let topic = Topic(rawValue: topicString) {
+                        return topic
+                    }
+                    return nil
+                }()
+                
+                // НЕ сохраняем все requests в Chat - только последние 10 для экономии памяти
+                // Остальные будут загружены по требованию
+                let maxRequestsInChat = 10
+                let limitedRequests = Array(sortedRequests.suffix(maxRequestsInChat))
+                
                 return Chat(
                     id: chatId,
                     title: String(title),
                     lastMessage: lastMessage,
                     lastMessageDate: lastRequest?.createdAt ?? Date(),
-                    requests: sortedRequests
+                    requests: limitedRequests,
+                    topic: topic
                 )
             }.sorted { $0.lastMessageDate > $1.lastMessageDate }
             
@@ -181,21 +197,45 @@ class ChatViewModel: ObservableObject {
     /// - Parameter chat: Чат, для которого нужно загрузить сообщения
     func loadMessages(for chat: Chat) {
         var messages: [ChatMessage] = []
-        messages.reserveCapacity(chat.requests.count * 2)
+        // Ограничиваем количество загружаемых сообщений для предотвращения утечек памяти
+        let maxMessages = 50
         
-        for request in chat.requests {
+        // Загружаем requests из Core Data напрямую, а не из chat.requests
+        // Это позволяет загрузить все сообщения чата, даже если в Chat хранится только 10 последних
+        let fetchRequest: NSFetchRequest<Request> = Request.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "chatId == %@", chat.id as CVarArg)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Request.createdAt, ascending: true)]
+        fetchRequest.fetchBatchSize = 20
+        fetchRequest.fetchLimit = maxMessages // Ограничиваем для экономии памяти
+        
+        var requestsToLoad: [Request] = []
+        do {
+            requestsToLoad = try context.fetch(fetchRequest)
+        } catch {
+            print("Ошибка загрузки requests для чата: \(error)")
+            // Fallback: используем requests из chat
+            requestsToLoad = Array(chat.requests.suffix(maxMessages))
+        }
+        
+        messages.reserveCapacity(requestsToLoad.count * 2)
+        
+        for request in requestsToLoad {
             // Сообщение пользователя
+            // НЕ загружаем imageData в память - используем lazy loading через requestId
+            // Это предотвращает утечки памяти при большом количестве изображений
             if let text = request.text {
                 messages.append(ChatMessage(
                     text: text,
-                    imageData: request.imageData,
+                    imageData: nil, // Не загружаем в память - будет загружено по требованию
+                    requestId: request.imageData != nil ? request.id : nil, // Сохраняем ID для lazy loading
                     isFromUser: true,
                     timestamp: request.createdAt
                 ))
             } else if request.imageData != nil {
                 messages.append(ChatMessage(
                     text: nil,
-                    imageData: request.imageData,
+                    imageData: nil, // Не загружаем в память - будет загружено по требованию
+                    requestId: request.id, // Сохраняем ID для lazy loading
                     isFromUser: true,
                     timestamp: request.createdAt
                 ))
@@ -220,18 +260,23 @@ class ChatViewModel: ObservableObject {
             }
         }
         
-        // Сохраняем все сообщения для ленивой загрузки
-        allChatMessages = messages.sorted { $0.timestamp < $1.timestamp }
+        // Ограничиваем количество сообщений для предотвращения утечек памяти
+        // НЕ сохраняем все сообщения - только последние N для оптимизации
+        let sortedMessages = messages.sorted { $0.timestamp < $1.timestamp }
+        let maxStoredMessages = 50 // Максимум сообщений для хранения (уменьшено для экономии памяти)
         
-        // Загружаем только последние N сообщений для оптимизации
-        let sortedMessages = allChatMessages
         if sortedMessages.count <= initialMessagesCount {
             // Если сообщений меньше или равно лимиту, загружаем все
             currentChatMessages = sortedMessages
+            allChatMessages = sortedMessages // Сохраняем только если мало сообщений
             hasLoadedAllMessages = true
         } else {
             // Загружаем только последние N сообщений
-            currentChatMessages = Array(sortedMessages.suffix(initialMessagesCount))
+            let messagesToShow = Array(sortedMessages.suffix(initialMessagesCount))
+            currentChatMessages = messagesToShow
+            
+            // Сохраняем только последние maxStoredMessages для ленивой загрузки
+            allChatMessages = Array(sortedMessages.suffix(maxStoredMessages))
             hasLoadedAllMessages = false
         }
     }
@@ -277,11 +322,12 @@ class ChatViewModel: ObservableObject {
     /// Создать новый чат
     /// - Parameter title: Заголовок чата (опционально)
     /// - Returns: Созданный чат
-    func createNewChat(title: String? = nil) -> Chat {
+    func createNewChat(title: String? = nil, topic: Topic? = nil) -> Chat {
         let newChat = Chat(
             id: UUID(),
             title: title ?? "Новый чат",
-            lastMessageDate: Date()
+            lastMessageDate: Date(),
+            topic: topic
         )
         chats.insert(newChat, at: 0)
         currentChat = newChat
@@ -319,7 +365,8 @@ class ChatViewModel: ObservableObject {
         if hasText || hasImage {
             let userMessage = ChatMessage(
                 text: hasText ? text : nil,
-                imageData: hasImage ? imageData : nil,
+                imageData: hasImage ? imageData : nil, // Для новых сообщений загружаем сразу
+                requestId: nil, // Для новых сообщений requestId не нужен
                 isFromUser: true,
                 timestamp: Date()
             )
@@ -373,10 +420,25 @@ class ChatViewModel: ObservableObject {
         invalidateCache()
         loadChats(for: user, car: car)
         
+        // Обновляем тему текущего чата, если она указана
+        if let topic = topic, var currentChat = currentChat {
+            currentChat.topic = topic
+            self.currentChat = currentChat
+            // Обновляем чат в списке
+            if let index = chats.firstIndex(where: { $0.id == currentChat.id }) {
+                chats[index].topic = topic
+            }
+        }
+        
         // Проверяем наличие ответа
         if let savedChatId = savedChatId,
            let updatedChat = chats.first(where: { $0.id == savedChatId }) {
-            currentChat = updatedChat
+            var updatedChatWithTopic = updatedChat
+            // Сохраняем тему, если она была установлена
+            if let topic = topic {
+                updatedChatWithTopic.topic = topic
+            }
+            currentChat = updatedChatWithTopic
             loadMessages(for: updatedChat)
             
             // Проверяем, есть ли ответ
@@ -406,42 +468,56 @@ class ChatViewModel: ObservableObject {
         // Если ответа нет, ждем и проверяем еще раз
         var attempts = 0
         let maxAttempts = 40
-        let checkInterval: UInt64 = 500_000_000 // 0.5 секунды
+        let checkInterval: UInt64 = 1_000_000_000 // 1 секунда (увеличено для уменьшения нагрузки)
         
         while isWaitingForResponse && attempts < maxAttempts {
+            // Проверяем отмену задачи для предотвращения утечек памяти
+            try? Task.checkCancellation()
+            
             try? await Task.sleep(nanoseconds: checkInterval)
             
-            // Обновляем чаты и сообщения
-            invalidateCache()
-            loadChats(for: user, car: car)
+            // Проверяем отмену после сна
+            try? Task.checkCancellation()
+            
+            // Обновляем чаты и сообщения только каждые 2 секунды (каждую 2-ю итерацию)
+            // Это уменьшает нагрузку на память и Core Data
+            if attempts % 2 == 0 {
+                autoreleasepool {
+                    invalidateCache()
+                    loadChats(for: user, car: car)
+                }
+            }
             
             // Проверяем наличие ответа
-            if let savedChatId = savedChatId,
-               let updatedChat = chats.first(where: { $0.id == savedChatId }) {
-                currentChat = updatedChat
-                loadMessages(for: updatedChat)
-                
-                // Проверяем, есть ли ответ
-                if let lastRequest = updatedChat.requests.last,
-                   let response = lastRequest.response,
-                   !response.text.isEmpty {
-                    replaceLoadingIndicator(with: response.text)
-                    isWaitingForResponse = false
-                    isLoading = false
-                    return
-                }
-            } else if let firstChat = chats.first {
-                currentChat = firstChat
-                loadMessages(for: firstChat)
-                
-                // Проверяем, есть ли ответ в первом чате
-                if let lastRequest = firstChat.requests.last,
-                   let response = lastRequest.response,
-                   !response.text.isEmpty {
-                    replaceLoadingIndicator(with: response.text)
-                    isWaitingForResponse = false
-                    isLoading = false
-                    return
+            // Используем autoreleasepool для освобождения памяти
+            autoreleasepool {
+                if let savedChatId = savedChatId,
+                   let updatedChat = chats.first(where: { $0.id == savedChatId }) {
+                    currentChat = updatedChat
+                    loadMessages(for: updatedChat)
+                    
+                    // Проверяем, есть ли ответ
+                    if let lastRequest = updatedChat.requests.last,
+                       let response = lastRequest.response,
+                       !response.text.isEmpty {
+                        replaceLoadingIndicator(with: response.text)
+                        isWaitingForResponse = false
+                        isLoading = false
+                        return
+                    }
+                } else if let firstChat = chats.first {
+                    currentChat = firstChat
+                    loadMessages(for: firstChat)
+                    
+                    // Проверяем, есть ли ответ в первом чате
+                    if let lastRequest = firstChat.requests.last,
+                       let response = lastRequest.response,
+                       !response.text.isEmpty {
+                        replaceLoadingIndicator(with: response.text)
+                        isWaitingForResponse = false
+                        isLoading = false
+                        return
+                    }
                 }
             }
             
@@ -455,12 +531,17 @@ class ChatViewModel: ObservableObject {
             }
             
             attempts += 1
+            
+            // Проверяем отмену перед следующей итерацией
+            try? Task.checkCancellation()
         }
         
         // Финальное обновление после таймаута
         isWaitingForResponse = false
-        invalidateCache()
-        loadChats(for: user, car: car)
+        autoreleasepool {
+            invalidateCache()
+            loadChats(for: user, car: car)
+        }
         
         if let savedChatId = savedChatId,
            let updatedChat = chats.first(where: { $0.id == savedChatId }) {
@@ -529,8 +610,12 @@ class ChatViewModel: ObservableObject {
     private func buildChatHistory() -> [(role: String, content: String)] {
         var history: [(role: String, content: String)] = []
         
-        // Пропускаем последние два сообщения (новое сообщение пользователя и индикатор загрузки)
-        let messagesToProcess = currentChatMessages.dropLast(2)
+        // Ограничиваем историю чата для предотвращения утечек памяти
+        // Берем только последние 20 сообщений (10 пар вопрос-ответ)
+        let maxHistoryMessages = 20
+        let messagesToProcess = currentChatMessages
+            .dropLast(2) // Пропускаем последние 2 (новое сообщение + индикатор загрузки)
+            .suffix(maxHistoryMessages) // Ограничиваем количество
         
         for message in messagesToProcess {
             if message.isLoading {
@@ -562,6 +647,26 @@ class ChatViewModel: ObservableObject {
                 isFromUser: false,
                 timestamp: Date()
             )
+        }
+    }
+    
+    /// Обновить тему чата в Core Data
+    /// - Parameters:
+    ///   - chatId: ID чата
+    ///   - topic: Новая тема
+    func updateChatTopic(chatId: UUID, topic: Topic?) async {
+        let fetchRequest: NSFetchRequest<Request> = Request.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "chatId == %@", chatId as CVarArg)
+        
+        do {
+            let requests = try context.fetch(fetchRequest)
+            // Обновляем тему во всех Request чата
+            for request in requests {
+                request.topic = topic?.rawValue
+            }
+            CoreDataManager.shared.save()
+        } catch {
+            print("Ошибка обновления темы чата: \(error)")
         }
     }
 }
