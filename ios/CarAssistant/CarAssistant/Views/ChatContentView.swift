@@ -20,6 +20,22 @@ struct ChatContentView: View {
     let onTapToDismissKeyboard: () -> Void
     let onLoadMoreMessages: () -> Void
     
+    init(
+        messages: [ChatMessage],
+        keyboardHeight: CGFloat,
+        isLoadingHistory: Bool,
+        hasLoadedAllMessages: Bool,
+        onTapToDismissKeyboard: @escaping () -> Void,
+        onLoadMoreMessages: @escaping () -> Void
+    ) {
+        self.messages = messages
+        self.keyboardHeight = keyboardHeight
+        self.isLoadingHistory = isLoadingHistory
+        self.hasLoadedAllMessages = hasLoadedAllMessages
+        self.onTapToDismissKeyboard = onTapToDismissKeyboard
+        self.onLoadMoreMessages = onLoadMoreMessages
+    }
+    
     // MARK: - State Properties
     
     @State private var isFirstAppear = true
@@ -74,7 +90,7 @@ struct ChatContentView: View {
                         
                         ForEach(messages) { message in
                             ChatBubble(message: message)
-                                .id(message.id)
+                            .id(message.id)
                                 .onAppear {
                                     // Отслеживаем появление первого сообщения для подгрузки истории
                                     if message.id == messages.first?.id {

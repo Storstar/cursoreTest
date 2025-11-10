@@ -59,7 +59,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Для определения вашего местоположения и рекомендации сервисов в вашем регионе</string>
 	<key>OpenRouterAPIKey</key>
-	<string>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</string>
+	<string>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</string>
 	<key>OpenRouterReferer</key>
 	<string>https://carassistant.app/</string>
 	<key>OpenRouterAppTitle</key>

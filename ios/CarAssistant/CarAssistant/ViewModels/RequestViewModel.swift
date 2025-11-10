@@ -70,20 +70,24 @@ class RequestViewModel: ObservableObject {
         
         // Теперь пытаемся получить ответ от AI
         do {
-            // Формируем контекст автомобиля для AI (все данные)
-            let carContext = buildCarContext(for: car, user: user)
+            // Извлекаем данные об автомобиле для нового формата
+            let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
             
-            print("📤 Отправка запроса к OpenAI...")
-            print("   Контекст: \(carContext.prefix(200))...")
+            print("📤 Отправка запроса к OpenRouter...")
+            print("   Модель: \(carModel), Год: \(carYear)")
             
-            // Отправляем запрос с полным контекстом и историей чата
+            // Отправляем запрос с новым форматом, включая историю чата
             let responseText = try await AIService.shared.sendMessageWithCarContext(
-                message: text,
-                carContext: carContext,
+                userMessage: text,
+                carModel: carModel,
+                carYear: carYear,
+                serviceHistory: serviceHistory,
+                fullCarContext: fullCarContext,
+                userLocation: userLocation,
                 chatHistory: chatHistory
             )
             
-            print("✅ Получен ответ от OpenAI: \(responseText.prefix(100))...")
+            print("✅ Получен ответ от OpenRouter: \(responseText.prefix(100))...")
             
             // Создаем ответ и связываем с запросом
             let response = Response(context: context)
@@ -101,7 +105,7 @@ class RequestViewModel: ObservableObject {
             
         } catch {
             // Логируем ошибку для отладки
-            print("❌ Ошибка при запросе к OpenAI: \(error)")
+            print("❌ Ошибка при запросе к OpenRouter: \(error)")
             
             // Обрабатываем ошибки AIService
             var errorMsg: String
@@ -132,55 +136,95 @@ class RequestViewModel: ObservableObject {
         isLoading = false
     }
     
+    // Извлекает данные об автомобиле для нового формата API
+    private func extractCarData(for car: Car?, user: User) -> (carModel: String, carYear: String, serviceHistory: String, fullCarContext: String, userLocation: String) {
+        // Извлекаем модель и год
+        let carModel: String
+        let carYear: String
+        
+        if let car = car {
+            let brand = car.brand ?? ""
+            let model = car.model ?? ""
+            carModel = brand.isEmpty && model.isEmpty ? "Не указана" : "\(brand) \(model)".trimmingCharacters(in: .whitespaces)
+            carYear = car.year > 0 ? "\(car.year)" : "Не указан"
+        } else {
+            carModel = "Не указана"
+            carYear = "Не указан"
+        }
+        
+        // Извлекаем историю обслуживания
+        let serviceHistory = buildServiceHistory(for: car)
+        
+        // Формируем полный контекст (все данные об авто)
+        let fullCarContext = buildFullCarContext(for: car)
+        
+        // Извлекаем геопозицию
+        var locationParts: [String] = []
+        if let country = user.country, !country.isEmpty {
+            locationParts.append(country)
+        }
+        if let city = user.city, !city.isEmpty {
+            locationParts.append(city)
+        }
+        let userLocation = locationParts.isEmpty ? "Не указана" : locationParts.joined(separator: ", ")
+        
+        return (carModel, carYear, serviceHistory, fullCarContext, userLocation)
+    }
+    
     // Формирует полный контекст автомобиля для AI (все данные)
-    private func buildCarContext(for car: Car?, user: User) -> String {
+    private func buildFullCarContext(for car: Car?) -> String {
         var contextParts: [String] = []
         
-        // Данные об автомобиле
+        // Данные об автомобиле - ВСЕ поля обязательно
         if let car = car {
             contextParts.append("=== ДАННЫЕ ОБ АВТОМОБИЛЕ ===")
-            contextParts.append("Марка: \(car.brand ?? "Не указана")")
-            contextParts.append("Модель: \(car.model ?? "Не указана")")
+            
+            // Обязательные поля
+            contextParts.append("Марка: \(car.brand.isEmpty ? "Не указана" : car.brand)")
+            contextParts.append("Модель: \(car.model.isEmpty ? "Не указана" : car.model)")
             contextParts.append("Год выпуска: \(car.year > 0 ? "\(car.year)" : "Не указан")")
-            if !car.engine.isEmpty {
-                contextParts.append("Двигатель: \(car.engine)")
-            }
+            contextParts.append("Двигатель: \(car.engine.isEmpty ? "Не указан" : car.engine)")
+            
+            // Опциональные поля - включаем все, даже если пустые
             if let fuelType = car.fuelType, !fuelType.isEmpty {
                 contextParts.append("Тип топлива: \(fuelType)")
-            }
-            if let driveType = car.driveType, !driveType.isEmpty {
-                contextParts.append("Привод: \(driveType)")
-            }
-            if let transmission = car.transmission, !transmission.isEmpty {
-                contextParts.append("Коробка передач: \(transmission)")
-            }
-            if let vin = car.vin, !vin.isEmpty {
-                contextParts.append("VIN: \(vin)")
-            }
-            if let notes = car.notes, !notes.isEmpty {
-                contextParts.append("Дополнительная информация: \(notes)")
+            } else {
+                contextParts.append("Тип топлива: Не указан")
             }
             
-            // История обслуживания
-            let serviceHistory = buildServiceHistory(for: car)
-            contextParts.append("\n=== ИСТОРИЯ ОБСЛУЖИВАНИЯ ===")
-            contextParts.append(serviceHistory)
+            if let driveType = car.driveType, !driveType.isEmpty {
+                contextParts.append("Привод: \(driveType)")
+            } else {
+                contextParts.append("Привод: Не указан")
+            }
+            
+            if let transmission = car.transmission, !transmission.isEmpty {
+                contextParts.append("Коробка передач: \(transmission)")
+            } else {
+                contextParts.append("Коробка передач: Не указана")
+            }
+            
+            if let vin = car.vin, !vin.isEmpty {
+                contextParts.append("VIN: \(vin)")
+            } else {
+                contextParts.append("VIN: Не указан")
+            }
+            
+            if let notes = car.notes, !notes.isEmpty {
+                contextParts.append("Дополнительная информация: \(notes)")
+            } else {
+                contextParts.append("Дополнительная информация: Нет")
+            }
+            
+            // Фото автомобиля (если есть)
+            if car.photoData != nil {
+                contextParts.append("Фото автомобиля: Есть")
+            } else {
+                contextParts.append("Фото автомобиля: Нет")
+            }
         } else {
             contextParts.append("=== ДАННЫЕ ОБ АВТОМОБИЛЕ ===")
             contextParts.append("Автомобиль не выбран")
-        }
-        
-        // Геопозиция пользователя
-        contextParts.append("\n=== ГЕОПОЗИЦИЯ ===")
-        if let country = user.country, !country.isEmpty {
-            contextParts.append("Страна: \(country)")
-        } else {
-            contextParts.append("Страна: Не указана")
-        }
-        if let city = user.city, !city.isEmpty {
-            contextParts.append("Город: \(city)")
-        } else {
-            contextParts.append("Город: Не указан")
         }
         
         return contextParts.joined(separator: "\n")
@@ -188,7 +232,10 @@ class RequestViewModel: ObservableObject {
     
     // Формирует строку с историей обслуживания из MaintenanceRecord
     // Берет ВСЮ историю обслуживания для максимального контекста
-    private func buildServiceHistory(for car: Car) -> String {
+    private func buildServiceHistory(for car: Car?) -> String {
+        guard let car = car else {
+            return "Нет данных об обслуживании"
+        }
         let fetchRequest: NSFetchRequest<MaintenanceRecord> = MaintenanceRecord.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "car == %@", car)
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MaintenanceRecord.date, ascending: false)]
@@ -293,16 +340,41 @@ class RequestViewModel: ObservableObject {
         isLoading = false
     }
     
-    func createPhotoRequest(imageData: Data, for user: User, car: Car?, chatId: UUID? = nil, chatHistory: [(role: String, content: String)] = []) async {
+    func createPhotoRequest(imageData: Data, userMessage: String? = nil, for user: User, car: Car?, chatId: UUID? = nil, chatHistory: [(role: String, content: String)] = []) async {
         errorMessage = nil
         isLoading = true
         
         do {
-            let responseText = try await AIService.shared.sendPhotoRequest(imageData)
+            // Извлекаем данные об автомобиле для нового формата
+            let (carModel, carYear, serviceHistory, fullCarContext, userLocation) = extractCarData(for: car, user: user)
+            
+            print("📤 Отправка фото запроса к OpenRouter...")
+            print("   Модель: \(carModel), Год: \(carYear)")
+            if let userMessage = userMessage, !userMessage.isEmpty {
+                print("   Текст пользователя: \(userMessage.prefix(50))...")
+            }
+            
+            // Отправляем запрос с новым форматом, включая историю чата и текст пользователя
+            let responseText = try await AIService.shared.sendPhotoRequest(
+                imageData: imageData,
+                userMessage: userMessage,
+                carModel: carModel,
+                carYear: carYear,
+                serviceHistory: serviceHistory,
+                fullCarContext: fullCarContext,
+                userLocation: userLocation,
+                chatHistory: chatHistory
+            )
+            
+            print("✅ Получен ответ от OpenRouter: \(responseText.prefix(100))...")
             
             let request = Request(context: context)
             request.id = UUID()
             request.imageData = imageData
+            // Сохраняем текст, если он есть
+            if let userMessage = userMessage, !userMessage.isEmpty {
+                request.text = userMessage
+            }
             request.type = "photo"
             request.createdAt = Date()
             request.user = user

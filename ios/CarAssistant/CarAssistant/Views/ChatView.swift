@@ -26,6 +26,12 @@ struct ChatView: View {
     @StateObject private var requestViewModel = RequestViewModel()
     @StateObject private var speechRecognizer = SpeechRecognizer()
     
+    // MARK: - App State Manager
+    
+    private var appStateManager: AppStateManager {
+        AppStateManager.shared
+    }
+    
     // MARK: - State Properties
     
     @State private var messageText = ""
@@ -39,6 +45,7 @@ struct ChatView: View {
     @State private var keyboardHeight: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
+    @State private var hasRestoredState = false
     
     // MARK: - Task Management
     
@@ -66,7 +73,7 @@ struct ChatView: View {
         }
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: showChatHistory)
         .task {
-            loadInitialData()
+            await loadInitialData()
         }
         .onAppear {
             // При открытии ChatView определяем, нужно ли скрывать TabBar
@@ -78,21 +85,33 @@ struct ChatView: View {
             // showChatHistory = false означает активный чат (скрываем TabBar)
             onChatStateChange?(!newValue)
             
+            // Сохраняем состояние в AppStateManager
+            appStateManager.saveState(showChatHistory: newValue, currentChatId: chatViewModel.currentChat?.id)
+            
             // Сбрасываем смещение при закрытии чата
             if newValue {
                 dragOffset = 0
                 isDragging = false
             }
         }
+        .onChange(of: chatViewModel.currentChat?.id) { newChatId in
+            // Сохраняем ID текущего чата при его изменении
+            appStateManager.saveState(showChatHistory: showChatHistory, currentChatId: newChatId)
+        }
         .onChange(of: carViewModel.car?.id) { newCarId in
             handleCarChange()
         }
-        .sheet(isPresented: $showImageOptions) {
-            ImageSourcePicker(
-                selectedImage: $selectedImage,
-                showImagePicker: $showImagePicker,
-                showPhotoPicker: $showPhotoPicker
-            )
+        .overlay {
+            if showImageOptions {
+                ImageSourcePicker(
+                    selectedImage: $selectedImage,
+                    showImagePicker: $showImagePicker,
+                    showPhotoPicker: $showPhotoPicker,
+                    onDismiss: {
+                        showImageOptions = false
+                    }
+                )
+            }
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(image: $selectedImage, sourceType: .camera)
@@ -143,12 +162,16 @@ struct ChatView: View {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     showChatHistory = false
                 }
+                // Сохраняем состояние при открытии чата
+                appStateManager.saveState(showChatHistory: false, currentChatId: chat.id)
             },
             onCreateNewChat: {
-                chatViewModel.createNewChat()
+                let newChat = chatViewModel.createNewChat()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     showChatHistory = false
                 }
+                // Сохраняем состояние при создании нового чата
+                appStateManager.saveState(showChatHistory: false, currentChatId: newChat.id)
             },
             onDeleteChat: { chat in
                 if let user = authViewModel.currentUser {
@@ -167,9 +190,13 @@ struct ChatView: View {
                     withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                         showChatHistory = true
                     }
+                    // Сохраняем состояние при показе истории
+                    appStateManager.saveState(showChatHistory: true, currentChatId: nil)
                 },
                 onCreateNewChat: {
-                    chatViewModel.createNewChat()
+                    let newChat = chatViewModel.createNewChat()
+                    // Сохраняем состояние при создании нового чата
+                    appStateManager.saveState(showChatHistory: false, currentChatId: newChat.id)
                 }
             )
             
@@ -226,10 +253,12 @@ struct ChatView: View {
                     // Закрываем чат только если горизонтальное движение превышает порог
                     // и значительно больше вертикального
                     if isDragging && horizontalMovement > threshold && horizontalMovement > verticalMovement * 1.5 {
-                        // Закрываем чат
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                            showChatHistory = true
-                        }
+                    // Закрываем чат
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        showChatHistory = true
+                    }
+                    // Сохраняем состояние при закрытии чата
+                    appStateManager.saveState(showChatHistory: true, currentChatId: nil)
                     } else {
                         // Возвращаем на место
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
@@ -245,9 +274,53 @@ struct ChatView: View {
     // MARK: - Helper Methods
     
     /// Загрузить начальные данные
-    private func loadInitialData() {
-        if let user = authViewModel.currentUser {
-            chatViewModel.loadChats(for: user, car: carViewModel.car)
+    private func loadInitialData() async {
+        guard let user = authViewModel.currentUser else { return }
+        
+        // Загружаем чаты
+        chatViewModel.loadChats(for: user, car: carViewModel.car)
+        
+        // Небольшая задержка, чтобы убедиться, что чаты загружены
+        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 секунды
+        
+        // Восстанавливаем состояние только если это не холодный старт
+        if !hasRestoredState {
+            if appStateManager.isColdStart {
+                // Холодный старт: всегда начинаем с "Нового чата"
+                showChatHistory = false
+                chatViewModel.currentChat = nil
+                chatViewModel.currentChatMessages = []
+                appStateManager.saveState(showChatHistory: false, currentChatId: nil)
+            } else if appStateManager.isDeepLinkLaunch {
+                // Запуск через диплинк/пуш: восстанавливаем состояние из диплинка
+                restoreState()
+            } else {
+                // Восстановление из фона: восстанавливаем сохраненное состояние
+                restoreState()
+            }
+            hasRestoredState = true
+        }
+    }
+    
+    /// Восстановить состояние приложения
+    private func restoreState() {
+        // Восстанавливаем состояние показа списка чатов
+        showChatHistory = appStateManager.showChatHistory
+        
+        // Восстанавливаем текущий чат, если он был открыт
+        if let chatId = appStateManager.currentChatId {
+            // Ищем чат в загруженных чатах
+            if let chat = chatViewModel.chats.first(where: { $0.id == chatId }) {
+                chatViewModel.openChat(chat)
+            } else if !showChatHistory {
+                // Если был открыт активный чат, но чат не найден, показываем новый чат
+                chatViewModel.currentChat = nil
+                chatViewModel.currentChatMessages = []
+            }
+        } else if !showChatHistory {
+            // Если был открыт активный чат, но ID чата не сохранен, показываем новый чат
+            chatViewModel.currentChat = nil
+            chatViewModel.currentChatMessages = []
         }
     }
     

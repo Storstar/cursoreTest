@@ -309,25 +309,16 @@ class ChatViewModel: ObservableObject {
         let chatId: UUID? = currentChat?.id
         
         // Добавление сообщения пользователя и индикатора загрузки
-        if let text = text, !text.isEmpty {
+        // Если есть и текст, и изображение - создаем одно сообщение с обоими
+        // Если есть только текст - создаем сообщение с текстом
+        // Если есть только изображение - создаем сообщение с изображением
+        let hasText = text != nil && !text!.isEmpty
+        let hasImage = imageData != nil
+        
+        if hasText || hasImage {
             let userMessage = ChatMessage(
-                text: text,
-                isFromUser: true,
-                timestamp: Date()
-            )
-            currentChatMessages.append(userMessage)
-            
-            let loadingMessage = ChatMessage(
-                text: nil,
-                isFromUser: false,
-                timestamp: Date(),
-                isLoading: true,
-                loadingText: getRandomLoadingPhrase()
-            )
-            currentChatMessages.append(loadingMessage)
-        } else if let imageData = imageData {
-            let userMessage = ChatMessage(
-                imageData: imageData,
+                text: hasText ? text : nil,
+                imageData: hasImage ? imageData : nil,
                 isFromUser: true,
                 timestamp: Date()
             )
@@ -347,9 +338,12 @@ class ChatViewModel: ObservableObject {
         let chatHistory = buildChatHistory()
         
         // Создание запроса через RequestViewModel
+        // Если есть изображение (с текстом или без) - используем createPhotoRequest
+        // Если есть только текст - используем createTextRequest
         if let imageData = imageData {
             await requestViewModel.createPhotoRequest(
                 imageData: imageData,
+                userMessage: text,
                 for: user,
                 car: car,
                 chatId: chatId,

@@ -1,59 +1,124 @@
-import SwiftUI
+//
+//  MainTabView.swift
+//  CarAssistant
+//
+//  Created on 10.11.2024.
+//
 
+import SwiftUI
+import UIKit
+
+// MARK: - MainTabView
+
+/// Главный экран с табами приложения
 struct MainTabView: View {
+    // MARK: - Environment Objects
+    
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var carViewModel: CarViewModel
-    @State private var selectedTab: Tab = .chats
     
+    // MARK: - State Properties
+    
+    @State private var selectedTab: Tab = .chats
+    @State private var showTabBar = true
+    
+    // MARK: - Tab Enum
+    
+    /// Перечисление вкладок приложения
     enum Tab: String, CaseIterable {
         case chats = "Чаты"
         case maintenance = "ТО"
         case profile = "Профиль"
         
+        /// Иконка для вкладки
         var icon: String {
             switch self {
-            case .chats: return "bubble.left.and.bubble.right.fill"
-            case .maintenance: return "wrench.and.screwdriver.fill"
-            case .profile: return "person.fill"
+            case .chats:
+                return "bubble.left.and.bubble.right.fill"
+            case .maintenance:
+                return "wrench.and.screwdriver.fill"
+            case .profile:
+                return "person.fill"
             }
         }
     }
     
+    // MARK: - Body
+    
     var body: some View {
         TabView(selection: $selectedTab) {
-            // Вкладка "Чаты" - временно заглушка
-            VStack {
-                Text("Чат будет добавлен")
-                    .font(.title2)
-                    .foregroundColor(.secondary)
-            }
-            .tabItem {
-                Label(Tab.chats.rawValue, systemImage: Tab.chats.icon)
-            }
-            .tag(Tab.chats)
-            
-            // Вкладка "ТО"
-            MaintenanceView()
-                .tabItem {
-                    Label(Tab.maintenance.rawValue, systemImage: Tab.maintenance.icon)
-                }
-                .tag(Tab.maintenance)
-            
-            // Вкладка "Профиль"
-            SettingsView()
-                .tabItem {
-                    Label(Tab.profile.rawValue, systemImage: Tab.profile.icon)
-                }
-                .tag(Tab.profile)
+            chatsTab
+            maintenanceTab
+            profileTab
         }
         .task {
-            // Используем task вместо onAppear для асинхронной загрузки
-            if let user = authViewModel.currentUser {
-                // Загружаем автомобили и восстанавливаем сохраненный выбор активного авто
-                await carViewModel.loadCarsAsync(for: user)
-                carViewModel.loadCar(for: user) // Загружаем сохраненный выбор активного авто
+            loadInitialData()
+        }
+        .onAppear {
+            updateTabBarVisibility()
+        }
+        .onChange(of: showTabBar) { _ in
+            updateTabBarVisibility()
+        }
+        .background(TabBarAccessor { tabBar in
+            tabBar.isHidden = !showTabBar
+        })
+    }
+    
+    /// Обновить видимость TabBar
+    private func updateTabBarVisibility() {
+        // Обновление через UIKit
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first,
+               let tabBarController = window.rootViewController?.findTabBarController() {
+                tabBarController.tabBar.isHidden = !showTabBar
             }
         }
     }
+    
+    // MARK: - Subviews
+    
+    /// Вкладка "Чаты"
+    private var chatsTab: some View {
+        ChatView(onChatStateChange: { isActiveChat in
+            // Скрываем TabBar когда открыт активный чат
+            showTabBar = !isActiveChat
+        })
+        .tabItem {
+            Label(Tab.chats.rawValue, systemImage: Tab.chats.icon)
+        }
+        .tag(Tab.chats)
+    }
+    
+    /// Вкладка "ТО"
+    private var maintenanceTab: some View {
+        MaintenanceView()
+            .tabItem {
+                Label(Tab.maintenance.rawValue, systemImage: Tab.maintenance.icon)
+            }
+            .tag(Tab.maintenance)
+    }
+    
+    /// Вкладка "Профиль"
+    private var profileTab: some View {
+        SettingsView()
+            .tabItem {
+                Label(Tab.profile.rawValue, systemImage: Tab.profile.icon)
+            }
+            .tag(Tab.profile)
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Загрузить начальные данные
+    private func loadInitialData() {
+        guard let user = authViewModel.currentUser else { return }
+        
+        Task {
+            // Загружаем автомобили и восстанавливаем сохраненный выбор активного авто
+            await carViewModel.loadCarsAsync(for: user)
+            carViewModel.loadCar(for: user)
+        }
+    }
 }
-

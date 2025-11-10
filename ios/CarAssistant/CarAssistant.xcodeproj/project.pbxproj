@@ -57,6 +57,21 @@
 		AA0001340000000000000001 /* MaintenanceRecord+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001350000000000000001 /* MaintenanceRecord+CoreDataProperties.swift */; };
 		AA0001360000000000000001 /* EditMaintenanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001370000000000000001 /* EditMaintenanceView.swift */; };
 		AA0001400000000000000001 /* KeyboardHeightHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001410000000000000001 /* KeyboardHeightHelper.swift */; };
+		AA0001420000000000000001 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001430000000000000001 /* ChatView.swift */; };
+		AA0001440000000000000001 /* ChatData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001450000000000000001 /* ChatData.swift */; };
+		AA0001460000000000000001 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001470000000000000001 /* ChatViewModel.swift */; };
+		AA0001480000000000000001 /* ChatBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001490000000000000001 /* ChatBubble.swift */; };
+		AA0001500000000000000001 /* ChatInputBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001510000000000000001 /* ChatInputBar.swift */; };
+		AA0001520000000000000001 /* ChatHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001530000000000000001 /* ChatHistoryView.swift */; };
+		AA0001540000000000000001 /* MultilineTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001550000000000000001 /* MultilineTextField.swift */; };
+		AA0001560000000000000001 /* TabBarAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001570000000000000001 /* TabBarAccessor.swift */; };
+		AA0001580000000000000001 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001590000000000000001 /* UIViewController+Extensions.swift */; };
+		AA0001600000000000000001 /* InputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001610000000000000001 /* InputAccessoryView.swift */; };
+		AA0001620000000000000001 /* InputAccessoryViewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001630000000000000001 /* InputAccessoryViewHelper.swift */; };
+		AA0001640000000000000001 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001650000000000000001 /* ChatViewController.swift */; };
+		AA0001660000000000000001 /* ChatViewControllerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001670000000000000001 /* ChatViewControllerRepresentable.swift */; };
+		AA0001680000000000000001 /* ChatContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001690000000000000001 /* ChatContentView.swift */; };
+		AA0001700000000000000001 /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001710000000000000001 /* AppStateManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,6 +127,21 @@
 		AA0001350000000000000001 /* MaintenanceRecord+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MaintenanceRecord+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		AA0001370000000000000001 /* EditMaintenanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMaintenanceView.swift; sourceTree = "<group>"; };
 		AA0001410000000000000001 /* KeyboardHeightHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHeightHelper.swift; sourceTree = "<group>"; };
+		AA0001430000000000000001 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		AA0001450000000000000001 /* ChatData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatData.swift; sourceTree = "<group>"; };
+		AA0001470000000000000001 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		AA0001490000000000000001 /* ChatBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubble.swift; sourceTree = "<group>"; };
+		AA0001510000000000000001 /* ChatInputBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatInputBar.swift; sourceTree = "<group>"; };
+		AA0001530000000000000001 /* ChatHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHistoryView.swift; sourceTree = "<group>"; };
+		AA0001550000000000000001 /* MultilineTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultilineTextField.swift; sourceTree = "<group>"; };
+		AA0001570000000000000001 /* TabBarAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarAccessor.swift; sourceTree = "<group>"; };
+		AA0001590000000000000001 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		AA0001610000000000000001 /* InputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputAccessoryView.swift; sourceTree = "<group>"; };
+		AA0001630000000000000001 /* InputAccessoryViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputAccessoryViewHelper.swift; sourceTree = "<group>"; };
+		AA0001650000000000000001 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		AA0001670000000000000001 /* ChatViewControllerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewControllerRepresentable.swift; sourceTree = "<group>"; };
+		AA0001690000000000000001 /* ChatContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatContentView.swift; sourceTree = "<group>"; };
+		AA0001710000000000000001 /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -166,6 +196,8 @@
 				AA0001110000000000000001 /* MainTabView.swift */,
 				AA0001170000000000000001 /* CarSelectionView.swift */,
 				AA0001250000000000000001 /* MyCarsView.swift */,
+				AA0001430000000000000001 /* ChatView.swift */,
+				AA0001690000000000000001 /* ChatContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -177,6 +209,7 @@
 				AA0000370000000000000001 /* CarViewModel.swift */,
 				AA0000390000000000000001 /* RequestViewModel.swift */,
 				AA0001310000000000000001 /* MaintenanceViewModel.swift */,
+				AA0001470000000000000001 /* ChatViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -189,6 +222,7 @@
 				AA0000510000000000000001 /* RequestData.swift */,
 				AA0000530000000000000001 /* UserData.swift */,
 				AA0001220000000000000001 /* CarBrandsData.swift */,
+				AA0001450000000000000001 /* ChatData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -201,6 +235,13 @@
 				AA0000450000000000000001 /* SpeechRecognizer.swift */,
 				AA0000470000000000000001 /* Validators.swift */,
 				AA0001410000000000000001 /* KeyboardHeightHelper.swift */,
+				AA0001570000000000000001 /* TabBarAccessor.swift */,
+				AA0001590000000000000001 /* UIViewController+Extensions.swift */,
+				AA0001610000000000000001 /* InputAccessoryView.swift */,
+				AA0001630000000000000001 /* InputAccessoryViewHelper.swift */,
+				AA0001650000000000000001 /* ChatViewController.swift */,
+				AA0001670000000000000001 /* ChatViewControllerRepresentable.swift */,
+				AA0001710000000000000001 /* AppStateManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -249,6 +290,10 @@
 				AA0001150000000000000001 /* ImageSourcePicker.swift */,
 				AA0001190000000000000001 /* CarMiniCard.swift */,
 				AA0001290000000000000001 /* CarSelectionSheet.swift */,
+				AA0001490000000000000001 /* ChatBubble.swift */,
+				AA0001510000000000000001 /* ChatInputBar.swift */,
+				AA0001530000000000000001 /* ChatHistoryView.swift */,
+				AA0001550000000000000001 /* MultilineTextField.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -365,6 +410,21 @@
 				AA0001300000000000000001 /* MaintenanceViewModel.swift in Sources */,
 				AA0001320000000000000001 /* MaintenanceRecord+CoreDataClass.swift in Sources */,
 				AA0001340000000000000001 /* MaintenanceRecord+CoreDataProperties.swift in Sources */,
+				AA0001420000000000000001 /* ChatView.swift in Sources */,
+				AA0001440000000000000001 /* ChatData.swift in Sources */,
+				AA0001680000000000000001 /* ChatContentView.swift in Sources */,
+				AA0001460000000000000001 /* ChatViewModel.swift in Sources */,
+				AA0001480000000000000001 /* ChatBubble.swift in Sources */,
+				AA0001500000000000000001 /* ChatInputBar.swift in Sources */,
+				AA0001520000000000000001 /* ChatHistoryView.swift in Sources */,
+				AA0001540000000000000001 /* MultilineTextField.swift in Sources */,
+				AA0001560000000000000001 /* TabBarAccessor.swift in Sources */,
+				AA0001580000000000000001 /* UIViewController+Extensions.swift in Sources */,
+				AA0001600000000000000001 /* InputAccessoryView.swift in Sources */,
+				AA0001620000000000000001 /* InputAccessoryViewHelper.swift in Sources */,
+				AA0001640000000000000001 /* ChatViewController.swift in Sources */,
+				AA0001660000000000000001 /* ChatViewControllerRepresentable.swift in Sources */,
+				AA0001700000000000000001 /* AppStateManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
