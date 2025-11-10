@@ -4,6 +4,8 @@ import CoreLocation
 struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var carViewModel: CarViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var systemColorScheme
     @State private var showAddCar = false
     @State private var editingCar: Car?
     @StateObject private var locationManager = LocationManager()
@@ -87,6 +89,38 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
                 }
                 
+                // Внешний вид
+                Section(header: Text("Внешний вид")) {
+                    HStack {
+                        Image(systemName: themeManager.colorScheme == .dark ? "moon.fill" : "sun.max.fill")
+                            .foregroundColor(.blue)
+                        Text("Тема")
+                        
+                        Spacer()
+                        
+                        Picker("", selection: Binding(
+                            get: {
+                                if themeManager.colorScheme == .dark {
+                                    return "dark"
+                                } else {
+                                    return "light"
+                                }
+                            },
+                            set: { newValue in
+                                if newValue == "dark" {
+                                    themeManager.setDarkTheme()
+                                } else {
+                                    themeManager.setLightTheme()
+                                }
+                            }
+                        )) {
+                            Text("Светлая").tag("light")
+                            Text("Темная").tag("dark")
+                        }
+                        .pickerStyle(.menu)
+                    }
+                }
+                
                 // Аккаунт
                 Section(header: Text("Аккаунт")) {
                     Button(action: {
@@ -129,7 +163,11 @@ struct SettingsView: View {
             }
             .task {
                 if let user = authViewModel.currentUser {
-                    await carViewModel.loadCarsAsync(for: user)
+                    // Загружаем автомобили только если они еще не загружены
+                    // ContentView уже загружает их при старте
+                    if carViewModel.cars.isEmpty {
+                        await carViewModel.loadCarsAsync(for: user)
+                    }
                     // Автоматически определяем геопозицию при открытии приложения
                     locationManager.requestLocation()
                 }
@@ -228,8 +266,14 @@ struct SettingsView: View {
     
     /// Градиентный фон приложения (авто ассистент)
     private var appGradientBackground: some View {
-        LinearGradient(
-            colors: [
+        let isDark = themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+        
+        return LinearGradient(
+            colors: isDark ? [
+                Color(red: 0.15, green: 0.17, blue: 0.20),      // Темно-синий (верх)
+                Color(red: 0.12, green: 0.15, blue: 0.18),    // Темно-серо-синий (середина)
+                Color(red: 0.10, green: 0.12, blue: 0.15)     // Темно-серый (низ)
+            ] : [
                 Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
                 Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
                 Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)

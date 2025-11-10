@@ -15,6 +15,8 @@ struct ChatView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var carViewModel: CarViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var systemColorScheme
     
     // MARK: - Properties
     
@@ -74,7 +76,7 @@ struct ChatView: View {
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
-        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: showChatHistory)
+        .animation(.easeInOut(duration: 0.25), value: showChatHistory)
         .task {
             await loadInitialData()
         }
@@ -160,8 +162,14 @@ struct ChatView: View {
     
     /// Градиентный фон приложения (авто ассистент)
     private var appGradientBackground: some View {
-        LinearGradient(
-            colors: [
+        let isDark = themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+        
+        return LinearGradient(
+            colors: isDark ? [
+                Color(red: 0.15, green: 0.17, blue: 0.20),      // Темно-синий (верх)
+                Color(red: 0.12, green: 0.15, blue: 0.18),    // Темно-серо-синий (середина)
+                Color(red: 0.10, green: 0.12, blue: 0.15)     // Темно-серый (низ)
+            ] : [
                 Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
                 Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
                 Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)
@@ -179,7 +187,7 @@ struct ChatView: View {
                 chatViewModel.openChat(chat)
                 // Восстанавливаем тему из открытого чата или используем .general_question по умолчанию
                 selectedTopic = chat.topic ?? .general_question
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     showChatHistory = false
                 }
                 // Сохраняем состояние при открытии чата
@@ -190,7 +198,7 @@ struct ChatView: View {
                 chatViewModel.invalidateCache()
                 // Используем selectedTopic или .general_question по умолчанию
                 let newChat = chatViewModel.createNewChat(topic: selectedTopic ?? .general_question)
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     showChatHistory = false
                 }
                 // Сохраняем состояние при создании нового чата
@@ -217,7 +225,7 @@ struct ChatView: View {
                         if let user = authViewModel.currentUser {
                             chatViewModel.loadChats(for: user, car: carViewModel.car)
                         }
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        withAnimation(.easeInOut(duration: 0.25)) {
                             showChatHistory = true
                         }
                         // Сохраняем состояние при показе истории
@@ -242,6 +250,7 @@ struct ChatView: View {
                     onTapToDismissKeyboard: { hideKeyboard() },
                     onLoadMoreMessages: { chatViewModel.loadMoreMessages() }
                 )
+                .environmentObject(themeManager)
                 .id(chatViewModel.currentChat?.id ?? UUID()) // Пересоздаем view при смене чата
                 
             // Панель ввода
@@ -275,6 +284,7 @@ struct ChatView: View {
                     }
                 }
             )
+            .environmentObject(themeManager)
             }
             .offset(x: dragOffset)
             .simultaneousGesture(
@@ -337,7 +347,7 @@ struct ChatView: View {
                         // Закрываем чат
                         // Инвалидируем кэш при закрытии чата, чтобы при следующем открытии загружались правильные чаты
                         chatViewModel.invalidateCache()
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        withAnimation(.easeInOut(duration: 0.25)) {
                             showChatHistory = true
                         }
                         // Сохраняем состояние при закрытии чата
@@ -361,23 +371,23 @@ struct ChatView: View {
     private func loadInitialData() async {
         guard let user = authViewModel.currentUser else { return }
         
-        // Загружаем чаты
+        // Загружаем чаты (использует кэш, если данные свежие)
         chatViewModel.loadChats(for: user, car: carViewModel.car)
-        
-        // Небольшая задержка, чтобы убедиться, что чаты загружены
-        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 секунды
         
         // Восстанавливаем состояние только если это не холодный старт
         if !hasRestoredState {
-            if appStateManager.isDeepLinkLaunch {
-                // Запуск через диплинк/пуш: восстанавливаем состояние из диплинка
-                restoreState()
-            } else {
-                // Всегда начинаем с "Нового чата" при перезаходе в приложение
-                showChatHistory = false
-                chatViewModel.currentChat = nil
-                chatViewModel.currentChatMessages = []
-                appStateManager.saveState(showChatHistory: false, currentChatId: nil)
+            // Используем анимацию для плавного перехода
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if appStateManager.isDeepLinkLaunch {
+                    // Запуск через диплинк/пуш: восстанавливаем состояние из диплинка
+                    restoreState()
+                } else {
+                    // Всегда начинаем с "Нового чата" при перезаходе в приложение
+                    showChatHistory = false
+                    chatViewModel.currentChat = nil
+                    chatViewModel.currentChatMessages = []
+                    appStateManager.saveState(showChatHistory: false, currentChatId: nil)
+                }
             }
             hasRestoredState = true
         }
@@ -385,25 +395,27 @@ struct ChatView: View {
     
     /// Восстановить состояние приложения
     private func restoreState() {
-        // Восстанавливаем состояние показа списка чатов
-        showChatHistory = appStateManager.showChatHistory
-        
-        // Восстанавливаем текущий чат, если он был открыт
-        if let chatId = appStateManager.currentChatId {
-            // Ищем чат в загруженных чатах
-            if let chat = chatViewModel.chats.first(where: { $0.id == chatId }) {
-                chatViewModel.openChat(chat)
-                // Восстанавливаем тему из открытого чата или используем .general_question по умолчанию
-                selectedTopic = chat.topic ?? .general_question
+        // Восстанавливаем состояние показа списка чатов с плавной анимацией
+        withAnimation(.easeInOut(duration: 0.25)) {
+            showChatHistory = appStateManager.showChatHistory
+            
+            // Восстанавливаем текущий чат, если он был открыт
+            if let chatId = appStateManager.currentChatId {
+                // Ищем чат в загруженных чатах
+                if let chat = chatViewModel.chats.first(where: { $0.id == chatId }) {
+                    chatViewModel.openChat(chat)
+                    // Восстанавливаем тему из открытого чата или используем .general_question по умолчанию
+                    selectedTopic = chat.topic ?? .general_question
+                } else if !showChatHistory {
+                    // Если был открыт активный чат, но чат не найден, показываем новый чат
+                    chatViewModel.currentChat = nil
+                    chatViewModel.currentChatMessages = []
+                }
             } else if !showChatHistory {
-                // Если был открыт активный чат, но чат не найден, показываем новый чат
+                // Если был открыт активный чат, но ID чата не сохранен, показываем новый чат
                 chatViewModel.currentChat = nil
                 chatViewModel.currentChatMessages = []
             }
-        } else if !showChatHistory {
-            // Если был открыт активный чат, но ID чата не сохранен, показываем новый чат
-            chatViewModel.currentChat = nil
-            chatViewModel.currentChatMessages = []
         }
     }
     

@@ -34,6 +34,11 @@ struct CarProblemButton: Identifiable {
 
 /// Компонент для ввода сообщений в чате
 struct ChatInputBar: View {
+    // MARK: - Environment Objects
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var systemColorScheme
+    
     // MARK: - Properties
     
     @Binding var text: String
@@ -184,14 +189,16 @@ struct ChatInputBar: View {
     
     /// Кнопка выбора фото (43×43pt, зона тача ≥53×53pt)
     private var photoButton: some View {
-        Button(action: onImageTap) {
+        let isDark = themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+        
+        return Button(action: onImageTap) {
             Image(systemName: "photo.fill")
                 .font(.system(size: 24))
                 .foregroundColor(.blue)
                 .frame(width: 43, height: 43)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.white)
+                        .fill(isDark ? Color(red: 0.25, green: 0.27, blue: 0.30) : Color.white)
                 )
         }
         .frame(width: 53, height: 53) // Зона тача ≥53×53pt
@@ -217,13 +224,15 @@ struct ChatInputBar: View {
         }
     }
     
-    /// Фон поля ввода (белый фон как обычно)
+    /// Фон поля ввода (адаптирован под тему)
     private var textFieldBackground: some View {
-        RoundedRectangle(cornerRadius: 18)
-            .fill(Color.white)
+        let isDark = themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+        
+        return RoundedRectangle(cornerRadius: 18)
+            .fill(isDark ? Color(red: 0.25, green: 0.27, blue: 0.30) : Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 18)
-                    .stroke(Color(.systemGray4).opacity(0.3), lineWidth: 0.5)
+                    .stroke(isDark ? Color(.systemGray3).opacity(0.3) : Color(.systemGray4).opacity(0.3), lineWidth: 0.5)
             )
     }
     
@@ -395,8 +404,15 @@ struct ChatInputBar: View {
 
 /// Представление кнопки проблемы
 struct ProblemButtonView: View {
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var systemColorScheme
+    
     let button: CarProblemButton
     let onTap: () -> Void
+    
+    private var isDark: Bool {
+        themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+    }
     
     var body: some View {
         Button(action: onTap) {
@@ -411,12 +427,12 @@ struct ProblemButtonView: View {
                 } else {
                     Image(systemName: button.icon)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(button.isActive ? .white : .blue)
+                        .foregroundColor(button.isActive ? .white : (isDark ? .white : .blue))
                 }
                 
                 Text(button.title)
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(button.isActive ? .white : .primary)
+                    .foregroundColor(button.isActive ? .white : (isDark ? .white : .primary))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -429,13 +445,19 @@ struct ProblemButtonView: View {
                             endPoint: .bottomTrailing
                           ) :
                           LinearGradient(
-                            colors: [Color.white, Color.white.opacity(0.9)],
+                            colors: isDark ? [
+                                Color(red: 0.25, green: 0.27, blue: 0.30),
+                                Color(red: 0.22, green: 0.24, blue: 0.27)
+                            ] : [
+                                Color.white,
+                                Color.white.opacity(0.9)
+                            ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                           )
                     )
                     .shadow(
-                        color: button.isActive ? Color.blue.opacity(0.3) : Color.black.opacity(0.1),
+                        color: button.isActive ? Color.blue.opacity(0.3) : (isDark ? Color.black.opacity(0.3) : Color.black.opacity(0.1)),
                         radius: button.isActive ? 4 : 2,
                         x: 0,
                         y: 2
@@ -444,7 +466,7 @@ struct ProblemButtonView: View {
             .overlay(
                 Capsule()
                     .stroke(
-                        button.isActive ? Color.clear : Color(.systemGray4).opacity(0.3),
+                        button.isActive ? Color.clear : (isDark ? Color(.systemGray2).opacity(0.3) : Color(.systemGray4).opacity(0.3)),
                         lineWidth: 0.5
                     )
             )

@@ -73,6 +73,7 @@
 		AA0001700000000000000001 /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001710000000000000001 /* AppStateManager.swift */; };
 		AA0001720000000000000001 /* PromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001730000000000000001 /* PromptBuilder.swift */; };
 		AA0001740000000000000001 /* ImageOptimizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001750000000000000001 /* ImageOptimizer.swift */; };
+		AA0001760000000000000001 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0001770000000000000001 /* ThemeManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,6 +145,7 @@
 		AA0001710000000000000001 /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateManager.swift; sourceTree = "<group>"; };
 		AA0001730000000000000001 /* PromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptBuilder.swift; sourceTree = "<group>"; };
 		AA0001750000000000000001 /* ImageOptimizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOptimizer.swift; sourceTree = "<group>"; };
+		AA0001770000000000000001 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -245,6 +247,7 @@
 				AA0001710000000000000001 /* AppStateManager.swift */,
 				AA0001730000000000000001 /* PromptBuilder.swift */,
 				AA0001750000000000000001 /* ImageOptimizer.swift */,
+				AA0001770000000000000001 /* ThemeManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				AA0001700000000000000001 /* AppStateManager.swift in Sources */,
 				AA0001720000000000000001 /* PromptBuilder.swift in Sources */,
 				AA0001740000000000000001 /* ImageOptimizer.swift in Sources */,
+				AA0001760000000000000001 /* ThemeManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

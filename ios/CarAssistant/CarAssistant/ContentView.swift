@@ -37,7 +37,14 @@ struct ContentView: View {
             if !hasCheckedAuth {
                 await authViewModel.checkAuthenticationAsync()
                 if let user = authViewModel.currentUser {
-                    await carViewModel.loadCarsAsync(for: user)
+                    // Загружаем автомобили только если они еще не загружены
+                    if carViewModel.cars.isEmpty {
+                        await carViewModel.loadCarsAsync(for: user)
+                    }
+                    // Восстанавливаем сохраненный выбор активного авто
+                    if carViewModel.car == nil {
+                        carViewModel.loadCar(for: user)
+                    }
                 }
                 hasCheckedAuth = true
             }

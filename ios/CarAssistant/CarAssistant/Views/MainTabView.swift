@@ -16,6 +16,8 @@ struct MainTabView: View {
     
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var carViewModel: CarViewModel
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var systemColorScheme
     
     // MARK: - State Properties
     
@@ -57,7 +59,15 @@ struct MainTabView: View {
                 profileTab
             }
             .task {
-                loadInitialData()
+                // Загружаем данные только если они еще не загружены
+                // ContentView уже загружает автомобили, поэтому здесь только восстанавливаем выбор
+                if let user = authViewModel.currentUser, carViewModel.cars.isEmpty {
+                    await carViewModel.loadCarsAsync(for: user)
+                }
+                // Восстанавливаем сохраненный выбор активного авто
+                if carViewModel.car == nil {
+                    carViewModel.loadCar(for: authViewModel.currentUser!)
+                }
             }
             .onAppear {
                 updateTabBarVisibility()
@@ -75,8 +85,14 @@ struct MainTabView: View {
     
     /// Градиентный фон приложения (авто ассистент)
     private var appGradientBackground: some View {
-        LinearGradient(
-            colors: [
+        let isDark = themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+        
+        return LinearGradient(
+            colors: isDark ? [
+                Color(red: 0.15, green: 0.17, blue: 0.20),      // Темно-синий (верх)
+                Color(red: 0.12, green: 0.15, blue: 0.18),    // Темно-серо-синий (середина)
+                Color(red: 0.10, green: 0.12, blue: 0.15)     // Темно-серый (низ)
+            ] : [
                 Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
                 Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
                 Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)
@@ -125,6 +141,7 @@ struct MainTabView: View {
             // Скрываем TabBar когда открыт активный чат
             showTabBar = !isActiveChat
         })
+        .environmentObject(themeManager)
         .tabItem {
             Label(Tab.chats.rawValue, systemImage: Tab.chats.icon)
         }
@@ -134,6 +151,7 @@ struct MainTabView: View {
     /// Вкладка "ТО"
     private var maintenanceTab: some View {
         MaintenanceView()
+            .environmentObject(themeManager)
             .tabItem {
                 Label(Tab.maintenance.rawValue, systemImage: Tab.maintenance.icon)
             }
@@ -143,6 +161,7 @@ struct MainTabView: View {
     /// Вкладка "Профиль"
     private var profileTab: some View {
         SettingsView()
+            .environmentObject(themeManager)
             .tabItem {
                 Label(Tab.profile.rawValue, systemImage: Tab.profile.icon)
             }
@@ -151,14 +170,5 @@ struct MainTabView: View {
     
     // MARK: - Helper Methods
     
-    /// Загрузить начальные данные
-    private func loadInitialData() {
-        guard let user = authViewModel.currentUser else { return }
-        
-        Task {
-            // Загружаем автомобили и восстанавливаем сохраненный выбор активного авто
-            await carViewModel.loadCarsAsync(for: user)
-            carViewModel.loadCar(for: user)
-        }
-    }
+    // Метод loadInitialData удален - загрузка теперь происходит в .task
 }

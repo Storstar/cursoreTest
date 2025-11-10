@@ -4,6 +4,7 @@ import SwiftUI
 struct CarAssistantApp: App {
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var carViewModel = CarViewModel()
+    @StateObject private var themeManager = ThemeManager.shared
     
     @Environment(\.scenePhase) private var scenePhase
     
@@ -20,7 +21,9 @@ struct CarAssistantApp: App {
             ContentView()
                 .environmentObject(authViewModel)
                 .environmentObject(carViewModel)
+                .environmentObject(themeManager)
                 .environment(\.managedObjectContext, persistenceController.viewContext)
+                .preferredColorScheme(themeManager.colorScheme)
                 .onAppear {
                     // Отмечаем холодный старт при первом запуске
                     appStateManager.markColdStart()

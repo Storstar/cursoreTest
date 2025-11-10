@@ -11,6 +11,11 @@ import SwiftUI
 
 /// Контент чата (без инпут-бара, который в inputAccessoryView)
 struct ChatContentView: View {
+    // MARK: - Environment Objects
+    
+    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(\.colorScheme) var systemColorScheme
+    
     // MARK: - Properties
     
     let messages: [ChatMessage]
@@ -58,8 +63,14 @@ struct ChatContentView: View {
     
     /// Градиентный фон приложения (авто ассистент)
     private var appGradientBackground: some View {
-        LinearGradient(
-            colors: [
+        let isDark = themeManager.colorScheme == .dark || (themeManager.colorScheme == nil && systemColorScheme == .dark)
+        
+        return LinearGradient(
+            colors: isDark ? [
+                Color(red: 0.15, green: 0.17, blue: 0.20),      // Темно-синий (верх)
+                Color(red: 0.12, green: 0.15, blue: 0.18),    // Темно-серо-синий (середина)
+                Color(red: 0.10, green: 0.12, blue: 0.15)     // Темно-серый (низ)
+            ] : [
                 Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
                 Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
                 Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)
