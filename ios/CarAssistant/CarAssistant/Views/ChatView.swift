@@ -37,6 +37,8 @@ struct ChatView: View {
     @State private var showChatHistory = false
     @State private var isTextFieldFocused = false
     @State private var keyboardHeight: CGFloat = 0
+    @State private var dragOffset: CGFloat = 0
+    @State private var isDragging = false
     
     // MARK: - Task Management
     
@@ -75,6 +77,12 @@ struct ChatView: View {
             // showChatHistory = true означает список чатов (показываем TabBar)
             // showChatHistory = false означает активный чат (скрываем TabBar)
             onChatStateChange?(!newValue)
+            
+            // Сбрасываем смещение при закрытии чата
+            if newValue {
+                dragOffset = 0
+                isDragging = false
+            }
         }
         .onChange(of: carViewModel.car?.id) { newCarId in
             handleCarChange()
@@ -183,6 +191,51 @@ struct ChatView: View {
                 onVoiceTap: { handleVoiceTap() }
             )
         }
+        .offset(x: dragOffset)
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 20)
+                .onChanged { value in
+                    let horizontalMovement = value.translation.width
+                    let verticalMovement = abs(value.translation.height)
+                    
+                    // Активируем только если горизонтальное движение значительно больше вертикального
+                    // и свайп идет слева направо (положительное значение)
+                    // Используем коэффициент 1.5 для более строгого определения горизонтального свайпа
+                    if horizontalMovement > 0 && horizontalMovement > verticalMovement * 1.5 {
+                        isDragging = true
+                        // Ограничиваем максимальное смещение для плавности
+                        dragOffset = min(horizontalMovement, UIScreen.main.bounds.width * 0.5)
+                    } else if isDragging && verticalMovement > horizontalMovement {
+                        // Если пользователь начал двигать вертикально после горизонтального свайпа,
+                        // отменяем горизонтальный свайп, чтобы не мешать вертикальному скроллингу
+                        withAnimation(.spring(response: 0.2, dampingFraction: 0.8)) {
+                            dragOffset = 0
+                        }
+                        isDragging = false
+                    }
+                }
+                .onEnded { value in
+                    let horizontalMovement = value.translation.width
+                    let verticalMovement = abs(value.translation.height)
+                    let threshold: CGFloat = 100 // Порог для закрытия чата
+                    
+                    // Закрываем чат только если горизонтальное движение превышает порог
+                    // и значительно больше вертикального
+                    if isDragging && horizontalMovement > threshold && horizontalMovement > verticalMovement * 1.5 {
+                        // Закрываем чат
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            showChatHistory = true
+                        }
+                    } else {
+                        // Возвращаем на место
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            dragOffset = 0
+                        }
+                    }
+                    
+                    isDragging = false
+                }
+        )
     }
     
     // MARK: - Helper Methods
