@@ -42,6 +42,7 @@ struct Vehicle {
 struct Geo {
     let country: String?
     let city: String?
+    let fullAddress: String? // Полный адрес для поиска ближайших сервисов
 }
 
 // MARK: - MaintenanceRecordData
@@ -79,7 +80,8 @@ private let baseSystemPromptTemplate = """
 VIN: {VIN}
 Дополнительная информация: {NOTES}
 Фото автомобиля: {HAS_PHOTOS}
-Геопозиция пользователя: {COUNTRY}, {CITY}
+Геопозиция пользователя: {FULL_ADDRESS}
+ВАЖНО: Используй этот адрес для поиска ближайших заправок, моек, сервисов и других автомобильных услуг. Если пользователь спрашивает о ближайших сервисах, используй этот адрес для предоставления релевантных рекомендаций.
 
 === ИСТОРИЯ ОБСЛУЖИВАНИЯ ===
 {MAINTENANCE_HISTORY}
@@ -254,6 +256,7 @@ final class PromptBuilder {
             "{HAS_PHOTOS}": vehicle.hasPhotos ? "Есть" : "Нет",
             "{COUNTRY}": geo.country ?? "Не указана",
             "{CITY}": geo.city ?? "",
+            "{FULL_ADDRESS}": geo.fullAddress ?? (geo.city != nil && geo.country != nil ? "\(geo.city ?? ""), \(geo.country ?? "")" : "Не указан"),
             "{MAINTENANCE_HISTORY}": history,
             "{ANALYZE_IMAGES_BLOCK}": hasImages ? analyzeImagesBlock : "",
             "{TOPIC_ADDON}": topicAddon
@@ -356,7 +359,8 @@ extension PromptBuilder {
     static func geo(from user: User) -> Geo {
         return Geo(
             country: user.country,
-            city: user.city
+            city: user.city,
+            fullAddress: user.fullAddress // Полный адрес для поиска ближайших сервисов
         )
     }
     

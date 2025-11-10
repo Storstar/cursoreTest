@@ -10,6 +10,10 @@ struct MaintenanceView: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                // Градиентный фон приложения (авто ассистент)
+                appGradientBackground
+                    .ignoresSafeArea()
+                
                 Group {
                     if maintenanceViewModel.maintenanceRecords.isEmpty && maintenanceViewModel.upcomingServices.isEmpty {
                         // Пустое состояние
@@ -104,6 +108,7 @@ struct MaintenanceView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden) // Скрываем фон List, чтобы был виден градиент
             .navigationTitle("Работы")
             .sheet(isPresented: $showAddMaintenance) {
                 AddMaintenanceView()
@@ -131,6 +136,19 @@ struct MaintenanceView: View {
                 }
             }
         }
+    }
+    
+    /// Градиентный фон приложения (авто ассистент)
+    private var appGradientBackground: some View {
+        LinearGradient(
+            colors: [
+                Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
+                Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
+                Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 }
 

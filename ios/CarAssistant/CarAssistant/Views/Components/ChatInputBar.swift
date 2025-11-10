@@ -58,10 +58,7 @@ struct ChatInputBar: View {
             problemButtonsScrollView
             inputFieldView
         }
-        .background(
-            inputBackground
-                .ignoresSafeArea(edges: .bottom)
-        )
+        .background(Color.clear) // Убираем фон за полем ввода и кнопками
         .padding(.bottom, 0)
         .onChange(of: selectedTopic) { newTopic in
             updateButtonsForTopic(newTopic)
@@ -90,7 +87,7 @@ struct ChatInputBar: View {
                                     if let updatedButton = problemButtons.first(where: { $0.id == buttonId }),
                                        updatedButton.isActive && !wasActive {
                                         withAnimation(.easeInOut(duration: 0.3)) {
-                                            proxy.scrollTo(buttonId, anchor: .trailing)
+                                            proxy.scrollTo(buttonId, anchor: .leading) // Выбранный элемент к левой стороне
                                         }
                                     }
                                 }
@@ -100,8 +97,11 @@ struct ChatInputBar: View {
                     }
                 }
                 .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.top, 2) // Минимальный отступ сверху
+                .padding(.bottom, 0) // Убираем отступ снизу
             }
+            .scrollContentBackground(.hidden) // Убираем фон у скролл вью
+            .background(Color.clear) // Убираем фон у скролл вью
             .onChange(of: selectedTopic) { newTopic in
                 // Прокручиваем к активной кнопке при изменении темы
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
@@ -109,7 +109,7 @@ struct ChatInputBar: View {
                        let buttonTitle = topicButtonTitle(for: topic),
                        let activeButton = problemButtons.first(where: { $0.title == buttonTitle && $0.isActive }) {
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            proxy.scrollTo(activeButton.id, anchor: .trailing)
+                            proxy.scrollTo(activeButton.id, anchor: .leading) // Выбранный элемент к левой стороне
                         }
                     }
                 }
@@ -119,13 +119,13 @@ struct ChatInputBar: View {
                 if let activeButton = problemButtons.first(where: { $0.isActive }) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            proxy.scrollTo(activeButton.id, anchor: .trailing)
+                            proxy.scrollTo(activeButton.id, anchor: .leading) // Выбранный элемент к левой стороне
                         }
                     }
                 }
             }
         }
-        .frame(height: 60)
+        .frame(height: 50)
     }
     
     /// Предпросмотр выбранного изображения
@@ -178,7 +178,7 @@ struct ChatInputBar: View {
             actionButton
         }
         .padding(.horizontal, 12)
-        .padding(.top, 8)
+        .padding(.top, 0) // Убираем отступ сверху, чтобы максимально приблизить к скролл вью
         .padding(.bottom, 12)
     }
     
@@ -207,7 +207,7 @@ struct ChatInputBar: View {
             isFocused: $isTextFieldFocused,
             contentHeight: $textFieldContentHeight
         )
-        .background(textFieldBackground)
+        .background(textFieldBackground) // Белый фон у поля ввода как обычно
         .frame(height: min(max(43, textFieldContentHeight), 100)) // Минимум 43pt (1 строка), максимум ~100pt (4 строки)
         .onChange(of: text) { newValue in
             // Сбрасываем высоту, когда текст пустой
@@ -217,25 +217,26 @@ struct ChatInputBar: View {
         }
     }
     
-    /// Фон поля ввода (закругленная капсула, как в Telegram)
+    /// Фон поля ввода (белый фон как обычно)
     private var textFieldBackground: some View {
         RoundedRectangle(cornerRadius: 18)
-            .fill(Color(.systemGray6))
+            .fill(Color.white)
             .overlay(
                 RoundedRectangle(cornerRadius: 18)
                     .stroke(Color(.systemGray4).opacity(0.3), lineWidth: 0.5)
             )
     }
     
-    /// Кнопка действия (микрофон/отправка)
+    /// Кнопка действия (отправка)
     @ViewBuilder
     private var actionButton: some View {
         if isRecording {
             stopRecordingButton
-        } else if text.isEmpty && selectedImage == nil {
-            microphoneButton
         } else {
+            // Кнопка отправки всегда видна, но неактивна когда нет текста и изображения
             sendButton
+                .disabled(text.isEmpty && selectedImage == nil)
+                .opacity((text.isEmpty && selectedImage == nil) ? 0.5 : 1.0)
         }
     }
     
@@ -291,7 +292,6 @@ struct ChatInputBar: View {
         }
         .frame(width: 53, height: 53) // Зона тача ≥53×53pt
         .buttonStyle(PlainButtonStyle())
-        .disabled(text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && selectedImage == nil)
     }
     
     /// Фон области ввода (совпадает с основным фоном)
@@ -359,7 +359,7 @@ struct ChatInputBar: View {
     private func scrollToActiveButton(proxy: ScrollViewProxy) {
         if let activeButton = problemButtons.first(where: { $0.isActive }) {
             withAnimation(.easeInOut(duration: 0.3)) {
-                proxy.scrollTo(activeButton.id, anchor: .trailing)
+                proxy.scrollTo(activeButton.id, anchor: .leading) // Выбранный элемент к левой стороне
             }
         }
     }

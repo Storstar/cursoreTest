@@ -55,6 +55,7 @@
         <attribute name="username" optional="NO" attributeType="String"/>
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="country" optional="YES" attributeType="String"/>
+        <attribute name="fullAddress" optional="YES" attributeType="String"/>
         <relationship name="cars" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Car" inverseName="user" inverseEntity="Car"/>
         <relationship name="requests" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Request" inverseName="user" inverseEntity="Request"/>
     </entity>

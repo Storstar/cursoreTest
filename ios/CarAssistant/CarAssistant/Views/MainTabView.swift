@@ -46,23 +46,63 @@ struct MainTabView: View {
     // MARK: - Body
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            chatsTab
-            maintenanceTab
-            profileTab
+        ZStack {
+            // Красивый градиентный фон для всего приложения (авто ассистент)
+            appGradientBackground
+                .ignoresSafeArea()
+            
+            TabView(selection: $selectedTab) {
+                chatsTab
+                maintenanceTab
+                profileTab
+            }
+            .task {
+                loadInitialData()
+            }
+            .onAppear {
+                updateTabBarVisibility()
+                configureTabBarAppearance()
+            }
+            .onChange(of: showTabBar) { _ in
+                updateTabBarVisibility()
+            }
+            .background(TabBarAccessor { tabBar in
+                tabBar.isHidden = !showTabBar
+                configureTabBarAppearance()
+            })
         }
-        .task {
-            loadInitialData()
+    }
+    
+    /// Градиентный фон приложения (авто ассистент)
+    private var appGradientBackground: some View {
+        LinearGradient(
+            colors: [
+                Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
+                Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
+                Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+    
+    /// Настроить внешний вид TabBar (убрать цветной фон)
+    private func configureTabBarAppearance() {
+        DispatchQueue.main.async {
+            // Настраиваем прозрачный appearance для TabBar
+            let appearance = UITabBarAppearance()
+            appearance.configureWithTransparentBackground()
+            appearance.backgroundColor = .clear
+            
+            // Настраиваем для всех состояний
+            UITabBar.appearance().standardAppearance = appearance
+            if #available(iOS 15.0, *) {
+                UITabBar.appearance().scrollEdgeAppearance = appearance
+            }
+            
+            // Делаем TabBar прозрачным
+            UITabBar.appearance().isTranslucent = true
         }
-        .onAppear {
-            updateTabBarVisibility()
-        }
-        .onChange(of: showTabBar) { _ in
-            updateTabBarVisibility()
-        }
-        .background(TabBarAccessor { tabBar in
-            tabBar.isHidden = !showTabBar
-        })
     }
     
     /// Обновить видимость TabBar

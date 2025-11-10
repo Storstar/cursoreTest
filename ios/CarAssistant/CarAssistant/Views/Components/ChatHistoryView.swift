@@ -21,46 +21,26 @@ struct ChatHistoryView: View {
     // MARK: - Body
     
     var body: some View {
-        VStack(spacing: 0) {
-            headerView
+        ZStack {
             chatsListView
+            
+            // Плавающая кнопка создания нового чата - всегда видна
+            // Те же координаты, что и черный плюс на экране ТО
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    FloatingAddChatButton {
+                        onCreateNewChat()
+                    }
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 30)
+                }
+            }
         }
     }
     
     // MARK: - Subviews
-    
-    /// Заголовок с кнопкой создания нового чата
-    private var headerView: some View {
-        HStack(spacing: 16) {
-            Text("Чаты")
-                .font(.system(size: 28, weight: .bold))
-                .foregroundColor(.primary)
-            
-            Spacer()
-            
-            Button(action: onCreateNewChat) {
-                Image(systemName: "plus")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .frame(width: 44, height: 44)
-                    .background(
-                        Circle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [Color.blue, Color.blue.opacity(0.8)],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
-                    )
-            }
-            .buttonStyle(PlainButtonStyle())
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 20)
-        .background(.ultraThinMaterial)
-    }
     
     /// Список чатов или пустое состояние
     @ViewBuilder
@@ -69,7 +49,7 @@ struct ChatHistoryView: View {
             emptyStateView
         } else {
             ScrollView {
-                LazyVStack(spacing: 16) {
+                LazyVStack(spacing: 12) {
                     ForEach(chats) { chat in
                         ChatRow(
                             chat: chat,
@@ -80,7 +60,8 @@ struct ChatHistoryView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 20)
+                .padding(.top, 4) // Минимальный отступ сверху, чтобы опустить скролл вью ближе к полю ввода
+                .padding(.bottom, 100) // Дополнительный отступ снизу для плавающей кнопки
             }
         }
     }
@@ -115,6 +96,46 @@ struct ChatHistoryView: View {
     }
 }
 
+// MARK: - FloatingAddChatButton
+
+/// Плавающая кнопка создания нового чата
+struct FloatingAddChatButton: View {
+    let onTap: () -> Void
+    @State private var isPressed = false
+    
+    var body: some View {
+        Button(action: {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                isPressed = true
+                onTap()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    isPressed = false
+                }
+            }
+        }) {
+            Image(systemName: "plus")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.white)
+                .frame(width: 56, height: 56)
+                .background(
+                    Circle()
+                        .fill(
+                            LinearGradient(
+                                colors: [Color.blue, Color.blue.opacity(0.8)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
+                )
+                .scaleEffect(isPressed ? 0.9 : 1.0)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
 // MARK: - ChatRow
 
 /// Строка чата в списке истории
@@ -129,13 +150,14 @@ struct ChatRow: View {
     
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: 16) {
+            HStack(spacing: 12) {
                 chatIcon
                 chatInfo
                 Spacer()
                 chevronIcon
             }
-            .padding(20)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
             .background(chatRowBackground)
         }
         .buttonStyle(PlainButtonStyle())
@@ -158,14 +180,14 @@ struct ChatRow: View {
                     endPoint: .bottomTrailing
                 )
             )
-            .frame(width: 56, height: 56)
+            .frame(width: 48, height: 48)
             .overlay(
                 Group {
                     if let topic = chat.topic {
                         topicIcon(for: topic)
                     } else {
                         Image(systemName: "bubble.left.and.bubble.right.fill")
-                            .font(.system(size: 24))
+                            .font(.system(size: 20))
                             .foregroundColor(.white)
                     }
                 }
@@ -180,11 +202,11 @@ struct ChatRow: View {
                     .resizable()
                     .renderingMode(.template)
                     .scaledToFit()
-                    .frame(width: 28, height: 28)
+                    .frame(width: 22, height: 22)
                     .foregroundColor(.white)
             } else {
                 Image(systemName: topicIconName(for: topic))
-                    .font(.system(size: 24))
+                    .font(.system(size: 20))
                     .foregroundColor(.white)
             }
         }
@@ -247,21 +269,21 @@ struct ChatRow: View {
     
     /// Информация о чате
     private var chatInfo: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
             Text(chat.title)
-                .font(.system(size: 17, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.primary)
                 .lineLimit(1)
             
             if let lastMessage = chat.lastMessage {
                 Text(lastMessage)
-                    .font(.system(size: 15, weight: .regular))
+                    .font(.system(size: 14, weight: .regular))
                     .foregroundColor(.secondary)
-                    .lineLimit(2)
+                    .lineLimit(1)
             }
             
             Text(formatDate(chat.lastMessageDate))
-                .font(.system(size: 13, weight: .regular))
+                .font(.system(size: 12, weight: .regular))
                 .foregroundColor(.secondary)
         }
     }
@@ -275,9 +297,13 @@ struct ChatRow: View {
     
     /// Фон строки чата
     private var chatRowBackground: some View {
-        RoundedRectangle(cornerRadius: 20)
+        RoundedRectangle(cornerRadius: 16)
             .fill(.ultraThinMaterial)
-            .shadow(color: .black.opacity(0.08), radius: 15, x: 0, y: 5)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color(.systemGray4).opacity(0.3), lineWidth: 0.5) // Тонкая обводка
+            )
+            .shadow(color: .black.opacity(0.15), radius: 16, x: 0, y: 6) // Более сильная 3D тень
     }
     
     // MARK: - Helper Methods

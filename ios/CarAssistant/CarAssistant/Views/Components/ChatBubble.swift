@@ -191,7 +191,10 @@ struct ChatBubble: View {
     private func cancelImageLoad() {
         imageLoadTask?.cancel()
         imageLoadTask = nil
-        loadedImageData = nil
+        // Используем autoreleasepool для немедленного освобождения памяти
+        autoreleasepool {
+            loadedImageData = nil
+        }
     }
 }
 

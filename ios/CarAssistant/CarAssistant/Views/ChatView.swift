@@ -46,7 +46,7 @@ struct ChatView: View {
     @State private var dragOffset: CGFloat = 0
     @State private var isDragging = false
     @State private var hasRestoredState = false
-    @State private var selectedTopic: Topic? = nil
+    @State private var selectedTopic: Topic? = .general_question
     
     // MARK: - Task Management
     
@@ -62,7 +62,9 @@ struct ChatView: View {
     
     var body: some View {
         ZStack {
-            backgroundGradient
+            // Градиентный фон приложения (будет виден через прозрачные элементы)
+            appGradientBackground
+                .ignoresSafeArea()
             
             if showChatHistory {
                 chatHistoryView
@@ -99,11 +101,12 @@ struct ChatView: View {
             // Сохраняем ID текущего чата при его изменении
             appStateManager.saveState(showChatHistory: showChatHistory, currentChatId: newChatId)
             
-            // Восстанавливаем тему из текущего чата
+            // Восстанавливаем тему из текущего чата или используем .general_question по умолчанию
             if let currentChat = chatViewModel.currentChat {
-                selectedTopic = currentChat.topic
+                selectedTopic = currentChat.topic ?? .general_question
             } else {
-                selectedTopic = nil
+                // По умолчанию всегда General Question
+                selectedTopic = .general_question
             }
         }
         .onChange(of: carViewModel.car?.id) { newCarId in
@@ -155,12 +158,13 @@ struct ChatView: View {
     
     // MARK: - Subviews
     
-    /// Градиентный фон экрана
-    private var backgroundGradient: some View {
+    /// Градиентный фон приложения (авто ассистент)
+    private var appGradientBackground: some View {
         LinearGradient(
             colors: [
-                Color(red: 0.96, green: 0.97, blue: 0.99), // #F6F7FB
-                Color(red: 0.88, green: 0.92, blue: 0.97)  // #E1EBF7
+                Color(red: 0.95, green: 0.97, blue: 1.0),      // Светло-голубой (верх)
+                Color(red: 0.92, green: 0.95, blue: 0.98),    // Светло-серо-голубой (середина)
+                Color(red: 0.88, green: 0.92, blue: 0.96)     // Светло-серый (низ)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
@@ -173,8 +177,8 @@ struct ChatView: View {
             chats: chatViewModel.chats,
             onChatTap: { chat in
                 chatViewModel.openChat(chat)
-                // Восстанавливаем тему из открытого чата
-                selectedTopic = chat.topic
+                // Восстанавливаем тему из открытого чата или используем .general_question по умолчанию
+                selectedTopic = chat.topic ?? .general_question
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     showChatHistory = false
                 }
@@ -182,7 +186,10 @@ struct ChatView: View {
                 appStateManager.saveState(showChatHistory: false, currentChatId: chat.id)
             },
             onCreateNewChat: {
-                let newChat = chatViewModel.createNewChat(topic: selectedTopic)
+                // Инвалидируем кэш при создании нового чата
+                chatViewModel.invalidateCache()
+                // Используем selectedTopic или .general_question по умолчанию
+                let newChat = chatViewModel.createNewChat(topic: selectedTopic ?? .general_question)
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     showChatHistory = false
                 }
@@ -204,6 +211,12 @@ struct ChatView: View {
                 ChatHeaderView(
                     car: carViewModel.car,
                     onShowHistory: {
+                        // Инвалидируем кэш при открытии истории чатов, чтобы загружались актуальные чаты
+                        chatViewModel.invalidateCache()
+                        // Перезагружаем чаты для текущей машины
+                        if let user = authViewModel.currentUser {
+                            chatViewModel.loadChats(for: user, car: carViewModel.car)
+                        }
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                             showChatHistory = true
                         }
@@ -211,7 +224,10 @@ struct ChatView: View {
                         appStateManager.saveState(showChatHistory: true, currentChatId: nil)
                     },
                     onCreateNewChat: {
-                        let newChat = chatViewModel.createNewChat(topic: selectedTopic)
+                        // Инвалидируем кэш при создании нового чата
+                        chatViewModel.invalidateCache()
+                        // Используем selectedTopic или .general_question по умолчанию
+                        let newChat = chatViewModel.createNewChat(topic: selectedTopic ?? .general_question)
                         // Сохраняем состояние при создании нового чата
                         appStateManager.saveState(showChatHistory: false, currentChatId: newChat.id)
                     }
@@ -319,6 +335,8 @@ struct ChatView: View {
                         // и значительно больше вертикального
                         if isDragging && horizontalMovement > threshold && horizontalMovement > verticalMovement * 1.5 {
                         // Закрываем чат
+                        // Инвалидируем кэш при закрытии чата, чтобы при следующем открытии загружались правильные чаты
+                        chatViewModel.invalidateCache()
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                             showChatHistory = true
                         }
@@ -375,8 +393,8 @@ struct ChatView: View {
             // Ищем чат в загруженных чатах
             if let chat = chatViewModel.chats.first(where: { $0.id == chatId }) {
                 chatViewModel.openChat(chat)
-                // Восстанавливаем тему из открытого чата
-                selectedTopic = chat.topic
+                // Восстанавливаем тему из открытого чата или используем .general_question по умолчанию
+                selectedTopic = chat.topic ?? .general_question
             } else if !showChatHistory {
                 // Если был открыт активный чат, но чат не найден, показываем новый чат
                 chatViewModel.currentChat = nil
@@ -400,12 +418,13 @@ struct ChatView: View {
             if let currentChatId = appStateManager.currentChatId,
                let chat = chatViewModel.chats.first(where: { $0.id == currentChatId }) {
                 chatViewModel.openChat(chat)
-                // Восстанавливаем тему из чата
-                selectedTopic = chat.topic
+                // Восстанавливаем тему из чата или используем .general_question по умолчанию
+                selectedTopic = chat.topic ?? .general_question
             } else {
                 chatViewModel.currentChat = nil
                 chatViewModel.currentChatMessages = []
-                selectedTopic = nil
+                // По умолчанию всегда General Question
+                selectedTopic = .general_question
             }
             selectedImage = nil
         }
@@ -483,12 +502,19 @@ struct ChatView: View {
             // Оптимизация изображения перед отправкой
             var compressedImageData: Data? = nil
             if let imageToSend = imageToSend {
-                compressedImageData = compressImage(imageToSend)
+                // Используем autoreleasepool для немедленного освобождения памяти
+                autoreleasepool {
+                    compressedImageData = compressImage(imageToSend)
+                }
             }
             
             // Очищаем изображение из памяти после сжатия
             defer {
                 compressedImageData = nil
+                // Принудительно очищаем память
+                autoreleasepool {
+                    // Освобождаем память
+                }
             }
             
             await chatViewModel.sendMessage(
@@ -497,7 +523,7 @@ struct ChatView: View {
                 requestViewModel: requestViewModel,
                 for: user,
                 car: carViewModel.car,
-                topic: selectedTopic
+                topic: selectedTopic ?? .general_question
             )
             
             // НЕ сбрасываем выбранную тему после отправки - она должна сохраняться в чате

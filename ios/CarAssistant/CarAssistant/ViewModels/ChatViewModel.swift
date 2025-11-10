@@ -60,6 +60,7 @@ class ChatViewModel: ObservableObject {
     
     /// Кэш для оптимизации загрузки чатов
     private var lastLoadedUserId: UUID?
+    private var lastLoadedCarId: UUID?
     private var lastLoadTime: Date?
     private let cacheTimeout: TimeInterval = 5.0
     
@@ -77,6 +78,7 @@ class ChatViewModel: ObservableObject {
     /// Инвалидировать кэш (принудительно перезагрузить чаты)
     func invalidateCache() {
         lastLoadedUserId = nil
+        lastLoadedCarId = nil
         lastLoadTime = nil
     }
     
@@ -93,20 +95,16 @@ class ChatViewModel: ObservableObject {
     ///   - user: Пользователь
     ///   - car: Автомобиль (опционально, для фильтрации)
     func loadChats(for user: User, car: Car? = nil) {
-        // Проверка кэша
+        // Проверка кэша - учитываем и user, и car
+        let currentCarId = car?.id
         if let lastUserId = lastLoadedUserId,
            let lastTime = lastLoadTime,
            lastUserId == user.id,
+           lastLoadedCarId == currentCarId, // Проверяем, что машина та же
            Date().timeIntervalSince(lastTime) < cacheTimeout,
            !chats.isEmpty {
-            if let car = car {
-                let currentChatsCarId = chats.first?.requests.first?.car?.id
-                if currentChatsCarId == car.id {
-                    return // Используем кэшированные данные
-                }
-            } else {
-                return // Используем кэшированные данные
-            }
+            // Кэш валиден - используем кэшированные данные
+            return
         }
         
         let fetchRequest: NSFetchRequest<Request> = Request.fetchRequest()
@@ -179,6 +177,7 @@ class ChatViewModel: ObservableObject {
             
             // Обновление кэша
             lastLoadedUserId = user.id
+            lastLoadedCarId = car?.id
             lastLoadTime = Date()
             
         } catch {
@@ -263,7 +262,7 @@ class ChatViewModel: ObservableObject {
         // Ограничиваем количество сообщений для предотвращения утечек памяти
         // НЕ сохраняем все сообщения - только последние N для оптимизации
         let sortedMessages = messages.sorted { $0.timestamp < $1.timestamp }
-        let maxStoredMessages = 50 // Максимум сообщений для хранения (уменьшено для экономии памяти)
+        let maxStoredMessages = 30 // Максимум сообщений для хранения (уменьшено для экономии памяти)
         
         if sortedMessages.count <= initialMessagesCount {
             // Если сообщений меньше или равно лимиту, загружаем все
@@ -323,11 +322,13 @@ class ChatViewModel: ObservableObject {
     /// - Parameter title: Заголовок чата (опционально)
     /// - Returns: Созданный чат
     func createNewChat(title: String? = nil, topic: Topic? = nil) -> Chat {
+        // Используем .general_question по умолчанию, если тема не указана
+        let chatTopic = topic ?? .general_question
         let newChat = Chat(
             id: UUID(),
             title: title ?? "Новый чат",
             lastMessageDate: Date(),
-            topic: topic
+            topic: chatTopic
         )
         chats.insert(newChat, at: 0)
         currentChat = newChat
@@ -363,6 +364,11 @@ class ChatViewModel: ObservableObject {
         let hasImage = imageData != nil
         
         if hasText || hasImage {
+            // Ограничиваем количество сообщений перед добавлением нового
+            if currentChatMessages.count > 30 {
+                currentChatMessages = Array(currentChatMessages.suffix(30))
+            }
+            
             let userMessage = ChatMessage(
                 text: hasText ? text : nil,
                 imageData: hasImage ? imageData : nil, // Для новых сообщений загружаем сразу
@@ -467,8 +473,8 @@ class ChatViewModel: ObservableObject {
         
         // Если ответа нет, ждем и проверяем еще раз
         var attempts = 0
-        let maxAttempts = 40
-        let checkInterval: UInt64 = 1_000_000_000 // 1 секунда (увеличено для уменьшения нагрузки)
+        let maxAttempts = 30 // Уменьшено с 40 для предотвращения накопления памяти
+        let checkInterval: UInt64 = 2_000_000_000 // 2 секунды (увеличено для уменьшения нагрузки)
         
         while isWaitingForResponse && attempts < maxAttempts {
             // Проверяем отмену задачи для предотвращения утечек памяти
@@ -479,12 +485,20 @@ class ChatViewModel: ObservableObject {
             // Проверяем отмену после сна
             try? Task.checkCancellation()
             
-            // Обновляем чаты и сообщения только каждые 2 секунды (каждую 2-ю итерацию)
+            // Обновляем чаты и сообщения только каждые 4 секунды (каждую 2-ю итерацию)
             // Это уменьшает нагрузку на память и Core Data
             if attempts % 2 == 0 {
                 autoreleasepool {
                     invalidateCache()
                     loadChats(for: user, car: car)
+                    
+                    // Агрессивная очистка памяти: ограничиваем массивы сообщений
+                    if currentChatMessages.count > 30 {
+                        currentChatMessages = Array(currentChatMessages.suffix(30))
+                    }
+                    if allChatMessages.count > 30 {
+                        allChatMessages = Array(allChatMessages.suffix(30))
+                    }
                 }
             }
             
@@ -611,8 +625,8 @@ class ChatViewModel: ObservableObject {
         var history: [(role: String, content: String)] = []
         
         // Ограничиваем историю чата для предотвращения утечек памяти
-        // Берем только последние 20 сообщений (10 пар вопрос-ответ)
-        let maxHistoryMessages = 20
+        // Берем только последние 15 сообщений (7-8 пар вопрос-ответ)
+        let maxHistoryMessages = 15 // Уменьшено с 20 для экономии памяти
         let messagesToProcess = currentChatMessages
             .dropLast(2) // Пропускаем последние 2 (новое сообщение + индикатор загрузки)
             .suffix(maxHistoryMessages) // Ограничиваем количество
